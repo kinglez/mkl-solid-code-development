@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check required Matt Pocock skill definitions in explicit local skill roots.
+"""Check required workflow skill definitions in explicit local skill roots.
 
 Read-only: no installation, overwrite, network access, or skill execution.
 Exit: 0 all definitions present; 1 missing/invalid definitions; 2 invalid input.
@@ -18,6 +18,7 @@ REQUIRED_SKILLS = (
     "grill-with-docs",
     "grilling",
     "domain-modeling",
+    "mkl-uml-robustness-diagram",
     "codebase-design",
     "to-spec",
     "to-tickets",

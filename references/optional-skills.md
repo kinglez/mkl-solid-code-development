@@ -1,6 +1,6 @@
-# Matt Pocock Prerequisites and Skill Routing
+# Workflow Prerequisites and Skill Routing
 
-Use [Matt Pocock Skills](https://github.com/mattpocock/skills) as the preferred execution framework for this workflow. Install the 11-skill baseline below before using the integrated workflow. This includes `grilling`, which supports `grill-with-docs`, and the repository setup skill. Installing the baseline does not require running all stages on every task.
+Use [Matt Pocock Skills](https://github.com/mattpocock/skills) as the preferred execution framework, together with `mkl-uml-robustness-diagram` from [MKL UML Skills](https://github.com/kinglez/mkl-uml) for robustness analysis. Install all 12 prerequisites: 11 Matt Pocock Skills and one MKL robustness-analysis skill. This includes `grilling`, which supports `grill-with-docs`, and the repository setup skill. Installation does not require every task to run every stage or produce a diagram.
 
 ## Required installation baseline
 
@@ -8,6 +8,7 @@ Use [Matt Pocock Skills](https://github.com/mattpocock/skills) as the preferred 
 |---|---|---|
 | Configure the target repository once | `setup-matt-pocock-skills` | Confirm the tracker, applicable labels, and domain-document conventions in the target project |
 | Clarify business rules and language | `grill-with-docs`, `grilling`, `domain-modeling` | Goals, established rules, conflicts, and open questions; produce confirmed rules and domain meanings |
+| Analyze use-case responsibilities | `mkl-uml-robustness-diagram` | Specified behavior and available domain evidence; identify boundary, entity, and control responsibilities, omissions, and model updates |
 | Design modules and interfaces | `codebase-design` | Change scenarios, callers, constraints, and dependencies; produce responsibilities, contracts, and trade-offs |
 | Consolidate specifications and dependencies | `to-spec`, `to-tickets` | Confirmed rules, design, acceptance scenarios, and verification entry points; produce a specification and verifiable slices |
 | Implement and verify behavior | `implement`, `tdd` | The current slice, dependencies, agreed test entry points, and completion criteria; produce code and actual verification results |
@@ -22,7 +23,13 @@ An editable-file installation can use this executable example, taken from the up
 npx skills add mattpocock/skills
 ```
 
-This installer example is not executed automatically by this skill. In the interactive selection, include every skill in the table, including `setup-matt-pocock-skills` and `grilling`. A plugin installation supported by the target agent is also valid. Preserve existing customizations; do not overwrite installed skills merely to satisfy a presence check.
+For that repository, select the 11 Matt Pocock Skills listed in the table, including `setup-matt-pocock-skills` and `grilling`. Install the required robustness-analysis skill separately with this executable command, which has no placeholder arguments:
+
+```bash
+npx skills add kinglez/mkl-uml --skill mkl-uml-robustness-diagram
+```
+
+These commands are not executed automatically by this skill. A plugin installation supported by the target agent is also valid. Preserve existing customizations; do not overwrite installed skills merely to satisfy a presence check.
 
 ## Verify installation and activation
 
@@ -33,7 +40,7 @@ python3 scripts/check_prerequisites.py --skills-root path/to/skills
 python3 scripts/check_prerequisites.py --skills-root path/to/project-skills --skills-root path/to/global-skills
 ```
 
-The checker verifies readable UTF-8 definitions with the expected frontmatter names across the supplied roots. It returns JSON and exit code `0` when all 11 are present, `1` for missing or invalid definitions, and `2` for invalid roots or command usage. It never downloads, overwrites, installs, or executes a skill.
+The checker verifies readable UTF-8 definitions with the expected frontmatter names across the supplied roots. It returns JSON and exit code `0` when all 12 are present, `1` for missing or invalid definitions, and `2` for invalid roots or command usage. It never downloads, overwrites, installs, or executes a skill.
 
 This is a presence check, not proof of upstream provenance, compatible versions, successful activation, or completed repository setup. For plugin installations without exposed filesystem roots, verify the installed catalog and definitions using the agent's supported mechanism. Confirm that relevant skills can actually be invoked in the current session. If a new installation requires a new session or turn, follow that agent's activation procedure.
 
@@ -54,16 +61,18 @@ Installation does not complete setup. Check the project's actual configuration b
 - Use subagents only when supported and authorized by the task or applicable skill. Two checks in the same context are not independent reviews.
 - Pass relevant rules, artifact locations, scope, and acceptance criteria. Verify returned artifacts and actual evidence. Teaching examples and other skills' samples do not become the current task's business rules or evidence.
 
-## Optional MKL modeling support
+## Robustness analysis and optional MKL modeling support
 
-These skills supplement the required Matt Pocock baseline; they are not installation prerequisites:
+`mkl-uml-robustness-diagram` is required. Read its instructions and use standalone mode by default; a formal MKL workflow or gate requires an explicit request. Missing domain or flow evidence limits verification claims rather than justifying invented business facts.
+
+The following additional modeling skills remain optional:
 
 | Work | Optional skills | Outcome |
 |---|---|---|
-| Specify use cases and analyze responsibilities | `mkl-use-case-specifier`, `mkl-uml-robustness-diagram` | Use-case behavior, responsibility coverage, ambiguities, and model updates |
+| Specify use cases and analyze responsibilities | `mkl-use-case-specifier` | Use-case behavior, responsibility coverage, ambiguities, and model updates |
 | Develop necessary domain, static, or interaction views | `mkl-uml-domain-modeler`, `mkl-uml-design-class-model`, `mkl-uml-sequence-diagram` | Views and constraints that answer the current design question |
 
-The included robustness reference remains available without these optional modeling skills.
+The included robustness reference provides supporting guidance; it does not replace the required robustness-analysis skill or make every task require a diagram.
 
 ## Interrupt and resume
 

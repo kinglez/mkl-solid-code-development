@@ -10,11 +10,11 @@ description: >-
 
 # MKL · Business-Driven SOLID Code Development
 
-Connect business rules, responsibility allocation, code behavior, and verification evidence into a traceable delivery workflow. Use Matt Pocock Skills as the preferred execution framework, with the required skill set installed before the integrated workflow is used.
+Connect business rules, responsibility allocation, code behavior, and verification evidence into a traceable delivery workflow. Use Matt Pocock Skills as the preferred execution framework and `mkl-uml-robustness-diagram` for robustness analysis. Install the required skill set before using the integrated workflow.
 
 ## Verify prerequisites
 
-Read [Matt Pocock prerequisites and skill routing](references/optional-skills.md). Verify all 11 required skills in the target environment before starting the integrated workflow. For filesystem installations, use `scripts/check_prerequisites.py` with the actual skill roots; for plugin installations, inspect the agent's installed-skill catalog and resolve the definitions. Installation, availability in the current session, and per-repository setup are separate checks.
+Read [Workflow prerequisites and skill routing](references/optional-skills.md). Verify all 12 required skills (11 Matt Pocock Skills plus `mkl-uml-robustness-diagram`) in the target environment before starting the integrated workflow. For filesystem installations, use `scripts/check_prerequisites.py` with the actual skill roots; for plugin installations, inspect the agent's installed-skill catalog and resolve the definitions. Installation, availability in the current session, and per-repository setup are separate checks.
 
 Install missing skills through a supported installer within the user's authorization, preserving existing customizations, then check again. If installation or activation is unavailable, report the missing prerequisite and pause dependent stages; continue justified independent work without claiming that the integrated workflow ran. Before stages that need repository configuration, confirm that `setup-matt-pocock-skills` has configured the target project's tracker and domain-document conventions.
 
@@ -44,7 +44,7 @@ Derive task-specific rules from the current request, applicable project material
 
 ## 2. Discover responsibilities before choosing code structure
 
-When responsibilities, information sources, or failure handling are unclear, examine the use case using [robustness analysis](references/robustness-analysis.md). Identify boundary interactions, domain information, and control responsibilities. Then check the diagram or responsibility list against the use case to uncover omissions and ambiguity.
+When responsibilities, information sources, or failure handling are unclear, use `mkl-uml-robustness-diagram` with the [robustness analysis guidance](references/robustness-analysis.md). Use its standalone mode unless a cross-artifact MKL handoff or formal gate is requested. Identify boundary interactions, domain information, and control responsibilities. Then check the diagram or responsibility list against the use case to uncover omissions and ambiguity.
 
 Analysis roles suggest responsibilities; they do not map one-to-one to files or classes. Allocate responsibilities to functions, classes, or modules according to actual reasons for change, state constraints, and collaboration. A responsibility list can explain simple behavior; use diagrams for complex collaboration.
 
@@ -104,6 +104,6 @@ Use these resources when they help; their presence does not require every small 
 
 ## Route work to the installed skills
 
-Use [the skill routing table](references/optional-skills.md) to hand off relevant work to the verified Matt Pocock Skills. Read the selected instructions and supply the current rules, scope, artifacts, and acceptance criteria. Required installation does not make every stage mandatory. Additional MKL use-case and UML skills remain optional; use the included robustness method when a dedicated modeling skill is unnecessary or unavailable.
+Use [the skill routing table](references/optional-skills.md) to hand off relevant work to the verified Matt Pocock Skills and the required robustness-analysis skill. Read the selected instructions and supply the current rules, scope, artifacts, and acceptance criteria. Required installation does not make every stage or diagram mandatory. Other MKL use-case and UML skills remain optional.
 
 Communicate in the user's language. Follow project conventions for code and document naming. For long tasks, preserve confirmed rules, the current slice, design decisions, actual verification results, and next steps in the existing work record so a later session can resume from the remaining gap.

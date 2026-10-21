@@ -41,6 +41,16 @@ class PrerequisiteTests(unittest.TestCase):
             self.assertEqual([item["name"] for item in result["missing"]], ["tdd"])
             self.assertFalse((root / "tdd").exists())
 
+    def test_robustness_skill_is_required_even_when_all_matt_skills_are_present(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            install(root, [name for name in checker.REQUIRED_SKILLS if name != "mkl-uml-robustness-diagram"])
+            result = checker.check([root])
+            self.assertFalse(result["prerequisites_present"])
+            self.assertEqual([item["name"] for item in result["missing"]], ["mkl-uml-robustness-diagram"])
+            install(root, ["mkl-uml-robustness-diagram"])
+            self.assertTrue(checker.check([root])["prerequisites_present"])
+
     def test_invalid_definitions_do_not_count_as_installed(self):
         for content in ("", "name: tdd", "---\nname: tdd\n", "---\nname: another-skill\n---\n",
                         "---\nname: tdd\nname: tdd\n---\n"):

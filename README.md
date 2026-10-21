@@ -18,14 +18,15 @@ Robustness analysis helps identify **boundary, entity, and control** responsibil
 
 The depth follows the task. A small change does not require a complete diagram set, structured record, or new abstractions. Design-only and review-only requests retain their scope. Communication follows the user's language even though this skill is written in English.
 
-## Prerequisites: Matt Pocock Skills
+## Prerequisites: Matt Pocock Skills and robustness analysis
 
-Install the following 11 skills from [mattpocock/skills](https://github.com/mattpocock/skills) before using the integrated workflow:
+Install **12 prerequisite skills** before using the integrated workflow: the following 11 from [mattpocock/skills](https://github.com/mattpocock/skills), plus `mkl-uml-robustness-diagram` from [kinglez/mkl-uml](https://github.com/kinglez/mkl-uml).
 
 | Purpose | Required skills |
 | --- | --- |
 | Repository setup | `setup-matt-pocock-skills` |
 | Business clarification and domain language | `grill-with-docs`, `grilling`, `domain-modeling` |
+| Boundary, entity, and control analysis | `mkl-uml-robustness-diagram` |
 | Module and interface design | `codebase-design` |
 | Specifications and implementation slices | `to-spec`, `to-tickets` |
 | Implementation and testing | `implement`, `tdd` |
@@ -38,7 +39,13 @@ Use the [upstream installation guide](https://github.com/mattpocock/skills#insta
 npx skills add mattpocock/skills
 ```
 
-Select all skills listed above. This example installer command is not executed automatically by this skill; the publication environment already had the required definitions. Use one installation route per agent to avoid duplicate copies, and preserve existing customizations.
+Select the 11 Matt Pocock Skills listed above. Install the required robustness-analysis skill separately:
+
+```bash
+npx skills add kinglez/mkl-uml --skill mkl-uml-robustness-diagram
+```
+
+These are executable installation examples with no placeholder arguments. They are not executed automatically by this skill. Use one installation route per agent to avoid duplicate copies, and preserve existing customizations.
 
 ## Install and use
 
@@ -54,7 +61,7 @@ The installer lets you select the target agents. Installation is project-scoped 
 npx skills add kinglez/mkl-solid-code-development -g
 ```
 
-Install the Matt Pocock prerequisites separately with the command in the previous section. Installing this skill does not automatically install another repository's skills. To inspect the available skill without installing it, run:
+Install both sets of prerequisites separately with the commands in the previous section. Installing this skill does not automatically install another repository's skills. To inspect the available skill without installing it, run:
 
 ```bash
 npx skills add kinglez/mkl-solid-code-development --list
@@ -67,7 +74,7 @@ python3 scripts/check_prerequisites.py --skills-root path/to/skills
 python3 scripts/check_prerequisites.py --skills-root path/to/project-skills --skills-root path/to/global-skills
 ```
 
-The checker is read-only. Exit code `0` means the 11 named definitions are readable, `1` means some are missing or invalid, and `2` means invalid input. It does not install skills or prove activation or repository setup. For plugin installations, use your agent's installed catalog and definition access instead of assuming a filesystem path.
+The checker is read-only. Exit code `0` means the 12 named definitions are readable, `1` means some are missing or invalid, and `2` means invalid input. It does not install skills or prove activation or repository setup. For plugin installations, use your agent's installed catalog and definition access instead of assuming a filesystem path.
 
 After installation, confirm that the skills are available to the current session. Run `setup-matt-pocock-skills` once in the **target development repository**, following its confirmation process; reuse valid existing setup. Required installation does not mean every task must run every stage. Explicit-only skills retain their invocation requirements, and tracker writes or commits still require authorization.
 
@@ -94,9 +101,9 @@ See [Delivery Records and Tools](references/delivery-record.md) for the schema, 
 
 ## Skill routing and optional modeling support
 
-The required Matt Pocock Skills provide the preferred execution path. If a prerequisite is missing, install it through a supported installer where authorized and recheck. If installation, activation, or required setup is unavailable, report the gap and pause dependent stages without claiming the integrated workflow ran.
+The required Matt Pocock Skills and `mkl-uml-robustness-diagram` provide the preferred execution path. If a prerequisite is missing, install it through a supported installer where authorized and recheck. If installation, activation, or required setup is unavailable, report the gap and pause dependent stages without claiming the integrated workflow ran.
 
-MKL use-case and UML skills remain optional for deeper modeling. The included robustness reference can support responsibility analysis without them. See [Matt Pocock Prerequisites and Skill Routing](references/optional-skills.md) for handoffs, invocation constraints, and optional modeling capabilities.
+Other MKL use-case and UML skills remain optional for deeper modeling. The included robustness reference supports the required robustness-analysis skill. Installation does not require every task to produce a diagram or enter a formal MKL gate. See [Workflow Prerequisites and Skill Routing](references/optional-skills.md) for handoffs, invocation constraints, and optional modeling capabilities.
 
 ## Repository layout
 
@@ -119,6 +126,6 @@ Run this command from the repository root. It has no placeholder arguments and w
 python3 -m unittest discover -s tests -v
 ```
 
-The published source passed **38 regression tests on Python 3.14.7**. The suite includes prerequisite discovery and failure reporting, the design-readiness gate, invalid UTF-8 input and retry behavior, evidence references, overwrite protection, and command non-execution. The two original defect-reproduction checks also passed before publication.
+The published source passed **39 regression tests on Python 3.14.7**. The suite includes prerequisite discovery and failure reporting, the design-readiness gate, invalid UTF-8 input and retry behavior, evidence references, overwrite protection, and command non-execution. The two original defect-reproduction checks also passed before publication.
 
 See [Independent Forward-Testing Scenarios](tests/behavioral-cases.md) for evaluating workflow decisions. Script tests and scenario documents do not establish correctness for every future task.
