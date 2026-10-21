@@ -10,7 +10,15 @@ description: >-
 
 # MKL · Business-Driven SOLID Code Development
 
-Connect business rules, responsibility allocation, code behavior, and verification evidence into a traceable delivery workflow. The core method is self-contained; specialized skills provide optional support.
+Connect business rules, responsibility allocation, code behavior, and verification evidence into a traceable delivery workflow. Use Matt Pocock Skills as the preferred execution framework, with the required skill set installed before the integrated workflow is used.
+
+## Verify prerequisites
+
+Read [Matt Pocock prerequisites and skill routing](references/optional-skills.md). Verify all 11 required skills in the target environment before starting the integrated workflow. For filesystem installations, use `scripts/check_prerequisites.py` with the actual skill roots; for plugin installations, inspect the agent's installed-skill catalog and resolve the definitions. Installation, availability in the current session, and per-repository setup are separate checks.
+
+Install missing skills through a supported installer within the user's authorization, preserving existing customizations, then check again. If installation or activation is unavailable, report the missing prerequisite and pause dependent stages; continue justified independent work without claiming that the integrated workflow ran. Before stages that need repository configuration, confirm that `setup-matt-pocock-skills` has configured the target project's tracker and domain-document conventions.
+
+Use the installed skills for the stages they cover, read their instructions, and respect explicit-only invocation. A short task still needs only its relevant stages. Installation does not authorize commits, tracker publication, or deployment.
 
 ## Establish the scope
 
@@ -86,6 +94,7 @@ Keep completion claims within the evidence. Test counts, diagram validation, and
 
 For structured handoffs or mechanical traceability checks, read [delivery records and tools](references/delivery-record.md):
 
+- `scripts/check_prerequisites.py` checks required skill definitions in explicitly supplied filesystem roots. It performs no installation or skill execution.
 - `scripts/init_delivery.py` initializes a record from packaged templates, optionally creates an implementation brief, and refuses to overwrite existing files.
 - `scripts/validate_delivery.py` checks references and declared states across rules, acceptance, design, evidence, and review. It neither executes recorded commands nor determines SOLID compliance.
 - `assets/templates/` contains reusable delivery-record and implementation-brief templates. Existing project materials do not need to be migrated into these formats.
@@ -93,8 +102,8 @@ For structured handoffs or mechanical traceability checks, read [delivery record
 
 Use these resources when they help; their presence does not require every small change to create additional files.
 
-## Use specialized skills as needed
+## Route work to the installed skills
 
-For work requiring greater depth, read [optional skill routing](references/optional-skills.md). Confirm availability in the target environment and read the selected skill's instructions. Use each skill for a concrete need. If a specialized skill is unavailable, continue with this skill's core method; installing the entire collection is unnecessary.
+Use [the skill routing table](references/optional-skills.md) to hand off relevant work to the verified Matt Pocock Skills. Read the selected instructions and supply the current rules, scope, artifacts, and acceptance criteria. Required installation does not make every stage mandatory. Additional MKL use-case and UML skills remain optional; use the included robustness method when a dedicated modeling skill is unnecessary or unavailable.
 
 Communicate in the user's language. Follow project conventions for code and document naming. For long tasks, preserve confirmed rules, the current slice, design decisions, actual verification results, and next steps in the existing work record so a later session can resume from the remaining gap.
