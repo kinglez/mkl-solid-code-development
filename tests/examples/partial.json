@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "task": {
+    "id": "EXAMPLE-2",
+    "intent": "implement",
+    "summary": "Synthetic fixture: duplicate reservation semantics are unresolved",
+    "status": "partial"
+  },
+  "rules": [
+    {
+      "id": "R1",
+      "text": "Should a duplicate request return the existing reservation or attempt another reservation?",
+      "status": "open",
+      "source": "Unanswered question in a synthetic fixture",
+      "blocks_completion": true
+    }
+  ],
+  "acceptance": [],
+  "design": [],
+  "evidence": [],
+  "review": {
+    "status": "not_run",
+    "evidence_ids": [],
+    "findings": []
+  },
+  "limitations": [
+    {
+      "id": "L1",
+      "description": "Core semantics remain unresolved; business behavior has not been implemented",
+      "blocks_completion": true
+    }
+  ]
+}

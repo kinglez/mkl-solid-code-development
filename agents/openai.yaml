@@ -1,0 +1,5 @@
+interface:
+  display_name: "MKL · SOLID Code Development"
+  short_description: "Build maintainable SOLID code from business requirements"
+  icon_small: "./assets/icon.svg"
+  icon_large: "./assets/icon.svg"

@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "task": {
+    "id": "EXAMPLE-1",
+    "intent": "implement",
+    "summary": "Synthetic fixture: no late fee on the due date",
+    "status": "complete"
+  },
+  "rules": [
+    {
+      "id": "R1",
+      "text": "No fee applies on the due date",
+      "status": "confirmed",
+      "source": "Synthetic fixture input, not actual business confirmation",
+      "blocks_completion": false
+    }
+  ],
+  "acceptance": [
+    {
+      "id": "AC1",
+      "scenario": "Today is the due date",
+      "expected": "The fee is zero",
+      "rule_ids": [
+        "R1"
+      ],
+      "evidence_ids": [
+        "E1"
+      ]
+    }
+  ],
+  "design": [],
+  "evidence": [
+    {
+      "id": "E1",
+      "kind": "behavior",
+      "method": "command",
+      "status": "passed",
+      "summary": "Synthetic data for field and reference checks, not an actual test result",
+      "artifact": "evidence/behavior.log",
+      "command": "synthetic-example-command",
+      "exit_code": 0
+    },
+    {
+      "id": "E2",
+      "kind": "manual_review",
+      "method": "inspection",
+      "status": "passed",
+      "summary": "Synthetic review data",
+      "artifact": "evidence/inspection.md"
+    }
+  ],
+  "review": {
+    "status": "completed",
+    "evidence_ids": [
+      "E2"
+    ],
+    "findings": []
+  },
+  "limitations": []
+}
