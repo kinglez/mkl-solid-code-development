@@ -35,22 +35,32 @@ Install the following 11 skills from [mattpocock/skills](https://github.com/matt
 Use the [upstream installation guide](https://github.com/mattpocock/skills#installation-30-second-setup) for your agent. For an editable-file installation, the following is a runnable example from that guide:
 
 ```bash
-npx skills@latest add mattpocock/skills
+npx skills add mattpocock/skills
 ```
 
 Select all skills listed above. This example installer command is not executed automatically by this skill; the publication environment already had the required definitions. Use one installation route per agent to avoid duplicate copies, and preserve existing customizations.
 
 ## Install and use
 
-Install this repository with an agent skill installer that accepts GitHub repositories, or clone it into a skills directory supported by your agent.
-
-The following is a runnable installation example, not a command executed by the skill. Run it from your agent's supported skills directory:
+Use the standard [Skills CLI](https://skills.sh/docs/cli). With Node.js and npm available, run this executable command from the target project; it has no placeholder arguments:
 
 ```bash
-git clone https://github.com/kinglez/mkl-solid-code-development.git
+npx skills add kinglez/mkl-solid-code-development
 ```
 
-Verify the prerequisite definitions using their actual installation roots. These are executable templates; replace `path/to/...` with directories containing `skill-name/SKILL.md`:
+The installer lets you select the target agents. Installation is project-scoped by default. For a user-wide installation, use this alternative instead:
+
+```bash
+npx skills add kinglez/mkl-solid-code-development -g
+```
+
+Install the Matt Pocock prerequisites separately with the command in the previous section. Installing this skill does not automatically install another repository's skills. To inspect the available skill without installing it, run:
+
+```bash
+npx skills add kinglez/mkl-solid-code-development --list
+```
+
+From the installed `mkl-solid-code-development` directory, verify the prerequisite definitions using their actual installation roots. These are executable templates; replace `path/to/...` with directories containing `skill-name/SKILL.md`:
 
 ```bash
 python3 scripts/check_prerequisites.py --skills-root path/to/skills

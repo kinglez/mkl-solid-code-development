@@ -19,7 +19,7 @@ Installation instructions and invocation rules come from the [upstream repositor
 An editable-file installation can use this executable example, taken from the upstream installation guide:
 
 ```bash
-npx skills@latest add mattpocock/skills
+npx skills add mattpocock/skills
 ```
 
 This installer example is not executed automatically by this skill. In the interactive selection, include every skill in the table, including `setup-matt-pocock-skills` and `grilling`. A plugin installation supported by the target agent is also valid. Preserve existing customizations; do not overwrite installed skills merely to satisfy a presence check.
