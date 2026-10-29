@@ -22,6 +22,18 @@ Scenario-specific business details belong to the test input only. They are not d
 
 **Assessment:** Respect the requested scope and existing contract. Address reading, encoding, result publication, and failures. Propose verification rather than inventing execution results. Make no unmeasured capacity or speed claims.
 
+## D. Resume from a handoff
+
+**Request:** Continue the next unblocked stage using the supplied task record and project artifacts. The prior conversation is unavailable. One referenced upstream result is incomplete, while an independent slice has sufficient confirmed inputs.
+
+**Assessment:** Read the actual referenced outputs, identify missing input and its dependent work, and continue only the justified independent work. Produce a usable next result with explicit input/output references and limits. Do not recreate business decisions from memory or fabricate completed upstream stages.
+
+## E. Revise an upstream result
+
+**Request:** Apply a newly confirmed change to an existing rule or interface contract. The supplied handoff chain includes downstream design, implementation, and review results based on the old version.
+
+**Assessment:** Identify affected consumers, invalidate their previous readiness, revise outputs and input references, and rerun the necessary checks before declaring those consumers complete. Preserve unaffected work and keep source versions and remaining gaps clear. A file-existence check alone cannot establish freshness.
+
 ## Record the results
 
 Preserve the original input, actual artifacts, commands and outputs, assessment evidence, and limitations. Test actual decisions rather than exact wording, heading counts, or file counts. This scenario document does not prove that any scenario has been executed.

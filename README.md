@@ -6,17 +6,32 @@ The workflow connects confirmed rules, responsibility and interface design, impl
 
 ## What it helps you do
 
-| Stage | Outcome |
+| Stage | Output used by the next stage |
 | --- | --- |
-| Clarify requirements | Confirmed rules, authoritative sources, acceptance scenarios, and explicit open questions |
-| Design responsibilities | Use-case coverage, suitable contracts, and justified module structure |
-| Implement verifiable slices | Working behavior with checks actually run |
-| Refactor and review | Corrections assessed against requirements and repository standards |
-| Reassess and deliver | A scoped architecture assessment, evidence, trade-offs, and remaining limitations |
+| Scope and prerequisites | Scoped request, change baseline, available capabilities, selected stages |
+| Clarify business rules | Confirmed rules, sources, flows, acceptance scenarios, open questions |
+| Model the domain | Agreed concepts, relationships, terminology, invariants |
+| Analyze robustness | Boundary/entity/control responsibilities and behavior coverage |
+| Design modules and interfaces | Responsibilities, contracts, dependencies, justified trade-offs |
+| Write the specification | Implementable scope, design constraints, acceptance, test seams |
+| Slice implementation | Verifiable tasks, blocking edges, slice completion criteria |
+| Implement and verify | Code changes, actual checks/results, coverage, remaining gaps |
+| Refactor | Final code and regression evidence, or a justified retain-design decision |
+| Review and correct | Findings, necessary corrections, rerun evidence, remaining issues |
+| Reassess architecture | Scoped architecture conclusion and maintenance decisions |
+| Deliver | Linked current artifacts, evidence, decisions, and limitations for the user |
 
 Robustness analysis helps identify **boundary, entity, and control** responsibilities where the use case is unclear. SOLID and design patterns guide concrete decisions; they are not mandatory class or interface checklists.
 
 The depth follows the task. A small change does not require a complete diagram set, structured record, or new abstractions. Design-only and review-only requests retain their scope. Communication follows the user's language even though this skill is written in English.
+
+## Every stage produces the next stage's input
+
+Each active stage reads the preceding result, produces a usable artifact or decision, and records why it is ready for the next consumer. Missing or inconsistent input returns to its producer. Upstream changes invalidate affected downstream results until rechecked.
+
+Keep outputs in existing project materials or named sections of one working document; twelve separate files are not required. Reuse requires a current applicability check. Skipped stages need a reason and cannot claim invented results. Small changes can combine stages. Design-only and review-only requests still end at their requested deliverable.
+
+See [Stage Outputs and Handoffs](references/workflow-handoffs.md) for the input/output contract and stage-specific checks. The [brief template](assets/templates/implementation-brief.md) includes a handoff index. For structured records, `validate_delivery.py --require-handoffs` checks declared output/input links and blocks missing, disconnected, or unready results; it does not judge semantic completeness or automatically detect stale content.
 
 ## Prerequisites: Matt Pocock Skills and robustness analysis
 
@@ -92,7 +107,7 @@ From the repository root, use the following executable examples. Replace `path/t
 
 ```bash
 python3 scripts/init_delivery.py path/to/delivery --id TASK-1 --summary "Delivery objective" --intent implement --with-brief
-python3 scripts/validate_delivery.py path/to/delivery/delivery-record.json --require-ready
+python3 scripts/validate_delivery.py path/to/delivery/delivery-record.json --require-handoffs
 ```
 
 Initialization refuses to overwrite existing files. Validation checks structure, references, declared evidence coverage, and readiness; it never executes recorded commands. **A ready record is not proof of correct software or SOLID compliance.**
@@ -126,6 +141,6 @@ Run this command from the repository root. It has no placeholder arguments and w
 python3 -m unittest discover -s tests -v
 ```
 
-The published source passed **39 regression tests on Python 3.14.7**. The suite includes prerequisite discovery and failure reporting, the design-readiness gate, invalid UTF-8 input and retry behavior, evidence references, overwrite protection, and command non-execution. The two original defect-reproduction checks also passed before publication.
+The published source passed **55 regression tests on Python 3.14.7**. The suite includes prerequisite discovery and failure reporting, the design-readiness gate, invalid UTF-8 input and retry behavior, evidence references, overwrite protection, and command non-execution. The two original defect-reproduction checks also passed before publication.
 
 See [Independent Forward-Testing Scenarios](tests/behavioral-cases.md) for evaluating workflow decisions. Script tests and scenario documents do not establish correctness for every future task.

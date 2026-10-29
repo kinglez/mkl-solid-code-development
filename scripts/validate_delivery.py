@@ -2,7 +2,7 @@
 """Check a delivery record's structure, references, and declared evidence coverage.
 
 Read-only; never runs recorded commands or interprets source code as SOLID proof.
-Exit: 0 valid structure (possibly incomplete); 1 invalid or --require-ready fails;
+Exit: 0 valid structure (possibly incomplete); 1 invalid or a readiness gate fails;
 2 unreadable/invalid JSON or invalid command usage.
 """
 from __future__ import annotations
@@ -25,7 +25,7 @@ def load_record(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"), object_pairs_hook=unique_keys)
 
 
-def validate(record: object, project_root: Path) -> dict:
+def validate(record: object, project_root: Path, require_handoffs: bool = False) -> dict:
     errors, blockers = [], []
     root = project_root.resolve()
 
@@ -73,7 +73,7 @@ def validate(record: object, project_root: Path) -> dict:
         return [v for v in values if v in targets]
 
     required_top = ("schema_version", "task", "rules", "acceptance", "design", "evidence", "review", "limitations")
-    if not fields(record, "$", required_top):
+    if not fields(record, "$", required_top, ("handoffs",)):
         return {"structure_valid": False, "record_ready": False, "errors": errors, "blockers": blockers}
     if type(record.get("schema_version")) is not int or record["schema_version"] != 1:
         error("SCHEMA_VERSION", "schema_version", "Only schema_version 1 is supported.")
@@ -233,6 +233,75 @@ def validate(record: object, project_root: Path) -> dict:
                 block("RULE_WITHOUT_ACCEPTANCE", identifier, "Confirmed rule lacks acceptance coverage.")
     if task.get("intent") == "design" and not design:
         block("DESIGN_EMPTY", "design", "Design request needs at least one design decision.")
+
+    if require_handoffs and "handoffs" not in record:
+        block("HANDOFFS_MISSING", "handoffs", "Stage handoffs are required for this validation.")
+    if "handoffs" in record:
+        stages = entries("handoffs", ("id", "stage", "status", "input_ids", "outputs", "notes"))
+        usable = ("completed", "reused")
+        produced = {}
+        stage_outputs = {}
+        active = []
+        for index, (identifier, stage) in enumerate(stages.items()):
+            for key in ("stage", "notes"):
+                text(stage, key, identifier)
+            choice(stage, "status", (*usable, "pending", "blocked", "invalidated", "skipped"), identifier)
+            if stage.get("status") != "skipped":
+                active.append(identifier)
+                if stage.get("status") not in usable:
+                    block("HANDOFF_INCOMPLETE", identifier, "The stage output is not ready for handoff.")
+            outputs = stage.get("outputs")
+            if not isinstance(outputs, list):
+                error("ARRAY_REQUIRED", identifier + ".outputs", "Expected a JSON array.")
+                outputs = []
+            stage_outputs[identifier] = set()
+            if stage.get("status") in usable and not outputs:
+                block("HANDOFF_OUTPUT_REQUIRED", identifier, "A completed or reused stage needs a usable output.")
+            if stage.get("status") == "skipped" and outputs:
+                error("SKIPPED_HANDOFF_HAS_OUTPUT", identifier, "A skipped stage cannot claim produced outputs.")
+            for offset, output in enumerate(outputs):
+                location = f"{identifier}.outputs[{offset}]"
+                if not fields(output, location, ("id", "summary"), ("artifact",)):
+                    continue
+                text(output, "id", location)
+                text(output, "summary", location)
+                output_id = output.get("id")
+                if isinstance(output_id, str) and output_id.strip():
+                    if output_id in ids:
+                        error("DUPLICATE_ID", location + ".id", f"ID is not unique: {output_id}.")
+                    else:
+                        ids.add(output_id)
+                        produced[output_id] = (index, stage.get("status"))
+                        stage_outputs[identifier].add(output_id)
+                if "artifact" in output:
+                    artifact = output["artifact"]
+                    if not isinstance(artifact, str) or not artifact.strip():
+                        error("HANDOFF_ARTIFACT_INVALID", location, "Expected a nonempty relative artifact path.")
+                        continue
+                    try:
+                        relative = Path(artifact)
+                        resolved = (root / relative).resolve()
+                        if relative.is_absolute() or not resolved.is_relative_to(root):
+                            error("HANDOFF_ARTIFACT_OUTSIDE_ROOT", location, "Output artifacts must stay inside project_root.")
+                        elif not resolved.is_file():
+                            error("HANDOFF_ARTIFACT_MISSING", location, "Output artifact does not exist as a file.")
+                    except (OSError, ValueError, RuntimeError) as exc:
+                        error("HANDOFF_ARTIFACT_INVALID", location, str(exc))
+        if not active:
+            block("HANDOFFS_EMPTY", "handoffs", "At least one stage with an actual result is required.")
+        consumed = {}
+        for index, (identifier, stage) in enumerate(stages.items()):
+            linked = refs(stage, "input_ids", produced, identifier)
+            consumed[identifier] = set(linked)
+            for output_id in linked:
+                producer_index, producer_status = produced[output_id]
+                if producer_index >= index:
+                    error("HANDOFF_FORWARD_REFERENCE", identifier, "Inputs must come from an earlier stage.")
+                elif producer_status not in usable:
+                    block("HANDOFF_INPUT_NOT_READY", identifier, "An input comes from an unfinished or invalidated stage.")
+        for previous, current in zip(active, active[1:]):
+            if not stage_outputs[previous].intersection(consumed[current]):
+                block("HANDOFF_NOT_CONNECTED", current, "The next active stage must consume a result of the previous stage.")
     return {"structure_valid": not errors, "record_ready": not errors and not blockers,
             "errors": errors, "blockers": blockers}
 
@@ -242,17 +311,20 @@ def main(argv=None) -> int:
     parser.add_argument("record", type=Path)
     parser.add_argument("--project-root", type=Path, help="Evidence root; defaults to the record's directory.")
     parser.add_argument("--require-ready", action="store_true", help="Exit 1 for incomplete evidence records too.")
+    parser.add_argument("--require-handoffs", action="store_true",
+                        help="Require linked stage handoffs; also implies --require-ready.")
     args = parser.parse_args(argv)
     root = args.project_root or args.record.parent
     try:
         if not root.is_dir():
             raise ValueError("project_root is not a directory")
-        result = validate(load_record(args.record), root)
+        result = validate(load_record(args.record), root, require_handoffs=args.require_handoffs)
     except (OSError, ValueError, RecursionError) as exc:
         print(json.dumps({"input_error": str(exc)}, ensure_ascii=False), file=sys.stderr)
         return 2
     print(json.dumps(result, ensure_ascii=False, indent=2))
-    return 0 if result["structure_valid"] and (result["record_ready"] or not args.require_ready) else 1
+    strict = args.require_ready or args.require_handoffs
+    return 0 if result["structure_valid"] and (result["record_ready"] or not strict) else 1
 
 
 if __name__ == "__main__":

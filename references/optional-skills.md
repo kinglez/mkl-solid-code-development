@@ -74,6 +74,10 @@ The following additional modeling skills remain optional:
 
 The included robustness reference provides supporting guidance; it does not replace the required robustness-analysis skill or make every task require a diagram.
 
+## Stage inputs and returned outputs
+
+Use the [stage handoff contract](workflow-handoffs.md) for every selected skill. Supply the actual preceding output and its current source reference, not only a stage name. Inspect the returned result against the next stage's input needs and preserve the result, source, readiness, and consumer in the existing work record. Installation or invocation alone is not a produced artifact.
+
 ## Interrupt and resume
 
 Preserve confirmed and unresolved rules, prerequisite checks, relevant setup state, the current slice, changed files, key decisions, actual check results, and next steps in the project's existing task record. Update existing records rather than maintaining parallel specifications unnecessarily.

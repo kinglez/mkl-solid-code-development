@@ -32,6 +32,29 @@ Choose the depth according to impact, ambiguity, and risk:
 
 Resolve routine technical choices using established rules, repository conventions, and the user's authorization. For unresolved decisions that affect business meaning, acceptance, or significant design trade-offs, present concrete scenarios, alternatives, and a recommendation for clarification. Pause only the work that depends on the answer; continue justified, independent work. Authorization to implement, refactor, or review does not automatically authorize commits, publication, deployment, or remote writes.
 
+## Produce an output at every stage
+
+Follow [Stage Outputs and Handoffs](references/workflow-handoffs.md). Every executed stage must produce a usable result that becomes the next active stage's input:
+
+| Stage | Output passed forward |
+|---|---|
+| Scope and prerequisites | Scoped request, baseline, capabilities, and selected stages |
+| Business clarification | Confirmed rules, flows, acceptance scenarios, and open questions |
+| Domain modeling | Agreed concepts, relationships, terminology, and invariants |
+| Robustness analysis | Boundary/entity/control responsibilities and behavior coverage |
+| Module and interface design | Responsibilities, contracts, dependencies, and justified trade-offs |
+| Implementation specification | Implementable scope, design decisions, acceptance, and test seams |
+| Task slicing | Verifiable slices, blocking edges, and slice completion criteria |
+| Implementation and verification | Code changes, checks actually run, coverage, and remaining gaps |
+| Refactoring | Final code and regression evidence, or a justified retain-design decision |
+| Change review | Findings, necessary corrections, rerun evidence, and remaining issues |
+| Architecture reassessment | Scoped architecture conclusion and maintenance decisions |
+| Final delivery | Linked outcomes, current artifacts, evidence, trade-offs, and limitations |
+
+Before the next stage starts, read the actual preceding output, check that it supplies the required information, and record the result reference and readiness. Identify original request/materials for the first active stage. If required input is incomplete, return to its producer instead of silently inventing it. Upstream changes invalidate affected downstream results until rechecked.
+
+Keep these outputs in existing project materials or named sections of one document; they do not require one file per stage. Reused results need a current applicability check. Skipped stages need a reason and produce no invented result. Small changes may combine stages, while design-only and review-only requests retain their endpoints. Every active stage still has explicit inputs, an output, and a consumer; the final consumer is the user.
+
 ## 1. Turn requirements into verifiable business rules
 
 Identify actors, goals, system scope, authoritative sources, and normal, alternative, and exceptional behavior. Use concrete inputs and outcomes to resolve ambiguity in units, rounding rules, precedence, state, and repeated operations.
@@ -40,9 +63,13 @@ Distinguish **confirmed rules, proposals, assumptions, and open questions**, and
 
 Derive task-specific rules from the current request, applicable project materials, and confirmed decisions. Treat teaching examples, previous tasks, and examples in other skills as illustrations, not default requirements or acceptance criteria.
 
+**Input:** The scoped request and supplied project evidence. **Output:** Confirmed rules, scenarios, sources, and open questions for domain modeling.
+
 **Completion criterion:** Behavior within the implementable scope has an explicit basis and acceptance scenarios. The impact of unresolved questions is clear. AI recommendations do not substitute for business answers that are required to proceed.
 
 ## 2. Discover responsibilities before choosing code structure
+
+First make the domain output explicit: agreed terms, concepts, relationships, and invariants derived from confirmed rules. Update the existing glossary/model or relevant section; keep unresolved meanings visible.
 
 When responsibilities, information sources, or failure handling are unclear, use `mkl-uml-robustness-diagram` with the [robustness analysis guidance](references/robustness-analysis.md). Use its standalone mode unless a cross-artifact MKL handoff or formal gate is requested. Identify boundary interactions, domain information, and control responsibilities. Then check the diagram or responsibility list against the use case to uncover omissions and ambiguity.
 
@@ -51,6 +78,8 @@ Analysis roles suggest responsibilities; they do not map one-to-one to files or 
 Define the interface contract callers need: input meaning, units, constraints, outputs, failure semantics, and relevant side effects or ordering requirements. Encapsulate complexity behind a clear interface. Introduce extension points when justified by actual substitution, external dependencies, test isolation, or comparable needs.
 
 For structural decisions currently being made, read [SOLID and design-pattern trade-offs](references/solid-design.md). Translate principles into concrete change scenarios and review questions.
+
+**Inputs:** Rules and domain output. **Outputs:** Robustness responsibilities and coverage, then module/interface contracts and design trade-offs for specification.
 
 **Completion criterion:** Relevant business behavior and success and failure outcomes have assigned responsibilities. Sources, contracts, and dependencies are explainable. New abstractions have stated benefits, costs, and limitations.
 
@@ -61,6 +90,8 @@ Use an existing task, specification, or concise brief to connect business rules 
 Split implementation into verifiable business outcomes, each including the code and checks needed for that outcome. Derive dependencies from actual data, behavior, and integration requirements. Reuse completed work rather than rebuilding it to fit a process.
 
 Where suitable automation exists, use a short feedback loop for significant new or corrected behavior: run a check that exposes the gap, observe a meaningful failure, implement the smallest sufficient change, and run regression checks. Build, dependency, and environment failures are not evidence of a business-behavior failure. Match verification to the task; simple renames and presentation-only changes may warrant other checks instead of mandatory TDD.
+
+Treat specification, task slicing, and implementation as separate logical handoffs, even when stored together. The specification feeds the task plan; the current unblocked slice feeds implementation; verified code and actual check results feed refactoring.
 
 **Completion criterion:** Each slice implements its rules and design constraints, with appropriate checks actually run. Unexecuted or uncovered checks and their implications are explicit.
 
@@ -75,11 +106,15 @@ Review two distinct axes:
 
 For each actionable finding, provide evidence, a precise location, impact, and a way to verify the correction. Distinguish business defects, design deviations, coverage gaps, and optional improvements. Correct issues within the authorized scope, then check the affected behavior. Missing coverage alone does not establish a defect; matching types alone does not establish substitutability.
 
+**Inputs:** The working implementation, contracts, and verification baseline. **Outputs:** The refactoring result/decision feeds change review; the review and correction results feed architecture reassessment.
+
 **Completion criterion:** Necessary, evidence-backed corrections within scope are resolved or explicitly reported as unfinished. Verification results and remaining limitations are clear.
 
 ## 5. Reassess the surrounding architecture and deliver evidence
 
 Examine the final change in the context of related modules and callers. Check that responsibilities, duplication, and dependencies remain coherent. A small change may need only a local reassessment; broader investigation needs an explicit scope or supporting evidence. Retaining the current design is a valid decision: explain its limitations and what would trigger reconsideration. Keep design costs proportional to the problem being solved.
+
+**Input:** Reviewed changes and their current evidence. **Output:** The architecture conclusion feeds the final delivery package; that package is the user-facing terminal output.
 
 Tailor the final delivery to the task, covering:
 
@@ -96,7 +131,7 @@ For structured handoffs or mechanical traceability checks, read [delivery record
 
 - `scripts/check_prerequisites.py` checks required skill definitions in explicitly supplied filesystem roots. It performs no installation or skill execution.
 - `scripts/init_delivery.py` initializes a record from packaged templates, optionally creates an implementation brief, and refuses to overwrite existing files.
-- `scripts/validate_delivery.py` checks references and declared states across rules, acceptance, design, evidence, and review. It neither executes recorded commands nor determines SOLID compliance.
+- `scripts/validate_delivery.py` checks references and declared states across rules, acceptance, design, evidence, and review. Use `--require-handoffs` for structured stage chains. It neither executes recorded commands nor determines SOLID compliance.
 - `assets/templates/` contains reusable delivery-record and implementation-brief templates. Existing project materials do not need to be migrated into these formats.
 - `tests/` contains script regressions, positive and negative fixtures, and forward-testing scenarios. Run regressions when maintaining the scripts; add relevant scenario-based verification when changing the core decision process.
 
