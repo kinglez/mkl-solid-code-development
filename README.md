@@ -1,41 +1,48 @@
 # MKL SOLID Code Development
 
-An agent skill for turning business requirements into understandable, extensible, and maintainable code.
+**Build AI-assisted code that fits the business and stays easy to change.**
 
-The workflow connects confirmed rules, responsibility and interface design, implementation, verification, and review. It is domain-agnostic and works with the target project's language and conventions. The integrated workflow uses Matt Pocock Skills, with an explicit installation baseline and prerequisite checks.
+An agent skill that connects business rules, robustness analysis, SOLID design, implementation, verification, and review. It works with your project's language and conventions, using Matt Pocock Skills and MKL robustness analysis.
 
-## What it helps you do
+[Workflow](#workflow-at-a-glance) · [How to use](#how-to-use) · [Stage outputs](#what-each-stage-produces) · [Verification](#verification)
 
-| Stage | Output used by the next stage |
+## Problems this skill addresses
+
+| Common problem | How the workflow addresses it |
 | --- | --- |
-| Scope and prerequisites | Scoped request, change baseline, available capabilities, selected stages |
-| Clarify business rules | Confirmed rules, sources, flows, acceptance scenarios, open questions |
-| Model the domain | Agreed concepts, relationships, terminology, invariants |
-| Analyze robustness | Boundary/entity/control responsibilities and behavior coverage |
-| Design modules and interfaces | Responsibilities, contracts, dependencies, justified trade-offs |
-| Write the specification | Implementable scope, design constraints, acceptance, test seams |
-| Slice implementation | Verifiable tasks, blocking edges, slice completion criteria |
-| Implement and verify | Code changes, actual checks/results, coverage, remaining gaps |
-| Refactor | Final code and regression evidence, or a justified retain-design decision |
-| Review and correct | Findings, necessary corrections, rerun evidence, remaining issues |
-| Reassess architecture | Scoped architecture conclusion and maintenance decisions |
-| Deliver | Linked current artifacts, evidence, decisions, and limitations for the user |
+| Unclear business rules become silent implementation assumptions. | Clarify concrete scenarios; separate confirmed rules, proposals, and open decisions before dependent work starts. |
+| A use case becomes code without clear responsibility boundaries. | Identify boundary, entity, and control responsibilities, then define modules and interface contracts. |
+| Classes, interfaces, or patterns are added without a reason. | Apply SOLID to actual change scenarios, caller needs, and dependency contracts; explain the costs of each abstraction. |
+| A passing test or green checklist is mistaken for business acceptance. | Connect rules to observable checks and review both requirements conformance and engineering standards. |
+| Changes are difficult to review or resume in a later session. | Preserve a fixed change snapshot, actual stage outputs, current evidence, and the next consumer. |
 
-Robustness analysis helps identify **boundary, entity, and control** responsibilities where the use case is unclear. SOLID and design patterns guide concrete decisions; they are not mandatory class or interface checklists.
+## Workflow at a glance
 
-The depth follows the task. A small change does not require a complete diagram set, structured record, or new abstractions. Design-only and review-only requests retain their scope. Communication follows the user's language even though this skill is written in English.
+![Development workflow: understand the business, design responsibilities and interfaces, plan verifiable slices, build and test, then review and deliver.](assets/diagrams/workflow.svg)
 
-## Every stage produces the next stage's input
+Scope and prerequisites (00) come first. The five phases expand into **Understand (01–02), Design (03–04), Plan (05–06), Build (07–08), and Review & deliver (09–11)** in the output tree below.
 
-Each active stage reads the preceding result, produces a usable artifact or decision, and records why it is ready for the next consumer. Missing or inconsistent input returns to its producer. Upstream changes invalidate affected downstream results until rechecked.
+Every active stage consumes real inputs and produces an output for the next stage. Missing input returns to its producer; a changed upstream rule invalidates affected downstream results until they are rechecked.
 
-Keep outputs in existing project materials or named sections of one working document; twelve separate files are not required. Reuse requires a current applicability check. Skipped stages need a reason and cannot claim invented results. Small changes can combine stages. Design-only and review-only requests still end at their requested deliverable.
+Robustness analysis identifies **boundary, entity, and control** responsibilities. SOLID and design patterns guide concrete design decisions. The depth follows the task: small changes can combine stages, and design-only or review-only requests end at their requested deliverable.
 
-See [Stage Outputs and Handoffs](references/workflow-handoffs.md) for the input/output contract and stage-specific checks. The [brief template](assets/templates/implementation-brief.md) includes a handoff index. For structured records, `validate_delivery.py --require-handoffs` checks declared output/input links and blocks missing, disconnected, or unready results; it does not judge semantic completeness or automatically detect stale content.
+## How to use
 
-## Prerequisites: Matt Pocock Skills and robustness analysis
+![Usage flow: install the skill and prerequisites, verify session availability, configure the target repository, start a scoped task, and inspect the delivery.](assets/diagrams/how-to-use.svg)
 
-Install **12 prerequisite skills** before using the integrated workflow: the following 11 from [mattpocock/skills](https://github.com/mattpocock/skills), plus `mkl-uml-robustness-diagram` from [kinglez/mkl-uml](https://github.com/kinglez/mkl-uml).
+This is the first-time path for a development repository. Reuse valid installation/setup and select stages that match the request.
+
+### 1. Install the skill and its prerequisites
+
+Use the standard [Skills CLI](https://skills.sh/docs/cli) from your target project. The validated CLI is `1.7.4`, requiring Node.js `>=22.20.0`, npm, Git, and access to npm/GitHub.
+
+```bash
+npx skills add kinglez/mkl-solid-code-development
+npx skills add mattpocock/skills
+npx skills add kinglez/mkl-uml --skill mkl-uml-robustness-diagram
+```
+
+For the Matt Pocock installation, select the **11 named skills below**. Together with the robustness skill, they form the **12-skill prerequisite baseline**. The installer lets you choose the target agents; installation is project-scoped by default.
 
 | Purpose | Required skills |
 | --- | --- |
@@ -48,122 +55,159 @@ Install **12 prerequisite skills** before using the integrated workflow: the fol
 | Change review | `code-review` |
 | Architecture reassessment | `improve-codebase-architecture` |
 
-Use the [upstream installation guide](https://github.com/mattpocock/skills#installation-30-second-setup) for your agent. For an editable-file installation, the following is a runnable example from that guide:
+Installing this skill does not automatically install skills from the other repositories. Required installation also does not mean every task runs every stage. Preserve existing customizations and use one installation route per agent.
 
-```bash
-npx skills add mattpocock/skills
-```
-
-Select the 11 Matt Pocock Skills listed above. Install the required robustness-analysis skill separately:
-
-```bash
-npx skills add kinglez/mkl-uml --skill mkl-uml-robustness-diagram
-```
-
-These are executable installation examples with no placeholder arguments. They are not executed automatically by this skill. Use one installation route per agent to avoid duplicate copies, and preserve existing customizations.
-
-## Install and use
-
-Use the standard [Skills CLI](https://skills.sh/docs/cli). The validated CLI is `1.7.4`, requiring Node.js `>=22.20.0`, npm, Git, and access to npm/GitHub. Run this executable command from the target project; it has no placeholder arguments:
-
-```bash
-npx skills add kinglez/mkl-solid-code-development
-```
-
-The installer lets you select the target agents. Installation is project-scoped by default. For a user-wide installation, use this alternative instead:
-
-```bash
-npx skills add kinglez/mkl-solid-code-development -g
-```
-
-Install both sets of prerequisites separately with the commands in the previous section. Installing this skill does not automatically install another repository's skills. To inspect the available skill without installing it, run:
+For a user-wide installation, add `-g` to the relevant install command. To inspect this skill without installing it:
 
 ```bash
 npx skills add kinglez/mkl-solid-code-development --list
 ```
 
-### Prerequisite checker runtime
+For reproducible acceptance or dependency upgrades, use the [validated dependency snapshot](references/compatibility.md).
 
-The optional prerequisite checker uses PyYAML to parse actual YAML safely. From the installed `mkl-solid-code-development` directory, create an isolated environment; this POSIX-shell example installs the pinned parser without changing system Python:
+### 2. Verify availability in the current session
+
+Confirm that the installed definitions are available to your agent. Follow its activation procedure if a new installation requires a fresh session. Installation, session availability, and repository configuration are separate checks.
+
+#### Prerequisite checker runtime
+
+For filesystem installations, the optional read-only checker parses actual YAML using PyYAML. From the installed `mkl-solid-code-development` directory, create an isolated environment. This is a POSIX-shell example:
 
 ```bash
 python3 -m venv .venv
 .venv/bin/python -m pip install -r requirements.txt
 ```
 
-Verify the prerequisite definitions using their actual installation roots. These are executable templates; replace `path/to/...` with directories containing `skill-name/SKILL.md`:
+Use the actual directories containing `skill-name/SKILL.md`. The following are command templates; replace each `path/to/...`:
 
 ```bash
 .venv/bin/python scripts/check_prerequisites.py --skills-root path/to/skills
 .venv/bin/python scripts/check_prerequisites.py --skills-root path/to/project-skills --skills-root path/to/global-skills
 ```
 
-The checker is read-only. It parses frontmatter, rejects duplicate YAML keys, and compares the actual top-level names. Exit code `0` means the 12 named definitions are readable, `1` means some are missing or invalid, and `2` means invalid input or a missing parser dependency. It does not install skills or prove activation or repository setup. For plugin installations, use your agent's installed catalog and definition access instead of assuming a filesystem path.
+Exit `0` means the 12 named definitions are readable with valid matching YAML names; `1` means definitions are missing or invalid; `2` means invalid input or a missing parser dependency. This does not prove session activation, source provenance, compatible behavior, or completed setup. Plugin installations can use the host's installed catalog and definition access instead of filesystem paths.
 
-After installation, confirm that the skills are available to the current session. Run `setup-matt-pocock-skills` in the **target development repository**, following its confirmation process, then verify the [actual consumer configuration](references/repository-setup.md). The 12-skill baseline omits `triage`; the documented local setup adapter fills the status-vocabulary gap for `to-spec`/`to-tickets`. Reuse valid configuration. Explicit-only skills retain their invocation requirements, and tracker writes or commits still require authorization.
+### 3. Configure the target repository
 
-Then ask your agent to use `mkl-solid-code-development` for the task. For example:
+Complete this setup before selected stages consume repository configuration. A scoped design or review that does not use a tracker does not require a new tracker setup.
 
-> Use mkl-solid-code-development to implement this feature from the attached requirements. Clarify any business decisions that block implementation, then deliver verified code and a scoped review.
+Make an explicit setup request through your agent's supported invocation mechanism. For example:
 
-The entry point is [SKILL.md](SKILL.md). It loads detailed references only when needed.
+> Use setup-matt-pocock-skills to configure this repository, then use mkl-solid-code-development to verify the tracker, domain-document conventions, and status mapping needed by downstream stages.
 
-### Local implementation and review
+Confirm the concrete configuration choices when setup asks, and reuse valid existing configuration. The 12-skill baseline omits `triage`; the documented [local setup adapter](references/repository-setup.md) completes any status vocabulary that the upstream setup omitted. Specifications and tickets must read the actual saved configuration.
 
-Uncommitted work uses a named [local implementation and two-axis review adapter](references/local-review.md). It preserves scoped slices and behavior verification, captures tracked and untracked changes against a fixed baseline, and gives both review axes the same actual snapshot. It neither commits nor claims unmodified execution of the upstream `implement`/`code-review` combination. Committed-history review can use the upstream route when its input covers the intended delivery.
+### 4. Start a scoped development task
+
+Supply the requirements, relevant project evidence, and intended endpoint. A starting request can be:
+
+> Use mkl-solid-code-development to implement the feature from the requirements I provide. Clarify blocking business decisions, design responsibilities and interfaces before coding, and implement verifiable slices. Deliver the stage outputs, actual verification results, and a scoped review of the changes.
+
+When a selected upstream stage is user-invoked, invoke that skill explicitly using your host's supported syntax. Typical handoffs are `grill-with-docs` for unresolved rules, `to-spec` for a confirmed design, and `to-tickets` for verifiable slices. The wrapper does not automatically invoke every installed skill. Each stage reads the preceding real output. Installation alone does not authorize commits, tracker publication, or deployment.
+
+For uncommitted code, the [local implementation and two-axis review adapter](references/local-review.md) captures the actual tracked and untracked changes against a fixed baseline. Both review axes receive the same snapshot. The adapter is identified separately from the original upstream `implement`/`code-review` combination. Committed-history review can use the upstream route when it covers the intended delivery.
+
+<details>
+<summary>Other starting requests: design, review, or resume</summary>
+
+**Design only**
+
+> Use mkl-solid-code-development to design responsibilities and interfaces for the requirements I provide. End with the design, trade-offs, and proposed verification.
+
+**Review only**
+
+> Use mkl-solid-code-development to review the current pending changes, including new files, against the specification and repository standards. Return findings and their supporting evidence.
+
+**Resume**
+
+> Use mkl-solid-code-development to continue from the task record I provide. Read the referenced artifacts, check their current applicability, and continue the next unblocked stage.
+
+</details>
+
+### 5. Inspect the delivery
+
+Use the stage-output tree below to check what actually exists:
+
+- Which confirmed rules and acceptance scenarios does the code implement?
+- Which preceding outputs did each active stage consume, and which decisions remain open?
+- Which checks ran, what happened, and what remains unverified?
+- What did the requirements and standards reviews find, and which corrections were verified?
+- Which architecture decisions affect future maintenance?
+
+The entry point for the agent is [SKILL.md](SKILL.md). Detailed execution and invocation contracts are in [Workflow Prerequisites and Skill Routing](references/optional-skills.md).
+
+## What each stage produces
+
+![Logical deliverable tree for one task: scope and setup, business rules, domain model, robustness responsibilities, interface design, specification, slices, code and checks, refactoring, review corrections, architecture decisions, and final delivery.](assets/diagrams/stage-outputs.svg)
+
+**This is a tree of logical deliverables, not a mandatory directory layout or twelve required files.** Keep outputs in existing project materials or named sections of one working document. The next active stage consumes the preceding output; the final consumer is the user.
+
+<details>
+<summary>Text version: the twelve logical stage outputs</summary>
+
+| Stage | Output used by the next stage |
+| --- | --- |
+| 00 · Scope and prerequisites | Scoped request, baseline, available capabilities, usable configuration, and selected stages |
+| 01 · Business clarification | Confirmed rules, flows, acceptance scenarios, sources, and open decisions |
+| 02 · Domain modeling | Agreed terms, concepts, relationships, and invariants |
+| 03 · Robustness analysis | Boundary/entity/control responsibilities, information sources, and success/failure coverage |
+| 04 · Module and interface design | Responsibilities, contracts, dependencies, and justified trade-offs |
+| 05 · Implementation specification | Scope, acceptance, design constraints, and observable test seams |
+| 06 · Task slicing | Verifiable tasks, blocking edges, and slice acceptance |
+| 07 · Implementation and verification | Code changes, actual checks/results, coverage, and remaining gaps |
+| 08 · Refactoring | Final code and regression evidence, or a justified decision to retain the design |
+| 09 · Review and corrections | Two-axis findings, corrections, current snapshot, and rerun evidence |
+| 10 · Architecture reassessment | Scoped change/retain decisions, maintenance costs, and reconsideration triggers |
+| 11 · Final delivery | Linked outcomes, current artifacts, evidence, decisions, and limitations for the user |
+
+</details>
+
+Reused outputs need a current applicability check. Skipped stages need a reason; pending results remain unready. An upstream change requires affected consumers to be rechecked. See [Stage Outputs and Handoffs](references/workflow-handoffs.md) for the complete input/output contract. The [implementation brief](assets/templates/implementation-brief.md) includes a compact handoff index.
 
 ## Optional delivery-record tools
 
-The delivery-record tools and local review capture require **Python 3.10+** and use only the standard library. No package installation or network access is required to run these tools. The separate prerequisite checker requires the parser setup above.
+The delivery-record tools and local review capture use Python 3.10+ and its standard library; review capture also needs Git. The separate prerequisite checker requires the PyYAML runtime above.
 
-From the repository root, use the following executable examples. Replace `path/to/delivery`, `TASK-1`, and the summary with values for your task; these example initialization and validation commands are not pre-executed:
+From the skill directory, these are command templates. Replace the delivery path, ID, and objective with the current task:
 
 ```bash
 python3 scripts/init_delivery.py path/to/delivery --id TASK-1 --summary "Delivery objective" --intent implement --with-brief
 python3 scripts/validate_delivery.py path/to/delivery/delivery-record.json --require-handoffs
 ```
 
-Initialization refuses to overwrite existing files. Validation checks structure, references, declared evidence coverage, and readiness; it never executes recorded commands. **A ready record is not proof of correct software or SOLID compliance.**
-
-See [Delivery Records and Tools](references/delivery-record.md) for the schema, task intents, evidence requirements, and exit codes.
-
-## Skill routing and optional modeling support
-
-The required Matt Pocock Skills and `mkl-uml-robustness-diagram` provide the preferred execution path. If a prerequisite is missing, install it through a supported installer where authorized and recheck. If installation, activation, or required setup is unavailable, report the gap and pause dependent stages without claiming the integrated workflow ran.
-
-Other MKL use-case and UML skills remain optional for deeper modeling. The included robustness reference supports the required robustness-analysis skill. Installation does not require every task to produce a diagram or enter a formal MKL gate. See [Workflow Prerequisites and Skill Routing](references/optional-skills.md) for handoffs, invocation constraints, and optional modeling capabilities.
-
-For reproducible acceptance or dependency upgrades, use the [validated dependency snapshot](references/compatibility.md). Default-branch installation does not guarantee that future upstream workflows remain compatible.
-
-## Repository layout
-
-```text
-SKILL.md                  Agent entry point
-agents/openai.yaml        Skill metadata and icon references
-references/               Analysis, design, tool, and optional-skill guidance
-scripts/                  Prerequisite checker, delivery records, and local review capture
-assets/                   Reusable templates and icon
-tests/                    Regression tests, synthetic fixtures, and workflow scenarios
-requirements.txt          Pinned YAML parser for the optional prerequisite checker
-LICENSE, NOTICE           Project license and attribution
-licenses/                 Original third-party notices
-```
-
-Teaching examples and synthetic fixtures illustrate the method. They do not supply default business rules or evidence for another task.
+Initialization refuses to overwrite existing files. Validation checks structure, references, declared evidence coverage, and readiness; it never executes recorded commands. **A ready record is not proof of correct software or SOLID compliance.** It does not judge semantic completeness or automatically detect stale content. See [Delivery Records and Tools](references/delivery-record.md) for fields, evidence requirements, and exit codes.
 
 ## Verification
 
-Run this command from the repository root. It has no placeholder arguments and was executed when preparing this publication:
+With the checker runtime prepared, run this command from the skill directory:
 
 ```bash
 .venv/bin/python -m unittest discover -s tests -v
 ```
 
-The corrected candidate passed **75 regression tests on Python 3.12.14, 3.13.15, and 3.14.7** on macOS. These include actual YAML semantics and parser-depth failures, structured evidence-path failures, and local review capture with file/directory replacements, in addition to the `v1.1.0` baseline's 55 tests. These are 75 distinct tests exercised on three interpreters, not 225 different business scenarios.
+The `v1.2.0` code passed **75 regression tests on Python 3.12.14, 3.13.15, and 3.14.7** on macOS. These include actual YAML semantics and parser-depth errors, structured evidence-path failures, local review capture, and file/directory replacements. They are 75 distinct tests exercised on three interpreters.
 
-See [Independent Forward-Testing Scenarios](tests/behavioral-cases.md) for evaluating workflow decisions. Script tests and scenario documents do not establish correctness for every future task.
+The [acceptance record](tests/ACCEPTANCE.md) distinguishes executed installation, script, and independent workflow scenarios from untested environments. The [forward-testing protocol](tests/behavioral-cases.md) describes future evaluations. Neither test counts nor scenario descriptions establish correctness for every generated program.
 
-The [candidate acceptance record](tests/ACCEPTANCE.md) distinguishes executed installation, script, and independent prompt-driven scenarios from untested environments and future tasks.
+<details>
+<summary>Repository layout and additional modeling support</summary>
+
+```text
+SKILL.md                  Agent entry point
+agents/openai.yaml        Skill metadata and icon references
+references/               Analysis, design, setup, routing, and tool contracts
+scripts/                  Prerequisite checker, delivery records, review capture
+assets/diagrams/          Homepage workflow, usage flow, and deliverable tree
+assets/templates/         Delivery-record and implementation-brief templates
+tests/                    Regressions, synthetic fixtures, acceptance, scenarios
+requirements.txt          Pinned YAML parser for the optional checker
+LICENSE, NOTICE           Project license and attribution
+licenses/                 Original third-party notices
+```
+
+Other MKL use-case and UML skills remain optional for deeper modeling. Installing the required robustness skill does not make every task require a diagram or a formal MKL gate. Teaching examples and synthetic fixtures are illustrations; they do not supply business rules for another task.
+
+</details>
 
 ## License
 

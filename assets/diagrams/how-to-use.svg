@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 432" width="1280" height="432" role="img" aria-labelledby="how-to-use-title how-to-use-desc" data-generator="fireworks-tech-graph" data-schema-version="1" data-style-id="1" data-visual-theme="Flat Icon" data-diagram-type="flowchart" data-semantic-profile="generic" data-semantic-valid="true" data-quality-profile="showcase">
+<title id="how-to-use-title">How to use this skill</title>
+<desc id="how-to-use-desc">Install the main skill and prerequisites, verify session availability, configure the target repository, start a scoped task, and inspect the delivered artifacts and evidence.</desc>
+<style>text { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }</style>
+<defs>
+<marker id="how-to-use-blue" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="10" refX="12" refY="5" orient="auto"><path d="M 0,0 L 12,5 L 0,10 Z" fill="#2563eb"/></marker>
+<marker id="how-to-use-green" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="10" refX="12" refY="5" orient="auto"><path d="M 0,0 L 12,5 L 0,10 Z" fill="#16a34a"/></marker>
+</defs>
+<rect data-graph-role="background" x="0" y="0" width="1280" height="432" fill="#ffffff"/>
+<text x="40" y="56" font-size="32" font-weight="600" fill="#111827" >How to use this skill</text>
+<text x="40" y="96" font-size="22" font-weight="400" fill="#6b7280" >Install once. Configure each project. Start a scoped task.</text>
+<path id="step-1" data-graph-role="edge" data-edge-id="step-1" data-source="install" data-target="verify" data-edge-kind="flow" data-flow="handoff" d="M 248,252 L 288,252" fill="none" stroke="#2563eb" stroke-width="3" marker-end="url(#how-to-use-blue)"/>
+<path id="step-2" data-graph-role="edge" data-edge-id="step-2" data-source="verify" data-target="configure" data-edge-kind="flow" data-flow="handoff" d="M 496,252 L 536,252" fill="none" stroke="#2563eb" stroke-width="3" marker-end="url(#how-to-use-blue)"/>
+<path id="step-3" data-graph-role="edge" data-edge-id="step-3" data-source="configure" data-target="start" data-edge-kind="flow" data-flow="handoff" d="M 744,252 L 784,252" fill="none" stroke="#2563eb" stroke-width="3" marker-end="url(#how-to-use-blue)"/>
+<path id="step-4" data-graph-role="edge" data-edge-id="step-4" data-source="start" data-target="inspect" data-edge-kind="flow" data-flow="handoff" d="M 992,252 L 1032,252" fill="none" stroke="#2563eb" stroke-width="3" marker-end="url(#how-to-use-blue)"/>
+<g id="install" data-graph-role="node" data-node-id="install" data-semantic-role="process" data-graph-bounds="40,164,248,340">
+<rect x="40" y="164" width="208" height="176" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6"/>
+<text x="64" y="200" font-size="18" font-weight="600" fill="#2563eb" >01</text>
+<text x="64" y="236" font-size="25" font-weight="600" fill="#111827" >Install</text>
+<text x="64" y="276" font-size="20" font-weight="400" fill="#6b7280" >Main skill</text>
+<text x="64" y="308" font-size="20" font-weight="400" fill="#6b7280" >+ 12 prerequisites</text>
+</g>
+<g id="verify" data-graph-role="node" data-node-id="verify" data-semantic-role="process" data-graph-bounds="288,164,496,340">
+<rect x="288" y="164" width="208" height="176" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6"/>
+<text x="312" y="200" font-size="18" font-weight="600" fill="#2563eb" >02</text>
+<text x="312" y="236" font-size="25" font-weight="600" fill="#111827" >Verify</text>
+<text x="312" y="276" font-size="20" font-weight="400" fill="#6b7280" >Available skills</text>
+<text x="312" y="308" font-size="20" font-weight="400" fill="#6b7280" >Current session</text>
+</g>
+<g id="configure" data-graph-role="node" data-node-id="configure" data-semantic-role="process" data-graph-bounds="536,164,744,340">
+<rect x="536" y="164" width="208" height="176" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6"/>
+<text x="560" y="200" font-size="18" font-weight="600" fill="#2563eb" >03</text>
+<text x="560" y="236" font-size="25" font-weight="600" fill="#111827" >Configure</text>
+<text x="560" y="276" font-size="20" font-weight="400" fill="#6b7280" >Tracker + domain</text>
+<text x="560" y="308" font-size="20" font-weight="400" fill="#6b7280" >Status mapping</text>
+</g>
+<g id="start" data-graph-role="node" data-node-id="start" data-semantic-role="process" data-graph-bounds="784,164,992,340">
+<rect x="784" y="164" width="208" height="176" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6"/>
+<text x="808" y="200" font-size="18" font-weight="600" fill="#2563eb" >04</text>
+<text x="808" y="236" font-size="25" font-weight="600" fill="#111827" >Start a task</text>
+<text x="808" y="276" font-size="20" font-weight="400" fill="#6b7280" >Rules and scope</text>
+<text x="808" y="308" font-size="20" font-weight="400" fill="#6b7280" >Local delivery</text>
+</g>
+<g id="inspect" data-graph-role="node" data-node-id="inspect" data-semantic-role="process" data-graph-bounds="1032,164,1240,340">
+<rect x="1032" y="164" width="208" height="176" rx="8" fill="#f0fdf4" stroke="#86efac" stroke-width="1.6"/>
+<text x="1056" y="200" font-size="18" font-weight="600" fill="#16a34a" >05</text>
+<text x="1056" y="236" font-size="25" font-weight="600" fill="#111827" >Inspect</text>
+<text x="1056" y="276" font-size="20" font-weight="400" fill="#6b7280" >Artifacts + checks</text>
+<text x="1056" y="308" font-size="20" font-weight="400" fill="#6b7280" >Review + limits</text>
+</g>
+<text x="40" y="396" font-size="20" font-weight="400" fill="#6b7280" >Confirm meaningful choices; explicitly invoke user-only stages when needed.</text>
+</svg>
