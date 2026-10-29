@@ -8,7 +8,7 @@ The first input is the user's request and applicable project evidence. The final
 
 | Stage | Input | Required output | Next consumer checks |
 |---|---|---|---|
-| 0. Scope and prerequisites | Request, repository guidance, installed capabilities, existing work | Scope, task intent, change baseline, relevant skill/setup availability, and selected stages | Clarification can identify the target behavior and unresolved scope |
+| 0. Scope and prerequisites | Request, repository guidance, installed capabilities, existing work | Scope, task intent, change baseline, relevant skill availability, actual downstream setup inputs, selected stages and adapters | Clarification can identify target behavior; tracker consumers can read confirmed configuration |
 | 1. Business clarification | Scope and supplied requirements | Confirmed rules with sources, actors and flows, acceptance scenarios, assumptions, proposals, and open questions | Domain modeling can distinguish agreed business meaning from suggestions |
 | 2. Domain modeling | Rules, scenarios, and existing glossary/model | Agreed terms, concepts and relationships, invariants, and unresolved meanings | Robustness analysis can identify domain information without inventing facts |
 | 3. Robustness analysis | Flows, rules, domain concepts, and constraints | Boundary/entity/control responsibilities, information sources, success/failure coverage, and model or requirement deltas; a diagram where useful | Interface design can allocate every required behavior, including failure handling |
@@ -17,11 +17,13 @@ The first input is the user's request and applicable project evidence. The final
 | 6. Task slicing | Specification and real dependencies | Verifiable vertical slices, blocking edges, acceptance for each slice, and its verification entry point | Implementation can start an unblocked slice with clear completion criteria |
 | 7. Implementation and behavior verification | An unblocked slice plus its referenced rules, design, and acceptance | Actual code changes, rules-to-check coverage, commands/results, relevant red/green evidence, and remaining gaps | Refactoring can identify behavior to preserve and rely on a real verification baseline |
 | 8. Refactoring and SOLID assessment | Working code, contracts, baseline results, and observed design friction | Refactored code and regression results with reasons/trade-offs, or an evidence-backed decision to retain the design | Change review can inspect the final diff, behavior, and actual dependency use |
-| 9. Change review and corrections | Final diff against a fixed baseline, specification, and verification results | Requirements and standards findings, locations/impact, necessary corrections, rerun results, and remaining issues | Architecture reassessment can distinguish corrected behavior from unresolved work |
+| 9. Change review and corrections | Fixed snapshot of the delivered change, including pending/untracked files where applicable, specification, and verification results | Requirements and standards findings, locations/impact, necessary corrections, rerun results, reviewed snapshot ID and remaining issues | Architecture reassessment can distinguish corrected behavior from unresolved work |
 | 10. Architecture reassessment | Reviewed changes, callers, dependencies, and remaining issues | A scoped architecture conclusion, change/retain decisions, costs, risks, and reconsideration triggers | Final delivery can state coherent outcomes and honest limitations |
 | 11. Final delivery | Reviewed behavior/design, verification, and architecture conclusion | A concise delivery package linking outcomes, current artifacts, evidence, decisions, unfinished work, and maintenance implications | The user can inspect what was delivered and what remains |
 
 Use `grill-with-docs`/`grilling`, `domain-modeling`, `mkl-uml-robustness-diagram`, `codebase-design`, `to-spec`, `to-tickets`, `implement`/`tdd`, `code-review`, and `improve-codebase-architecture` at their corresponding stages, subject to their invocation and authorization requirements. Installation does not mean a stage has executed.
+
+The [setup adapter](repository-setup.md) and [local implementation/review adapter](local-review.md) address specific upstream contract gaps. Record which route actually ran. Neither adapter changes the 12-skill baseline or grants additional remote-write/commit permissions.
 
 ## The handoff contract
 

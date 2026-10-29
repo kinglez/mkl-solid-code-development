@@ -1,0 +1,2 @@
+# Used only by scripts/check_prerequisites.py; the other CLI tools use the standard library.
+PyYAML==6.0.3

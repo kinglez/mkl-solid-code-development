@@ -1,0 +1,48 @@
+MKL UML Skills
+Copyright 2026 kingle.zhuang
+Author: kingle.zhuang
+Email: kinglezhuang@vip.qq.com
+Organization: mkl
+
+This work is an English translation and adaptation of an upstream UML skill
+collection. Original work: Copyright 2026 Jonatan Estiven Sánchez Vargas.
+Original author: Jonatan Estiven Sánchez Vargas
+Original contact: josanchezv@unal.edu.co
+Upstream repository: https://github.com/jonatan8254/%69%63%6f%6e%69%78-uml-skills
+The repository path is URL-encoded to retain this edition's naming convention.
+Upstream source snapshot: fb9ee4bd7610670f3aa31da7b9c17c84d47387e0
+
+Licensed under the Apache License, Version 2.0. The original copyright and
+license notices are retained. English translation, editorial revisions,
+MKL branding and skill identifiers, package metadata, and tool/documentation
+adaptations were made in 2026 by kingle.zhuang for mkl, with AI assistance.
+These notices do not change the license.
+
+Citation
+--------
+kingle.zhuang (2026). MKL UML Skills (version 1.0.0). mkl.
+Release date: 2026-10-21. Contact: kinglezhuang@vip.qq.com.
+
+Contributing
+------------
+Keep changes focused, preserve source attribution, and update affected docs.
+For validator defects, add a failing regression test before applying the fix.
+Run these executable commands from the package root before submitting changes:
+
+    python3 -m unittest discover -s tests -v
+    python3 tools/run_all_validators.py
+    python3 tools/run_all_validators.py --check-structure
+
+Submit a pull request when a repository remote is available. Explain the
+problem, resulting behavior, affected skills, and actual verification results.
+AI tools are not coauthors; disclose material AI assistance.
+
+Community conduct
+-----------------
+Communicate respectfully and give constructive feedback. Harassment,
+discrimination, personal attacks, and disclosure of private information without
+permission are unacceptable. Report concerns to kinglezhuang@vip.qq.com;
+the maintainer will review them fairly and address inappropriate participation.
+These guidelines apply in project spaces and when representing the project.
+Condensed from Contributor Covenant 2.1:
+https://www.contributor-covenant.org/version/2/1/code_of_conduct/

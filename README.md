@@ -64,7 +64,7 @@ These are executable installation examples with no placeholder arguments. They a
 
 ## Install and use
 
-Use the standard [Skills CLI](https://skills.sh/docs/cli). With Node.js and npm available, run this executable command from the target project; it has no placeholder arguments:
+Use the standard [Skills CLI](https://skills.sh/docs/cli). The validated CLI is `1.7.4`, requiring Node.js `>=22.20.0`, npm, Git, and access to npm/GitHub. Run this executable command from the target project; it has no placeholder arguments:
 
 ```bash
 npx skills add kinglez/mkl-solid-code-development
@@ -82,16 +82,25 @@ Install both sets of prerequisites separately with the commands in the previous 
 npx skills add kinglez/mkl-solid-code-development --list
 ```
 
-From the installed `mkl-solid-code-development` directory, verify the prerequisite definitions using their actual installation roots. These are executable templates; replace `path/to/...` with directories containing `skill-name/SKILL.md`:
+### Prerequisite checker runtime
+
+The optional prerequisite checker uses PyYAML to parse actual YAML safely. From the installed `mkl-solid-code-development` directory, create an isolated environment; this POSIX-shell example installs the pinned parser without changing system Python:
 
 ```bash
-python3 scripts/check_prerequisites.py --skills-root path/to/skills
-python3 scripts/check_prerequisites.py --skills-root path/to/project-skills --skills-root path/to/global-skills
+python3 -m venv .venv
+.venv/bin/python -m pip install -r requirements.txt
 ```
 
-The checker is read-only. Exit code `0` means the 12 named definitions are readable, `1` means some are missing or invalid, and `2` means invalid input. It does not install skills or prove activation or repository setup. For plugin installations, use your agent's installed catalog and definition access instead of assuming a filesystem path.
+Verify the prerequisite definitions using their actual installation roots. These are executable templates; replace `path/to/...` with directories containing `skill-name/SKILL.md`:
 
-After installation, confirm that the skills are available to the current session. Run `setup-matt-pocock-skills` once in the **target development repository**, following its confirmation process; reuse valid existing setup. Required installation does not mean every task must run every stage. Explicit-only skills retain their invocation requirements, and tracker writes or commits still require authorization.
+```bash
+.venv/bin/python scripts/check_prerequisites.py --skills-root path/to/skills
+.venv/bin/python scripts/check_prerequisites.py --skills-root path/to/project-skills --skills-root path/to/global-skills
+```
+
+The checker is read-only. It parses frontmatter, rejects duplicate YAML keys, and compares the actual top-level names. Exit code `0` means the 12 named definitions are readable, `1` means some are missing or invalid, and `2` means invalid input or a missing parser dependency. It does not install skills or prove activation or repository setup. For plugin installations, use your agent's installed catalog and definition access instead of assuming a filesystem path.
+
+After installation, confirm that the skills are available to the current session. Run `setup-matt-pocock-skills` in the **target development repository**, following its confirmation process, then verify the [actual consumer configuration](references/repository-setup.md). The 12-skill baseline omits `triage`; the documented local setup adapter fills the status-vocabulary gap for `to-spec`/`to-tickets`. Reuse valid configuration. Explicit-only skills retain their invocation requirements, and tracker writes or commits still require authorization.
 
 Then ask your agent to use `mkl-solid-code-development` for the task. For example:
 
@@ -99,9 +108,13 @@ Then ask your agent to use `mkl-solid-code-development` for the task. For exampl
 
 The entry point is [SKILL.md](SKILL.md). It loads detailed references only when needed.
 
+### Local implementation and review
+
+Uncommitted work uses a named [local implementation and two-axis review adapter](references/local-review.md). It preserves scoped slices and behavior verification, captures tracked and untracked changes against a fixed baseline, and gives both review axes the same actual snapshot. It neither commits nor claims unmodified execution of the upstream `implement`/`code-review` combination. Committed-history review can use the upstream route when its input covers the intended delivery.
+
 ## Optional delivery-record tools
 
-The tools require **Python 3.10+** and use only the standard library. No package installation or network access is required to run them.
+The delivery-record tools and local review capture require **Python 3.10+** and use only the standard library. No package installation or network access is required to run these tools. The separate prerequisite checker requires the parser setup above.
 
 From the repository root, use the following executable examples. Replace `path/to/delivery`, `TASK-1`, and the summary with values for your task; these example initialization and validation commands are not pre-executed:
 
@@ -120,15 +133,20 @@ The required Matt Pocock Skills and `mkl-uml-robustness-diagram` provide the pre
 
 Other MKL use-case and UML skills remain optional for deeper modeling. The included robustness reference supports the required robustness-analysis skill. Installation does not require every task to produce a diagram or enter a formal MKL gate. See [Workflow Prerequisites and Skill Routing](references/optional-skills.md) for handoffs, invocation constraints, and optional modeling capabilities.
 
+For reproducible acceptance or dependency upgrades, use the [validated dependency snapshot](references/compatibility.md). Default-branch installation does not guarantee that future upstream workflows remain compatible.
+
 ## Repository layout
 
 ```text
 SKILL.md                  Agent entry point
 agents/openai.yaml        Skill metadata and icon references
 references/               Analysis, design, tool, and optional-skill guidance
-scripts/                  Prerequisite checker and delivery-record tools
+scripts/                  Prerequisite checker, delivery records, and local review capture
 assets/                   Reusable templates and icon
 tests/                    Regression tests, synthetic fixtures, and workflow scenarios
+requirements.txt          Pinned YAML parser for the optional prerequisite checker
+LICENSE, NOTICE           Project license and attribution
+licenses/                 Original third-party notices
 ```
 
 Teaching examples and synthetic fixtures illustrate the method. They do not supply default business rules or evidence for another task.
@@ -138,9 +156,15 @@ Teaching examples and synthetic fixtures illustrate the method. They do not supp
 Run this command from the repository root. It has no placeholder arguments and was executed when preparing this publication:
 
 ```bash
-python3 -m unittest discover -s tests -v
+.venv/bin/python -m unittest discover -s tests -v
 ```
 
-The published source passed **55 regression tests on Python 3.14.7**. The suite includes prerequisite discovery and failure reporting, the design-readiness gate, invalid UTF-8 input and retry behavior, evidence references, overwrite protection, and command non-execution. The two original defect-reproduction checks also passed before publication.
+The corrected candidate passed **75 regression tests on Python 3.12.14, 3.13.15, and 3.14.7** on macOS. These include actual YAML semantics and parser-depth failures, structured evidence-path failures, and local review capture with file/directory replacements, in addition to the `v1.1.0` baseline's 55 tests. These are 75 distinct tests exercised on three interpreters, not 225 different business scenarios.
 
 See [Independent Forward-Testing Scenarios](tests/behavioral-cases.md) for evaluating workflow decisions. Script tests and scenario documents do not establish correctness for every future task.
+
+The [candidate acceptance record](tests/ACCEPTANCE.md) distinguishes executed installation, script, and independent prompt-driven scenarios from untested environments and future tasks.
+
+## License
+
+Apache-2.0; see [LICENSE](LICENSE) and [NOTICE](NOTICE). Independently installed dependencies retain their own licenses. Original notices and guidance for additional offline redistribution are in [Validated Dependencies and Distribution](references/compatibility.md).

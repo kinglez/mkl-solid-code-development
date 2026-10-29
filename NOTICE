@@ -1,0 +1,15 @@
+MKL SOLID Code Development
+Copyright 2026 kingle.zhuang
+
+Licensed under the Apache License, Version 2.0. See LICENSE.
+
+This package integrates independently installed Matt Pocock Skills and
+MKL UML robustness analysis. It does not bundle their skill implementations.
+The dependency revisions and distribution guidance are recorded in
+references/compatibility.md. The original Matt Pocock MIT notice is retained
+in licenses/mattpocock-skills-MIT.txt. The MKL UML source and adaptation
+notices are retained verbatim in licenses/mkl-uml-NOTICE.txt; its Apache-2.0
+license text is the same standard text provided in LICENSE.
+
+These notices preserve third-party attribution and do not change the
+licenses of independently installed dependencies.

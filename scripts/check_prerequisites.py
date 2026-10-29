@@ -4,14 +4,44 @@
 Read-only: no installation, overwrite, network access, or skill execution.
 Exit: 0 all definitions present; 1 missing/invalid definitions; 2 invalid input.
 This does not prove agent activation, repository setup, or upstream provenance.
+Requires PyYAML 6.x to parse the actual frontmatter safely.
 """
 from __future__ import annotations
 
 import argparse
 import json
 from pathlib import Path
-import re
 import sys
+
+try:
+    import yaml
+except ImportError:
+    yaml = None
+
+
+if yaml is not None:
+    class UniqueKeysSafeLoader(yaml.SafeLoader):
+        """Preserve SafeLoader semantics while rejecting explicit duplicate keys."""
+
+        def construct_mapping(self, node, deep=False):
+            if isinstance(node, yaml.MappingNode):
+                seen = set()
+                for key_node, _ in node.value:
+                    if key_node.tag == "tag:yaml.org,2002:merge":
+                        continue
+                    key = self.construct_object(key_node, deep=deep)
+                    try:
+                        duplicate = key in seen
+                        seen.add(key)
+                    except TypeError as exc:
+                        raise yaml.constructor.ConstructorError(
+                            "while constructing a mapping", node.start_mark,
+                            "found an unhashable mapping key", key_node.start_mark) from exc
+                    if duplicate:
+                        raise yaml.constructor.ConstructorError(
+                            "while constructing a mapping", node.start_mark,
+                            f"found duplicate key: {key!r}", key_node.start_mark)
+            return super().construct_mapping(node, deep=deep)
 
 REQUIRED_SKILLS = (
     "setup-matt-pocock-skills",
@@ -30,6 +60,8 @@ REQUIRED_SKILLS = (
 
 
 def check(roots: list[Path]) -> dict:
+    if yaml is None:
+        raise ValueError("Prerequisite checking requires PyYAML 6.x; install this skill's requirements.txt.")
     if not roots:
         raise ValueError("Provide at least one skill root.")
     for root in roots:
@@ -47,12 +79,11 @@ def check(roots: list[Path]) -> dict:
                 end = next((i for i in range(1, len(lines)) if lines[i].strip() == "---"), None)
                 if end is None:
                     raise ValueError("Unterminated YAML frontmatter.")
-                names = []
-                for line in lines[1:end]:
-                    match = re.fullmatch(r"name:[ \t]*([\"']?)([a-z0-9-]+)\1[ \t]*(?:#.*)?", line)
-                    if match:
-                        names.append(match.group(2))
-                if names != [name]:
+                try:
+                    frontmatter = yaml.load("\n".join(lines[1:end]), Loader=UniqueKeysSafeLoader)
+                except (yaml.YAMLError, RecursionError) as exc:
+                    raise ValueError(f"Invalid YAML frontmatter: {exc}") from exc
+                if not isinstance(frontmatter, dict) or frontmatter.get("name") != name:
                     raise ValueError(f"Expected a single frontmatter name: {name}")
             except (OSError, UnicodeError, ValueError) as exc:
                 attempts.append({"path": str(path), "reason": str(exc)})

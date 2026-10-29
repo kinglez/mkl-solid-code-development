@@ -34,6 +34,24 @@ Scenario-specific business details belong to the test input only. They are not d
 
 **Assessment:** Identify affected consumers, invalidate their previous readiness, revise outputs and input references, and rerun the necessary checks before declaring those consumers complete. Preserve unaffected work and keep source versions and remaining gaps clear. A file-existence check alone cannot establish freshness.
 
+## F. Clean repository setup
+
+**Request:** In a fresh repository with exactly the 12 required skills and no `triage`, explicitly run setup, specification, and ticketing with the user's tracker, label mapping, document layout, and test seam choices supplied. Use a local Markdown tracker and preserve an existing instruction file. Include a custom ready-state mapping.
+
+**Assessment:** Read real setup outputs, complete any omitted consumer configuration through the named adapter, and use that saved configuration in the actual specification and tickets. Preserve the custom mapping and surrounding instructions. Reuse valid setup instead of repeating the same incomplete upstream branch. Installation and prompt reading alone are not completion.
+
+## G. Review pending changes
+
+**Request:** Review a supplied specification against staged, unstaged, and newly added local files. The starting commit is supplied, and no commit or code correction is requested.
+
+**Assessment:** Review the actual selected change, including non-ignored new files, using a fixed local snapshot when committed history does not contain it. Give both axes the same input, preserve Git state and application bytes, and identify real contract deviations. Label the local adapter accurately.
+
+## H. Complete local feature
+
+**Request:** Implement a fully specified feature from raw requirements to local code, tests, and review. Explicitly request the relevant user-invoked stages and provide their necessary choices. Select a test business independent of the skill's teaching history. No commit or remote publication is requested.
+
+**Assessment:** Inspect real rules, domain/responsibility design, specification, slices, code, verification, review input, and corrections. Each active stage must consume actual preceding results. Check observable behavior independently at the public API. The final review must include delivered local code and new files, with accurate invocation, evidence, scope, and completion claims.
+
 ## Record the results
 
 Preserve the original input, actual artifacts, commands and outputs, assessment evidence, and limitations. Test actual decisions rather than exact wording, heading counts, or file counts. This scenario document does not prove that any scenario has been executed.

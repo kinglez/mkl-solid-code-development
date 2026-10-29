@@ -11,8 +11,8 @@ Use [Matt Pocock Skills](https://github.com/mattpocock/skills) as the preferred 
 | Analyze use-case responsibilities | `mkl-uml-robustness-diagram` | Specified behavior and available domain evidence; identify boundary, entity, and control responsibilities, omissions, and model updates |
 | Design modules and interfaces | `codebase-design` | Change scenarios, callers, constraints, and dependencies; produce responsibilities, contracts, and trade-offs |
 | Consolidate specifications and dependencies | `to-spec`, `to-tickets` | Confirmed rules, design, acceptance scenarios, and verification entry points; produce a specification and verifiable slices |
-| Implement and verify behavior | `implement`, `tdd` | The current slice, dependencies, agreed test entry points, and completion criteria; produce code and actual verification results |
-| Review the change | `code-review` | A fixed change baseline, request scope, specification, repository standards, and verification results |
+| Implement and verify behavior | `implement`, `tdd`; named local adapter where needed | The current slice, dependencies, agreed test entry points, and completion criteria; select the [implementation/review route](local-review.md) before starting |
+| Review the change | `code-review` for an applicable committed diff; local two-axis adapter for pending changes | A fixed change snapshot, request scope, specification, repository standards, and verification results; include delivered untracked files |
 | Reassess architecture when warranted | `improve-codebase-architecture` | Relevant final code, observed friction, and a bounded investigation scope; produce evidence and trade-offs |
 
 Installation instructions and invocation rules come from the [upstream repository](https://github.com/mattpocock/skills#installation-30-second-setup). Use one installation route per agent to avoid duplicate skill copies.
@@ -36,11 +36,11 @@ These commands are not executed automatically by this skill. A plugin installati
 For filesystem installations, run the packaged read-only checker from this skill's root. The following are executable templates; replace each `path/to/...` with a real directory containing `skill-name/SKILL.md`:
 
 ```bash
-python3 scripts/check_prerequisites.py --skills-root path/to/skills
-python3 scripts/check_prerequisites.py --skills-root path/to/project-skills --skills-root path/to/global-skills
+.venv/bin/python scripts/check_prerequisites.py --skills-root path/to/skills
+.venv/bin/python scripts/check_prerequisites.py --skills-root path/to/project-skills --skills-root path/to/global-skills
 ```
 
-The checker verifies readable UTF-8 definitions with the expected frontmatter names across the supplied roots. It returns JSON and exit code `0` when all 12 are present, `1` for missing or invalid definitions, and `2` for invalid roots or command usage. It never downloads, overwrites, installs, or executes a skill.
+The checker requires PyYAML from `requirements.txt`; see the [runtime setup](../README.md#prerequisite-checker-runtime). It parses UTF-8 YAML frontmatter safely, rejects duplicate keys, and compares each actual top-level name across the supplied roots. It returns JSON and exit code `0` when all 12 are present, `1` for missing or invalid definitions, and `2` for invalid input or missing checker dependencies. It never downloads, overwrites, installs, or executes a skill.
 
 This is a presence check, not proof of upstream provenance, compatible versions, successful activation, or completed repository setup. For plugin installations without exposed filesystem roots, verify the installed catalog and definitions using the agent's supported mechanism. Confirm that relevant skills can actually be invoked in the current session. If a new installation requires a new session or turn, follow that agent's activation procedure.
 
@@ -48,7 +48,7 @@ When a required skill is missing, install it through the target environment's su
 
 ## Configure the target repository
 
-After installation, run `setup-matt-pocock-skills` once in the codebase where development will occur, using the agent's supported explicit invocation. Follow its confirmation process for the tracker, labels where applicable, and document layout. Reuse valid existing configuration rather than running setup for every task.
+After installation, run `setup-matt-pocock-skills` in the target codebase through explicit invocation, following its confirmation process. Then apply the [repository setup completion contract](repository-setup.md). It accounts for the upstream omission of labels when `triage` is absent and defines a local adapter that preserves confirmed repository conventions. Reuse configuration that satisfies the actual downstream consumers rather than rerunning setup for every task.
 
 Installation does not complete setup. Check the project's actual configuration before tracker-dependent specification, ticket, implementation, or review stages. Do not copy the skill publisher's tracker, labels, paths, or teaching business into another project.
 
@@ -56,7 +56,7 @@ Installation does not complete setup. Check the project's actual configuration b
 
 - Read the selected skill's instructions and respect its applicability. Upstream user-invoked skills require explicit invocation; installing them does not make them automatically callable by another skill.
 - Use model-invoked skills where appropriate. For explicit-only stages, use the supported user-invocation mechanism rather than silently bypassing it.
-- Some workflows require a tracker, approved slices, agreed test seams, delegation, or committing. Run their complete workflow only when those prerequisites and actions match the task's authorization. Do not omit required steps and still claim complete execution.
+- Some workflows require a tracker, approved slices, agreed test seams, delegation, or committing. Run their complete workflow only when those prerequisites and actions match the task's authorization. Select the [local implementation/review adapter](local-review.md) for pending changes or local delivery; distinguish that execution from the original upstream workflow.
 - Keep local delivery local when requested. Publishing issues, committing, pushing, creating pull requests, and deploying require authorization for those actions.
 - Use subagents only when supported and authorized by the task or applicable skill. Two checks in the same context are not independent reviews.
 - Pass relevant rules, artifact locations, scope, and acceptance criteria. Verify returned artifacts and actual evidence. Teaching examples and other skills' samples do not become the current task's business rules or evidence.

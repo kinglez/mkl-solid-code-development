@@ -155,13 +155,17 @@ def validate(record: object, project_root: Path, require_handoffs: bool = False)
                 error("ARTIFACT_REQUIRED", identifier, "Passed evidence requires a relative artifact path.")
                 usable = False
             else:
-                relative = Path(artifact)
-                resolved = (root / relative).resolve()
-                if relative.is_absolute() or not resolved.is_relative_to(root):
-                    error("ARTIFACT_OUTSIDE_ROOT", identifier, "Evidence must stay inside project_root.")
-                    usable = False
-                elif not resolved.is_file():
-                    error("ARTIFACT_MISSING", identifier, "Evidence artifact does not exist as a file.")
+                try:
+                    relative = Path(artifact)
+                    resolved = (root / relative).resolve()
+                    if relative.is_absolute() or not resolved.is_relative_to(root):
+                        error("ARTIFACT_OUTSIDE_ROOT", identifier, "Evidence must stay inside project_root.")
+                        usable = False
+                    elif not resolved.is_file():
+                        error("ARTIFACT_MISSING", identifier, "Evidence artifact does not exist as a file.")
+                        usable = False
+                except (OSError, ValueError, RuntimeError) as exc:
+                    error("ARTIFACT_INVALID", identifier, str(exc))
                     usable = False
         if usable:
             passed.add(identifier)
@@ -319,7 +323,7 @@ def main(argv=None) -> int:
         if not root.is_dir():
             raise ValueError("project_root is not a directory")
         result = validate(load_record(args.record), root, require_handoffs=args.require_handoffs)
-    except (OSError, ValueError, RecursionError) as exc:
+    except (OSError, ValueError, RuntimeError) as exc:
         print(json.dumps({"input_error": str(exc)}, ensure_ascii=False), file=sys.stderr)
         return 2
     print(json.dumps(result, ensure_ascii=False, indent=2))

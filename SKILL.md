@@ -1,5 +1,6 @@
 ---
 name: mkl-solid-code-development
+license: Apache-2.0
 description: >-
   Develop new features or evolve existing code from business requirements through
   responsibility and interface design, implementation, verification, and review.
@@ -16,7 +17,7 @@ Connect business rules, responsibility allocation, code behavior, and verificati
 
 Read [Workflow prerequisites and skill routing](references/optional-skills.md). Verify all 12 required skills (11 Matt Pocock Skills plus `mkl-uml-robustness-diagram`) in the target environment before starting the integrated workflow. For filesystem installations, use `scripts/check_prerequisites.py` with the actual skill roots; for plugin installations, inspect the agent's installed-skill catalog and resolve the definitions. Installation, availability in the current session, and per-repository setup are separate checks.
 
-Install missing skills through a supported installer within the user's authorization, preserving existing customizations, then check again. If installation or activation is unavailable, report the missing prerequisite and pause dependent stages; continue justified independent work without claiming that the integrated workflow ran. Before stages that need repository configuration, confirm that `setup-matt-pocock-skills` has configured the target project's tracker and domain-document conventions.
+Install missing skills through a supported installer within the user's authorization, preserving existing customizations, then check again. If installation or activation is unavailable, report the missing prerequisite and pause dependent stages; continue justified independent work without claiming that the integrated workflow ran. Before tracker-dependent stages, read [repository setup compatibility](references/repository-setup.md) and check the actual tracker, domain conventions, and status vocabulary consumed downstream. The 12-skill baseline excludes `triage`; the named local setup adapter fills the resulting configuration gap without repeatedly running unchanged setup.
 
 Use the installed skills for the stages they cover, read their instructions, and respect explicit-only invocation. A short task still needs only its relevant stages. Installation does not authorize commits, tracker publication, or deployment.
 
@@ -87,6 +88,8 @@ For structural decisions currently being made, read [SOLID and design-pattern tr
 
 Use an existing task, specification, or concise brief to connect business rules and scope, necessary design constraints, acceptance scenarios, observable public verification entry points, dependencies, and open questions. One document may be sufficient; fixed filenames and a full document set are optional.
 
+Select the implementation route before starting. The upstream `implement` workflow reviews before committing, while its selected `code-review` compares committed history. For an implementation with pending local changes, use the [local implementation and two-axis review adapter](references/local-review.md): keep the agreed slices and `tdd`, review a fixed snapshot of the actual delivered changes, and stop at local delivery unless further actions are authorized. Identify this as the adapter rather than claiming unmodified execution of `implement`.
+
 Split implementation into verifiable business outcomes, each including the code and checks needed for that outcome. Derive dependencies from actual data, behavior, and integration requirements. Reuse completed work rather than rebuilding it to fit a process.
 
 Where suitable automation exists, use a short feedback loop for significant new or corrected behavior: run a check that exposes the gap, observe a meaningful failure, implement the smallest sufficient change, and run regression checks. Build, dependency, and environment failures are not evidence of a business-behavior failure. Match verification to the task; simple renames and presentation-only changes may warrant other checks instead of mandatory TDD.
@@ -103,6 +106,8 @@ Review two distinct axes:
 
 - **Requirements conformance:** Are the rules, success and failure behavior, scope, and acceptance scenarios implemented faithfully?
 - **Standards and design:** Does the code follow repository standards, terminology, responsibilities, contracts, and agreed dependencies? Follow execution paths to verify that declared abstractions are actually used.
+
+Before review, inspect the current change state and read [local review inputs](references/local-review.md). Use the upstream review only when its committed diff includes the intended delivered changes. For staged, working-tree, or untracked changes, use the named local adapter and pass the same fixed snapshot, specification, and standards to independent reviewers. Confirm task scope rather than attributing every existing local edit to this task. After a correction, capture and review the changed snapshot again.
 
 For each actionable finding, provide evidence, a precise location, impact, and a way to verify the correction. Distinguish business defects, design deviations, coverage gaps, and optional improvements. Correct issues within the authorized scope, then check the affected behavior. Missing coverage alone does not establish a defect; matching types alone does not establish substitutability.
 
@@ -130,6 +135,7 @@ Keep completion claims within the evidence. Test counts, diagram validation, and
 For structured handoffs or mechanical traceability checks, read [delivery records and tools](references/delivery-record.md):
 
 - `scripts/check_prerequisites.py` checks required skill definitions in explicitly supplied filesystem roots. It performs no installation or skill execution.
+- `scripts/capture_review.py` captures an explicitly scoped Git change for local review without staging or committing. Read [its contract](references/local-review.md) before use.
 - `scripts/init_delivery.py` initializes a record from packaged templates, optionally creates an implementation brief, and refuses to overwrite existing files.
 - `scripts/validate_delivery.py` checks references and declared states across rules, acceptance, design, evidence, and review. Use `--require-handoffs` for structured stage chains. It neither executes recorded commands nor determines SOLID compliance.
 - `assets/templates/` contains reusable delivery-record and implementation-brief templates. Existing project materials do not need to be migrated into these formats.

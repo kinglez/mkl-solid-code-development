@@ -160,6 +160,22 @@ class DeliveryValidationTests(unittest.TestCase):
             record["evidence"][0]["artifact"] = "link.txt"
             self.assertIn("ARTIFACT_OUTSIDE_ROOT", self.codes(validator.validate(record, root), "errors"))
 
+    def test_evidence_resolution_failure_is_a_located_validation_error(self):
+        real_resolve = Path.resolve
+
+        def loop_for_artifact(path, *args, **kwargs):
+            if path.name == "loop.log":
+                raise RuntimeError("Symlink loop from test artifact")
+            return real_resolve(path, *args, **kwargs)
+
+        self.record["evidence"][0]["artifact"] = "loop.log"
+        with patch.object(Path, "resolve", loop_for_artifact):
+            result = self.check()
+        self.assertFalse(result["structure_valid"])
+        self.assertFalse(result["record_ready"])
+        artifact_error = next(item for item in result["errors"] if item["code"] == "ARTIFACT_INVALID")
+        self.assertEqual(artifact_error["location"], self.record["evidence"][0]["id"])
+
     def test_wrong_types_and_unknown_fields_report_errors_instead_of_crashing(self):
         mutations = [("task", []), ("rules", {}), ("evidence", 1), ("review", False), ("schema_version", True)]
         for field, value in mutations:
@@ -202,6 +218,26 @@ class DeliveryCliTests(unittest.TestCase):
             p = Path(tmp) / "bad.json"
             p.write_text('{', encoding="utf-8")
             self.assertEqual(self.invoke(p).returncode, 2)
+
+    def test_symlink_loop_returns_structured_cli_error(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            link = root / "loop.log"
+            try:
+                link.symlink_to("loop.log")
+            except (OSError, NotImplementedError):
+                self.skipTest("Symlinks unavailable in this environment")
+            record = validator.load_record(EXAMPLES / "ready.json")
+            record["evidence"][0]["artifact"] = "loop.log"
+            record_path = root / "record.json"
+            record_path.write_text(json.dumps(record), encoding="utf-8")
+            result = self.invoke(record_path, "--project-root", root, "--require-ready")
+            self.assertEqual(result.returncode, 1)
+            payload = json.loads(result.stdout)
+            self.assertFalse(payload["structure_valid"])
+            self.assertFalse(payload["record_ready"])
+            self.assertTrue({"ARTIFACT_INVALID", "ARTIFACT_MISSING"} & {item["code"] for item in payload["errors"]})
+            self.assertEqual(result.stderr, "")
 
     def test_recorded_commands_are_never_executed(self):
         with tempfile.TemporaryDirectory() as tmp:

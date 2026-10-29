@@ -60,6 +60,57 @@ class PrerequisiteTests(unittest.TestCase):
                 (root / "tdd/SKILL.md").write_text(content)
                 self.assertFalse(checker.check([root])["prerequisites_present"])
 
+    def test_actual_yaml_names_and_invalid_yaml_are_not_misreported(self):
+        headers = (
+            "name: tdd#other-name\ndescription: Fixture\n",
+            'name: tdd\ndescription: "unterminated\n',
+            'name: tdd\n"name": another-skill\n',
+            "name: tdd\ndescription: First\ndescription: Second\n",
+            "name: [tdd]\n",
+            "- name: tdd\n",
+            "name: !!python/object/new:builtins.str []\n",
+        )
+        for header in headers:
+            with self.subTest(header=header), tempfile.TemporaryDirectory() as tmp:
+                root = Path(tmp)
+                install(root, checker.REQUIRED_SKILLS)
+                (root / "tdd/SKILL.md").write_text("---\n" + header + "---\n", encoding="utf-8")
+                result = checker.check([root])
+                self.assertFalse(result["prerequisites_present"])
+                self.assertEqual([item["name"] for item in result["missing"]], ["tdd"])
+
+    def test_valid_yaml_string_forms_are_understood(self):
+        for header in ('"name": tdd\n', "name: !!str tdd\n", "name: tdd # comment\n",
+                       "{name: tdd, description: Fixture}\n", "name: >-\n  tdd\n",
+                       "defaults: &defaults\n  name: other\n<<: *defaults\nname: tdd\n"):
+            with self.subTest(header=header), tempfile.TemporaryDirectory() as tmp:
+                root = Path(tmp)
+                install(root, checker.REQUIRED_SKILLS)
+                (root / "tdd/SKILL.md").write_text("---\n" + header + "---\n", encoding="utf-8")
+                self.assertTrue(checker.check([root])["prerequisites_present"])
+
+    def test_excessive_yaml_nesting_is_reported_as_invalid_definition(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            install(root, checker.REQUIRED_SKILLS)
+            header = "name: tdd\ndescription: " + "[" * 600 + "0" + "]" * 600 + "\n"
+            (root / "tdd/SKILL.md").write_text("---\n" + header + "---\n", encoding="utf-8")
+            result = subprocess.run([sys.executable, str(ROOT / "scripts/check_prerequisites.py"),
+                                     "--skills-root", str(root)], capture_output=True, text=True)
+            self.assertEqual(result.returncode, 1)
+            self.assertEqual(result.stderr, "")
+            report = json.loads(result.stdout)
+            self.assertFalse(report["prerequisites_present"])
+            self.assertEqual([item["name"] for item in report["missing"]], ["tdd"])
+
+    def test_missing_yaml_dependency_is_structured_input_error(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            command = [sys.executable, "-S", str(ROOT / "scripts/check_prerequisites.py"), "--skills-root", tmp]
+            result = subprocess.run(command, capture_output=True, text=True)
+            self.assertEqual(result.returncode, 2)
+            self.assertIn("PyYAML", json.loads(result.stderr)["input_error"])
+            self.assertEqual(result.stdout, "")
+
     def test_skills_can_be_split_across_roots_with_quoted_names(self):
         with tempfile.TemporaryDirectory() as tmp:
             first, second = Path(tmp) / "first", Path(tmp) / "second"
