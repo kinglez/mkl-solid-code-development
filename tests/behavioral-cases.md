@@ -54,4 +54,11 @@ Scenario-specific business details belong to the test input only. They are not d
 
 ## Record the results
 
+For the detailed-design workflow, also exercise these focused cases with independent raw business inputs:
+
+- **Stateful new use case:** Carry an actual lifecycle through rules, BCE, class/module structure, principal/failure sequences, a state view, specification, code, tests, and review. Check declared design readiness before coding and compare actual operations/events/transitions afterward. Missing required views or unresolved lifecycle rules must not pass that design gate.
+- **Stateless new use case:** Produce an appropriate module/structure view and interactions without inventing classes or business states. Record state non-applicability from the actual contract. Do not claim a class-specific profile verified a different diagram grammar.
+- **Bounded maintenance:** Preserve existing contracts and responsibilities. Justify lightweight reuse or omission rather than automatically generating the full design set; continue to honor an explicitly requested view.
+- **Response-only design:** Deliver the appropriate views and consistency assessment in the response while preserving a request that prohibits project writes. Do not force JSON or persisted diagrams merely to satisfy a tool.
+
 Preserve the original input, actual artifacts, commands and outputs, assessment evidence, and limitations. Test actual decisions rather than exact wording, heading counts, or file counts. This scenario document does not prove that any scenario has been executed.

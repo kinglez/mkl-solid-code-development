@@ -26,6 +26,14 @@ Every active stage consumes real inputs and produces an output for the next stag
 
 Robustness analysis identifies **boundary, entity, and control** responsibilities. SOLID and design patterns guide concrete design decisions. The depth follows the task: small changes can combine stages, and design-only or review-only requests end at their requested deliverable.
 
+### Design produces actual models before code
+
+For new use cases and complex changes, detailed design includes a **design class model** (or an explicit module/component view for non-OO code) and **sequence diagrams** for the required interactions. A **state diagram** is also required when lifecycle rules determine legal operations or outcomes. State applicability is assessed explicitly.
+
+![Detailed design connects BCE responsibilities, class or module structure, sequence interactions and applicable lifecycle states, then reviews their consistency before implementation.](assets/diagrams/design-views.svg)
+
+These views are refined together: use-case/BCE responsibilities map to interactions, owned operations/events, relevant state effects, and acceptance. Check contracts and behavior across the actual views before specification/implementation, then synchronize them after coding or refactoring. Bounded corrections may use checked reuse or a justified lightweight path. See [Design Views](references/design-views.md) for selection, outputs, routing, and readiness.
+
 ## How to use
 
 ![Usage flow: install the skill and prerequisites, verify session availability, configure the target repository, start a scoped task, and inspect the delivery.](assets/diagrams/how-to-use.svg)
@@ -42,7 +50,7 @@ npx skills add mattpocock/skills
 npx skills add kinglez/mkl-uml --skill mkl-uml-robustness-diagram
 ```
 
-For the Matt Pocock installation, select the **11 named skills below**. Together with the robustness skill, they form the **12-skill prerequisite baseline**. The installer lets you choose the target agents; installation is project-scoped by default.
+For the Matt Pocock installation, select the **11 named skills below**. Together with the robustness skill, they form the **12-skill core baseline**. The installer lets you choose target agents; installation is project-scoped by default.
 
 | Purpose | Required skills |
 | --- | --- |
@@ -54,6 +62,14 @@ For the Matt Pocock installation, select the **11 named skills below**. Together
 | Implementation and testing | `implement`, `tdd` |
 | Change review | `code-review` |
 | Architecture reassessment | `improve-codebase-architecture` |
+
+The detailed-design path additionally requires these **two existing MKL skills**, for 14 definitions in total:
+
+```bash
+npx skills add kinglez/mkl-uml --skill mkl-uml-design-class-model mkl-uml-sequence-diagram
+```
+
+The class skill supports OO structure; the sequence skill supports interactions. State diagrams use the project's available UML toolchain, such as a local PlantUML renderer. No dedicated state-diagram skill is assumed. A missing renderer is reported separately from skill-definition availability.
 
 Installing this skill does not automatically install skills from the other repositories. Required installation also does not mean every task runs every stage. Preserve existing customizations and use one installation route per agent.
 
@@ -83,9 +99,10 @@ Use the actual directories containing `skill-name/SKILL.md`. The following are c
 ```bash
 .venv/bin/python scripts/check_prerequisites.py --skills-root path/to/skills
 .venv/bin/python scripts/check_prerequisites.py --skills-root path/to/project-skills --skills-root path/to/global-skills
+.venv/bin/python scripts/check_prerequisites.py --skills-root path/to/skills --profile detailed-design
 ```
 
-Exit `0` means the 12 named definitions are readable with valid matching YAML names; `1` means definitions are missing or invalid; `2` means invalid input or a missing parser dependency. This does not prove session activation, source provenance, compatible behavior, or completed setup. Plugin installations can use the host's installed catalog and definition access instead of filesystem paths.
+Exit `0` means the selected profile's named definitions are readable with matching YAML names: 12 for default `core`, 14 for `detailed-design`. Exit `1` means missing/invalid definitions; `2` means invalid input or parser dependency. This does not prove session activation, provenance, compatible behavior, completed setup, or a working renderer. Plugins can use the installed catalog and definition access instead.
 
 ### 3. Configure the target repository
 
@@ -102,6 +119,8 @@ Confirm the concrete configuration choices when setup asks, and reuse valid exis
 Supply the requirements, relevant project evidence, and intended endpoint. A starting request can be:
 
 > Use mkl-solid-code-development to implement the feature from the requirements I provide. Clarify blocking business decisions, design responsibilities and interfaces before coding, and implement verifiable slices. Deliver the stage outputs, actual verification results, and a scoped review of the changes.
+
+New use cases default to detailed design. Before coding, inspect the class/module and sequence views, applicable state view, and their consistency review. With a structured record, `--require-design` checks the declared pre-implementation gate; final task/review readiness is checked separately. Keep the diagrams current when operations, dependencies, or lifecycle behavior change.
 
 When a selected upstream stage is user-invoked, invoke that skill explicitly using your host's supported syntax. Typical handoffs are `grill-with-docs` for unresolved rules, `to-spec` for a confirmed design, and `to-tickets` for verifiable slices. The wrapper does not automatically invoke every installed skill. Each stage reads the preceding real output. Installation alone does not authorize commits, tracker publication, or deployment.
 
@@ -151,11 +170,11 @@ The entry point for the agent is [SKILL.md](SKILL.md). Detailed execution and in
 | 01 · Business clarification | Confirmed rules, flows, acceptance scenarios, sources, and open decisions |
 | 02 · Domain modeling | Agreed terms, concepts, relationships, and invariants |
 | 03 · Robustness analysis | Boundary/entity/control responsibilities, information sources, and success/failure coverage |
-| 04 · Module and interface design | Responsibilities, contracts, dependencies, and justified trade-offs |
+| 04 · Detailed views and contracts | Class/module and sequence sources, applicable state sources, contracts/dependencies, consistency review, and trade-offs |
 | 05 · Implementation specification | Scope, acceptance, design constraints, and observable test seams |
 | 06 · Task slicing | Verifiable tasks, blocking edges, and slice acceptance |
 | 07 · Implementation and verification | Code changes, actual checks/results, coverage, and remaining gaps |
-| 08 · Refactoring | Final code and regression evidence, or a justified decision to retain the design |
+| 08 · Refactoring | Final code, synchronized affected views, and regression evidence, or a justified retain decision |
 | 09 · Review and corrections | Two-axis findings, corrections, current snapshot, and rerun evidence |
 | 10 · Architecture reassessment | Scoped change/retain decisions, maintenance costs, and reconsideration triggers |
 | 11 · Final delivery | Linked outcomes, current artifacts, evidence, decisions, and limitations for the user |
@@ -168,12 +187,25 @@ Reused outputs need a current applicability check. Skipped stages need a reason;
 
 The delivery-record tools and local review capture use Python 3.10+ and its standard library; review capture also needs Git. The separate prerequisite checker requires the PyYAML runtime above.
 
-From the skill directory, these are command templates. Replace the delivery path, ID, and objective with the current task:
+From the skill directory, initialize a detailed-design draft. This is a command template; replace the path, ID, and objective:
 
 ```bash
-python3 scripts/init_delivery.py path/to/delivery --id TASK-1 --summary "Delivery objective" --intent implement --with-brief
-python3 scripts/validate_delivery.py path/to/delivery/delivery-record.json --require-handoffs
+python3 scripts/init_delivery.py path/to/delivery --id TASK-1 --summary "Delivery objective" --intent implement --design-profile detailed --with-brief
 ```
+
+Fill in the actual rules, view sources, applicability, and consistency-review evidence. Before coding, check the design gate:
+
+```bash
+python3 scripts/validate_delivery.py path/to/delivery/delivery-record.json --require-design
+```
+
+The draft starts unready and invents no completed views or review. `--require-design` can pass before coding with `design_ready: true` while `record_ready` remains false. After implementation and final review, require both gates:
+
+```bash
+python3 scripts/validate_delivery.py path/to/delivery/delivery-record.json --require-design --require-handoffs
+```
+
+For existing/simple records, omitting `--design-profile` retains the previous format; lightweight design can be explicitly selected when justified.
 
 Initialization refuses to overwrite existing files. Validation checks structure, references, declared evidence coverage, and readiness; it never executes recorded commands. **A ready record is not proof of correct software or SOLID compliance.** It does not judge semantic completeness or automatically detect stale content. See [Delivery Records and Tools](references/delivery-record.md) for fields, evidence requirements, and exit codes.
 
@@ -185,7 +217,7 @@ With the checker runtime prepared, run this command from the skill directory:
 .venv/bin/python -m unittest discover -s tests -v
 ```
 
-The `v1.2.0` code passed **75 regression tests on Python 3.12.14, 3.13.15, and 3.14.7** on macOS. These include actual YAML semantics and parser-depth errors, structured evidence-path failures, local review capture, and file/directory replacements. They are 75 distinct tests exercised on three interpreters.
+The detailed-design update passed **101 regression tests on Python 3.12.14, 3.13.15, and 3.14.7** on macOS. These include conditional modeling prerequisites, draft initialization, independent design/final readiness gates, YAML and evidence-path failures, and actual local review capture. They are 101 distinct tests exercised on three interpreters.
 
 The [acceptance record](tests/ACCEPTANCE.md) distinguishes executed installation, script, and independent workflow scenarios from untested environments. The [forward-testing protocol](tests/behavioral-cases.md) describes future evaluations. Neither test counts nor scenario descriptions establish correctness for every generated program.
 
@@ -197,15 +229,15 @@ SKILL.md                  Agent entry point
 agents/openai.yaml        Skill metadata and icon references
 references/               Analysis, design, setup, routing, and tool contracts
 scripts/                  Prerequisite checker, delivery records, review capture
-assets/diagrams/          Homepage workflow, usage flow, and deliverable tree
-assets/templates/         Delivery-record and implementation-brief templates
+assets/diagrams/          Workflow, detailed views, usage, and deliverable tree
+assets/templates/         Delivery-record, design-view, and brief templates
 tests/                    Regressions, synthetic fixtures, acceptance, scenarios
 requirements.txt          Pinned YAML parser for the optional checker
 LICENSE, NOTICE           Project license and attribution
 licenses/                 Original third-party notices
 ```
 
-Other MKL use-case and UML skills remain optional for deeper modeling. Installing the required robustness skill does not make every task require a diagram or a formal MKL gate. Teaching examples and synthetic fixtures are illustrations; they do not supply business rules for another task.
+Beyond the conditional detailed-design pair, further MKL domain/use-case modeling aids remain optional. Required views follow the selected scope; installing skills does not enter a formal MKL gate. Teaching examples and synthetic fixtures do not supply business rules for another task.
 
 </details>
 

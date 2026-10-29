@@ -1,6 +1,6 @@
 # Workflow Prerequisites and Skill Routing
 
-Use [Matt Pocock Skills](https://github.com/mattpocock/skills) as the preferred execution framework, together with `mkl-uml-robustness-diagram` from [MKL UML Skills](https://github.com/kinglez/mkl-uml) for robustness analysis. Install all 12 prerequisites: 11 Matt Pocock Skills and one MKL robustness-analysis skill. This includes `grilling`, which supports `grill-with-docs`, and the repository setup skill. Installation does not require every task to run every stage or produce a diagram.
+Use [Matt Pocock Skills](https://github.com/mattpocock/skills) with [MKL UML Skills](https://github.com/kinglez/mkl-uml). The core has 12 prerequisites: 11 Matt skills and MKL robustness analysis. Detailed design adds the class/sequence pair below. Installation does not require every task to run every stage or every diagram type.
 
 ## Required installation baseline
 
@@ -9,7 +9,7 @@ Use [Matt Pocock Skills](https://github.com/mattpocock/skills) as the preferred 
 | Configure the target repository once | `setup-matt-pocock-skills` | Confirm the tracker, applicable labels, and domain-document conventions in the target project |
 | Clarify business rules and language | `grill-with-docs`, `grilling`, `domain-modeling` | Goals, established rules, conflicts, and open questions; produce confirmed rules and domain meanings |
 | Analyze use-case responsibilities | `mkl-uml-robustness-diagram` | Specified behavior and available domain evidence; identify boundary, entity, and control responsibilities, omissions, and model updates |
-| Design modules and interfaces | `codebase-design` | Change scenarios, callers, constraints, and dependencies; produce responsibilities, contracts, and trade-offs |
+| Design modules and interfaces | `codebase-design`; detailed-design capabilities below | Responsibilities and actual class/module, sequence and relevant lifecycle views; produce reviewed contracts and trade-offs |
 | Consolidate specifications and dependencies | `to-spec`, `to-tickets` | Confirmed rules, design, acceptance scenarios, and verification entry points; produce a specification and verifiable slices |
 | Implement and verify behavior | `implement`, `tdd`; named local adapter where needed | The current slice, dependencies, agreed test entry points, and completion criteria; select the [implementation/review route](local-review.md) before starting |
 | Review the change | `code-review` for an applicable committed diff; local two-axis adapter for pending changes | A fixed change snapshot, request scope, specification, repository standards, and verification results; include delivered untracked files |
@@ -31,6 +31,16 @@ npx skills add kinglez/mkl-uml --skill mkl-uml-robustness-diagram
 
 These commands are not executed automatically by this skill. A plugin installation supported by the target agent is also valid. Preserve existing customizations; do not overwrite installed skills merely to satisfy a presence check.
 
+### Conditional detailed-design profile
+
+For new use cases and complex changes, read [Design Views](design-views.md) and install the two required detailed-design capabilities:
+
+```bash
+npx skills add kinglez/mkl-uml --skill mkl-uml-design-class-model mkl-uml-sequence-diagram
+```
+
+This makes 14 definitions for the selected detailed-design profile. Use the class skill for OO structure and the sequence skill for interactions. A justified non-OO module view replaces the class artifact without claiming class-validator coverage. Use the available project UML renderer for required state views; no dedicated MKL state skill is assumed.
+
 ## Verify installation and activation
 
 For filesystem installations, run the packaged read-only checker from this skill's root. The following are executable templates; replace each `path/to/...` with a real directory containing `skill-name/SKILL.md`:
@@ -38,9 +48,10 @@ For filesystem installations, run the packaged read-only checker from this skill
 ```bash
 .venv/bin/python scripts/check_prerequisites.py --skills-root path/to/skills
 .venv/bin/python scripts/check_prerequisites.py --skills-root path/to/project-skills --skills-root path/to/global-skills
+.venv/bin/python scripts/check_prerequisites.py --skills-root path/to/skills --profile detailed-design
 ```
 
-The checker requires PyYAML from `requirements.txt`; see the [runtime setup](../README.md#prerequisite-checker-runtime). It parses UTF-8 YAML frontmatter safely, rejects duplicate keys, and compares each actual top-level name across the supplied roots. It returns JSON and exit code `0` when all 12 are present, `1` for missing or invalid definitions, and `2` for invalid input or missing checker dependencies. It never downloads, overwrites, installs, or executes a skill.
+The checker requires PyYAML from `requirements.txt`; see the [runtime setup](../README.md#prerequisite-checker-runtime). It parses YAML safely, rejects duplicate keys, and compares actual names. Default profile `core` checks 12 definitions; `detailed-design` checks 14. Exit `0` means the selected set is present, `1` means missing/invalid definitions, and `2` means invalid input or checker dependencies. It never downloads, installs, overwrites, or executes a skill.
 
 This is a presence check, not proof of upstream provenance, compatible versions, successful activation, or completed repository setup. For plugin installations without exposed filesystem roots, verify the installed catalog and definitions using the agent's supported mechanism. Confirm that relevant skills can actually be invoked in the current session. If a new installation requires a new session or turn, follow that agent's activation procedure.
 
@@ -65,12 +76,12 @@ Installation does not complete setup. Check the project's actual configuration b
 
 `mkl-uml-robustness-diagram` is required. Read its instructions and use standalone mode by default; a formal MKL workflow or gate requires an explicit request. Missing domain or flow evidence limits verification claims rather than justifying invented business facts.
 
-The following additional modeling skills remain optional:
+The following modeling aids remain optional. The class/sequence pair above is conditional on detailed design rather than a universal optional suggestion:
 
 | Work | Optional skills | Outcome |
 |---|---|---|
 | Specify use cases and analyze responsibilities | `mkl-use-case-specifier` | Use-case behavior, responsibility coverage, ambiguities, and model updates |
-| Develop necessary domain, static, or interaction views | `mkl-uml-domain-modeler`, `mkl-uml-design-class-model`, `mkl-uml-sequence-diagram` | Views and constraints that answer the current design question |
+| Clarify domain relationships | `mkl-uml-domain-modeler` | Conceptual domain meanings and relationships, distinct from technical design classes |
 
 The included robustness reference provides supporting guidance; it does not replace the required robustness-analysis skill or make every task require a diagram.
 

@@ -7,7 +7,7 @@ Use this reference when reproducing an accepted environment, upgrading dependenc
 | Component | Snapshot used for integration acceptance |
 |---|---|
 | Matt Pocock Skills, the 11 named in [routing](optional-skills.md) | `mattpocock/skills` at `d1478fcb140db0b93c0c8df17bcfd311844749d0` |
-| Robustness analysis | `kinglez/mkl-uml` at `f6f21221ef950371700e0db5860f3e94e077bc07` |
+| Robustness; conditional class/sequence skills | `kinglez/mkl-uml` at `f6f21221ef950371700e0db5860f3e94e077bc07` |
 | Skills CLI | `1.7.4`; upstream Node requirement `>=22.20.0` |
 | Prerequisite YAML parser | PyYAML `6.0.3`, pinned in `requirements.txt` |
 
@@ -17,6 +17,14 @@ To reproduce the dependency sources using the standard Skills CLI, run these com
 npx skills@1.7.4 add https://github.com/mattpocock/skills/tree/d1478fcb140db0b93c0c8df17bcfd311844749d0 --skill setup-matt-pocock-skills grill-with-docs grilling domain-modeling codebase-design to-spec to-tickets implement tdd code-review improve-codebase-architecture
 npx skills@1.7.4 add https://github.com/kinglez/mkl-uml/tree/f6f21221ef950371700e0db5860f3e94e077bc07 --skill mkl-uml-robustness-diagram
 ```
+
+For the detailed-design profile, install the two additional skills with the standard command:
+
+```bash
+npx skills add kinglez/mkl-uml --skill mkl-uml-design-class-model mkl-uml-sequence-diagram
+```
+
+The core profile stays at 12; this conditional profile has 14. A state diagram uses the available project UML renderer, not an assumed state-specific MKL skill. Current local acceptance uses PlantUML 1.2026.7, Java 21.0.9 and Graphviz 15.1.1; renderer syntax/preview checks do not establish cross-view semantics.
 
 Preserve the target project's installation lock and actual file hashes with its acceptance results. On upgrade, compare the relevant upstream contracts and rerun setup, implementation/review, and scope-handling scenarios against the installed definitions. A matching skill name or successful download does not prove compatible behavior.
 

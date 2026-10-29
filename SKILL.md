@@ -15,7 +15,7 @@ Connect business rules, responsibility allocation, code behavior, and verificati
 
 ## Verify prerequisites
 
-Read [Workflow prerequisites and skill routing](references/optional-skills.md). Verify all 12 required skills (11 Matt Pocock Skills plus `mkl-uml-robustness-diagram`) in the target environment before starting the integrated workflow. For filesystem installations, use `scripts/check_prerequisites.py` with the actual skill roots; for plugin installations, inspect the agent's installed-skill catalog and resolve the definitions. Installation, availability in the current session, and per-repository setup are separate checks.
+Read [Workflow prerequisites and skill routing](references/optional-skills.md). Verify the 12 core skills (11 Matt Pocock Skills plus `mkl-uml-robustness-diagram`) before the integrated workflow. Detailed design additionally needs the existing MKL design-class and sequence skills: use `scripts/check_prerequisites.py --profile detailed-design` with actual roots to check all 14. For plugin installations, resolve the corresponding installed definitions. Installation, availability in the current session, and per-repository setup are separate checks.
 
 Install missing skills through a supported installer within the user's authorization, preserving existing customizations, then check again. If installation or activation is unavailable, report the missing prerequisite and pause dependent stages; continue justified independent work without claiming that the integrated workflow ran. Before tracker-dependent stages, read [repository setup compatibility](references/repository-setup.md) and check the actual tracker, domain conventions, and status vocabulary consumed downstream. The 12-skill baseline excludes `triage`; the named local setup adapter fills the resulting configuration gap without repeatedly running unchanged setup.
 
@@ -28,7 +28,7 @@ Read applicable repository instructions, requirements, terminology, existing cod
 Choose the depth according to impact, ambiguity, and risk:
 
 - **Small changes:** Reuse established rules and design. Make the local change, run suitable checks, and review the affected scope. Keep necessary explanations in the response or existing task record.
-- **New use cases or complex changes:** Establish business rules and acceptance scenarios, resolve responsibility and interface questions, and implement verifiable slices. Add diagrams and documents where they support a decision, handoff, or verification.
+- **New use cases or complex changes:** Use the detailed-design path: establish business rules and acceptance, resolve responsibility and interface questions through actual structure and interaction views, assess lifecycle behavior, and implement verifiable slices.
 - **Changes spanning modules or systems, or involving complex state:** Also examine authoritative sources, state transitions, failure paths, compatibility, and consistency of side effects. Add interaction or state views as needed.
 
 Resolve routine technical choices using established rules, repository conventions, and the user's authorization. For unresolved decisions that affect business meaning, acceptance, or significant design trade-offs, present concrete scenarios, alternatives, and a recommendation for clarification. Pause only the work that depends on the answer; continue justified, independent work. Authorization to implement, refactor, or review does not automatically authorize commits, publication, deployment, or remote writes.
@@ -43,7 +43,7 @@ Follow [Stage Outputs and Handoffs](references/workflow-handoffs.md). Every exec
 | Business clarification | Confirmed rules, flows, acceptance scenarios, and open questions |
 | Domain modeling | Agreed concepts, relationships, terminology, and invariants |
 | Robustness analysis | Boundary/entity/control responsibilities and behavior coverage |
-| Module and interface design | Responsibilities, contracts, dependencies, and justified trade-offs |
+| Module and interface design | Class/module and sequence views, state view when applicable, contracts, cross-view review, and justified trade-offs |
 | Implementation specification | Implementable scope, design decisions, acceptance, and test seams |
 | Task slicing | Verifiable slices, blocking edges, and slice completion criteria |
 | Implementation and verification | Code changes, checks actually run, coverage, and remaining gaps |
@@ -78,11 +78,15 @@ Analysis roles suggest responsibilities; they do not map one-to-one to files or 
 
 Define the interface contract callers need: input meaning, units, constraints, outputs, failure semantics, and relevant side effects or ordering requirements. Encapsulate complexity behind a clear interface. Introduce extension points when justified by actual substitution, external dependencies, test isolation, or comparable needs.
 
+Read [Design Views](references/design-views.md). For detailed design, produce or check current **design class models (or a justified module/component view for non-OO code)** and **sequence diagrams** for the principal and relevant alternative/failure paths. Add a **state diagram** when lifecycle transitions determine legal operations or outcomes; record a reasoned applicability decision and resolve unknown state rules before dependent work. Other views answer specific scoped questions. A bounded correction may use a justified lightweight path; honor any explicitly requested views.
+
+Iterate the actual views together. Trace use-case/BCE responsibilities to interactions, owned operations or events, state effects where applicable, and acceptance. Verify participant/operation contracts and state names, guards, and effects consistently; replies and signals are not mechanically ordinary methods. Use the installed class/sequence skills in standalone mode by default and the available project UML toolchain for state views. Keep edits and missing-render limitations explicit.
+
 For structural decisions currently being made, read [SOLID and design-pattern trade-offs](references/solid-design.md). Translate principles into concrete change scenarios and review questions.
 
-**Inputs:** Rules and domain output. **Outputs:** Robustness responsibilities and coverage, then module/interface contracts and design trade-offs for specification.
+**Inputs:** Rules and domain output. **Outputs:** Robustness coverage, actual applicable design views, contracts, consistency review, and trade-offs for specification.
 
-**Completion criterion:** Relevant business behavior and success and failure outcomes have assigned responsibilities. Sources, contracts, and dependencies are explainable. New abstractions have stated benefits, costs, and limitations.
+**Completion criterion:** Required views are present or checked as current; relevant behavior, responsibilities, interactions, contracts, and lifecycle rules agree. No implementation-changing design question in scope remains unresolved. New abstractions have stated benefits, costs, and limitations. With structured records, use `--require-design` to check declared design readiness before coding; it is separate from final delivery readiness and does not establish semantic correctness.
 
 ## 3. Hand off the design and implement verifiable slices
 
@@ -101,6 +105,8 @@ Treat specification, task slicing, and implementation as separate logical handof
 ## 4. Refactor and review the actual code
 
 Before choosing a refactoring, locate duplicated decisions, scattered responsibilities, inconsistent contracts, and actual dependency use. Preserve behavior within the request's scope; align intentional behavior changes with business rules. Rerun the necessary affected checks after refactoring.
+
+Keep the design views synchronized with the implemented operations, participants, dependencies, and state transitions. A refactor or rule change invalidates affected view reviews until they are rechecked; final delivery includes the current views and their relation to the code.
 
 Review two distinct axes:
 
@@ -134,10 +140,10 @@ Keep completion claims within the evidence. Test counts, diagram validation, and
 
 For structured handoffs or mechanical traceability checks, read [delivery records and tools](references/delivery-record.md):
 
-- `scripts/check_prerequisites.py` checks required skill definitions in explicitly supplied filesystem roots. It performs no installation or skill execution.
+- `scripts/check_prerequisites.py` checks the 12-skill core or 14-skill detailed-design profile in explicitly supplied roots. It performs no installation or skill execution.
 - `scripts/capture_review.py` captures an explicitly scoped Git change for local review without staging or committing. Read [its contract](references/local-review.md) before use.
-- `scripts/init_delivery.py` initializes a record from packaged templates, optionally creates an implementation brief, and refuses to overwrite existing files.
-- `scripts/validate_delivery.py` checks references and declared states across rules, acceptance, design, evidence, and review. Use `--require-handoffs` for structured stage chains. It neither executes recorded commands nor determines SOLID compliance.
+- `scripts/init_delivery.py` initializes a record, optionally selects a design profile and creates a brief, and refuses to overwrite existing files.
+- `scripts/validate_delivery.py` checks declared references/states and evidence. Use `--require-design` for pre-implementation design readiness and `--require-handoffs` for final stage-chain completion. It neither executes recorded commands nor determines UML/SOLID correctness.
 - `assets/templates/` contains reusable delivery-record and implementation-brief templates. Existing project materials do not need to be migrated into these formats.
 - `tests/` contains script regressions, positive and negative fixtures, and forward-testing scenarios. Run regressions when maintaining the scripts; add relevant scenario-based verification when changing the core decision process.
 
@@ -145,6 +151,6 @@ Use these resources when they help; their presence does not require every small 
 
 ## Route work to the installed skills
 
-Use [the skill routing table](references/optional-skills.md) to hand off relevant work to the verified Matt Pocock Skills and the required robustness-analysis skill. Read the selected instructions and supply the current rules, scope, artifacts, and acceptance criteria. Required installation does not make every stage or diagram mandatory. Other MKL use-case and UML skills remain optional.
+Use [the routing table](references/optional-skills.md) to hand off work to the verified core and conditional modeling capabilities. Read their instructions and supply current rules, scope, artifacts, and acceptance. Installation does not select every stage; the chosen design depth determines required views. Beyond the detailed class/sequence pair, further domain/use-case modeling aids remain optional.
 
 Communicate in the user's language. Follow project conventions for code and document naming. For long tasks, preserve confirmed rules, the current slice, design decisions, actual verification results, and next steps in the existing work record so a later session can resume from the remaining gap.

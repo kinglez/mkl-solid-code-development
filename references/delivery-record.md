@@ -18,6 +18,14 @@ All output is encoded as UTF-8 before directories or files are created. Unencoda
 
 The [delivery-record template](../assets/templates/delivery-record.json) and [implementation-brief template](../assets/templates/implementation-brief.md) can also be used directly. They need not be delivered together.
 
+`--design-profile detailed` or `lightweight` optionally adds the [design-view fragment](../assets/templates/design-views.json) to the record. It begins with no views, unresolved lifecycle applicability, and an unperformed review. Replace the draft scope and actual results; initialization does not make a design ready. Omitting the option preserves records without a design bundle.
+
+For that profile, use this initialization alternative rather than the command above:
+
+```bash
+python3 scripts/init_delivery.py path/to/new-delivery --id TASK-1 --summary "Delivery objective" --intent implement --design-profile detailed --with-brief
+```
+
 ## Record format: schema version 1
 
 Field names are checked strictly: unknown fields and duplicate JSON keys are errors. Collections may be empty, so an incomplete draft can still pass structural validation. Item IDs must be unique across the record's collections, review findings, handoff stages, and outputs. Preserve existing IDs when reordering. Example prefixes are for readability, not a naming requirement.
@@ -35,6 +43,7 @@ Field names are checked strictly: unknown fields and duplicate JSON keys are err
 | `limitations[]` | `id`, `description`, `blocks_completion` |
 | `handoffs[]` | `id`, `stage`, `status`, `input_ids[]`, `outputs[]`, `notes`; present in new records |
 | `handoffs[].outputs[]` | `id`, `summary`; optional local `artifact` path |
+| `design_views` | Optional declared design bundle and independent pre-implementation readiness check, described below |
 
 Required descriptions, sources, scenarios, and summaries must be nonempty text. Boolean fields use JSON `true/false`. Record the actual basis for a rule in `source`; existing code and AI proposals do not establish business confirmation.
 
@@ -49,7 +58,7 @@ Required descriptions, sources, scenarios, and summaries must be nonempty text. 
 
 ### Coverage and task intent
 
-All intents require the task to be declared `complete`, a completed review linked to passed inspection evidence, and no declared completion-blocking rules or limitations.
+Final delivery readiness for all intents requires the task to be declared `complete`, a completed review linked to passed inspection evidence, and no declared completion-blocking rules or limitations. Pre-implementation `design_ready` is separate; future implementation/review work need not already be complete.
 
 - **implement:** Confirmed rules have acceptance scenarios. Acceptance references confirmed rules and passed behavior or contract evidence. Required corrections are resolved. Unsettled future-scope rules may remain nonblocking, but any unresolved rule used by current acceptance still blocks readiness.
 - **design:** Design decisions include reasons and trade-offs, linked to design or structural inspection evidence. Required design corrections are resolved; `open` and `deferred` both block readiness. Code and runtime behavior tests are not required.
@@ -96,6 +105,43 @@ Legacy schema-version-1 records without `handoffs` retain their existing validat
 
 The checker validates declared references, statuses, and file existence. It does not infer which stages a task needs, verify document sections or source versions, prove that inputs were read, or automatically detect changes to artifact contents. The agent/reviewer must check those semantics and invalidate affected consumers when upstream results change.
 
+## Design views and the pre-implementation gate
+
+Use the optional `design_views` bundle for the scope selected under [Design Views](design-views.md). It adds declared source/evidence checks, not a UML parser or another final-delivery review.
+
+| Field | Contents |
+|---|---|
+| `profile` | `detailed/lightweight`; view obligations, distinct from the prerequisite tool's `detailed-design` capability profile |
+| `reason` | Nonempty task-specific rationale, including justified reuse or lightweight work |
+| `rule_ids[]` | Existing rule IDs selected as this design's inputs; detailed design needs a nonempty set |
+| `state_model` | `requirement: required/not_applicable/unresolved`, with a nonempty source-based `reason` |
+| `views[]` | Each has unique `id`, `kind`, `status`, `notes`, `evidence_ids[]`; optional `artifact`, `preview_artifact` |
+| `views[].kind` | `class/module/sequence/state/other`; module is the explicit non-OO structural alternative |
+| `views[].status` | `completed/reused/pending/blocked/invalidated/skipped` |
+| `consistency_review` | `status`, `view_ids[]`, `evidence_ids[]`, `notes`, `unresolved_issues[]` |
+| `consistency_review.status` | `completed/not_run/pending/blocked/invalidated` |
+| `consistency_review.unresolved_issues[]` | Outstanding design issues as nonempty strings; an empty array means none declared |
+
+Completed/reused views need a real local source `artifact` and passed `structure`, `manual_review`, or `design_review` evidence. A supplied preview must also exist inside the project root. Notes explain reuse, limits, or skips; skipped views cannot claim source/preview artifacts. Response-only designs do not need conversion into JSON or project files.
+
+Detailed design needs a usable `class` or `module` view and a usable `sequence` view. State requirement `required` needs a usable state view even in lightweight work; `unresolved` blocks readiness. A not-applicable assessment needs a reason. The checker trusts the declared scope and cannot infer lifecycle rules or whether lightweight was justified.
+
+Consistency review must be completed, cover the active views, link passed `manual_review` or `design_review` evidence, and declare no unresolved design issues. Check actual contracts and rule coverage using the semantic guide. Within selected `rule_ids`, unconfirmed completion-blocking rules also block design readiness. Unrelated work outside those inputs and later code-review findings do not automatically block the pre-coding gate.
+
+Run this **before implementation**, while the task may still be `in_progress` and future checks/review/handoffs are pending:
+
+```bash
+python3 scripts/validate_delivery.py path/to/delivery-record.json --project-root path/to/project --require-design
+```
+
+`design_ready: true` means the declared design bundle passes its own mechanical checks. `record_ready` may be false because implementation or final review is unfinished. `--require-design` returns `0` only for a structurally valid record and ready design; it does not imply final readiness. Combine it with `--require-ready` or `--require-handoffs` to require both gates.
+
+Without a bundle or the new flag, legacy records retain their original behavior and return `design_ready: null` (not evaluated). With `--require-design`, a missing bundle returns false and blocks that gate. A present unready bundle also blocks final record readiness. Completing the task status cannot make missing/stale/unreviewed views ready.
+
+Older validator releases do not understand this optional extension or its CLI flag. Use the validator shipped with the selected skill version rather than silently dropping the bundle to obtain a pass.
+
+Neither gate authenticates evidence, reads UML meaning, automatically detects stale content, executes recorded commands, or certifies complete design/SOLID. Assess and record those semantic limits honestly.
+
 ## Validate a record and interpret exit codes
 
 These are executable templates. Replace `path/to/delivery-record.json` and `path/to/project` with actual paths.
@@ -104,13 +150,15 @@ These are executable templates. Replace `path/to/delivery-record.json` and `path
 python3 scripts/validate_delivery.py path/to/delivery-record.json --project-root path/to/project
 python3 scripts/validate_delivery.py path/to/delivery-record.json --project-root path/to/project --require-ready
 python3 scripts/validate_delivery.py path/to/delivery-record.json --project-root path/to/project --require-handoffs
+python3 scripts/validate_delivery.py path/to/delivery-record.json --project-root path/to/project --require-design
 ```
 
-The JSON result contains `structure_valid`, `record_ready`, `errors[]`, and `blockers[]`.
+The JSON result contains `structure_valid`, `record_ready`, `design_ready`, `errors[]`, `blockers[]`, and separate `design_blockers[]`.
 
 - By default, exit code `0` means only that the structure is valid. Also inspect `record_ready` and the blockers.
 - With `--require-ready`, structural errors or incomplete declared coverage return exit code `1`.
 - `--require-handoffs` requires a nonempty, connected chain of usable stage results and implies `--require-ready`. It returns `1` when the record or chain is incomplete.
+- `--require-design` independently checks pre-implementation readiness; combined final-readiness options remain cumulative.
 - Unreadable input, invalid JSON, duplicate JSON keys, or invalid command usage return exit code `2`.
 
 `record_ready` means only that **the declared record and evidence references satisfy mechanical checks**. It is not software acceptance, architecture approval, or SOLID certification. Labeling an unrelated file as passed does not make it relevant evidence; review must examine that semantic relationship.

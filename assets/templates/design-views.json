@@ -1,0 +1,19 @@
+{
+  "profile": "detailed",
+  "reason": "Draft: record the task-specific design scope and rationale.",
+  "rule_ids": [],
+  "state_model": {
+    "requirement": "unresolved",
+    "reason": "Draft: assess lifecycle behavior from confirmed rules."
+  },
+  "views": [],
+  "consistency_review": {
+    "status": "not_run",
+    "view_ids": [],
+    "evidence_ids": [],
+    "notes": "Draft: review actual view consistency before implementation.",
+    "unresolved_issues": [
+      "Design applicability and required views have not yet been assessed."
+    ]
+  }
+}

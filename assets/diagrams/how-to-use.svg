@@ -8,7 +8,7 @@
 </defs>
 <rect data-graph-role="background" x="0" y="0" width="1280" height="432" fill="#ffffff"/>
 <text x="40" y="56" font-size="32" font-weight="600" fill="#111827" >How to use this skill</text>
-<text x="40" y="96" font-size="22" font-weight="400" fill="#6b7280" >Install once. Configure each project. Start a scoped task.</text>
+<text x="40" y="96" font-size="22" font-weight="400" fill="#6b7280" >Install the selected profile. Reuse setup. Start a scoped task.</text>
 <path id="step-1" data-graph-role="edge" data-edge-id="step-1" data-source="install" data-target="verify" data-edge-kind="flow" data-flow="handoff" d="M 248,252 L 288,252" fill="none" stroke="#2563eb" stroke-width="3" marker-end="url(#how-to-use-blue)"/>
 <path id="step-2" data-graph-role="edge" data-edge-id="step-2" data-source="verify" data-target="configure" data-edge-kind="flow" data-flow="handoff" d="M 496,252 L 536,252" fill="none" stroke="#2563eb" stroke-width="3" marker-end="url(#how-to-use-blue)"/>
 <path id="step-3" data-graph-role="edge" data-edge-id="step-3" data-source="configure" data-target="start" data-edge-kind="flow" data-flow="handoff" d="M 744,252 L 784,252" fill="none" stroke="#2563eb" stroke-width="3" marker-end="url(#how-to-use-blue)"/>
@@ -17,8 +17,8 @@
 <rect x="40" y="164" width="208" height="176" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6"/>
 <text x="64" y="200" font-size="18" font-weight="600" fill="#2563eb" >01</text>
 <text x="64" y="236" font-size="25" font-weight="600" fill="#111827" >Install</text>
-<text x="64" y="276" font-size="20" font-weight="400" fill="#6b7280" >Main skill</text>
-<text x="64" y="308" font-size="20" font-weight="400" fill="#6b7280" >+ 12 prerequisites</text>
+<text x="64" y="276" font-size="20" font-weight="400" fill="#6b7280" >Main + 12 core</text>
+<text x="64" y="308" font-size="20" font-weight="400" fill="#6b7280" >Detailed: +2</text>
 </g>
 <g id="verify" data-graph-role="node" data-node-id="verify" data-semantic-role="process" data-graph-bounds="288,164,496,340">
 <rect x="288" y="164" width="208" height="176" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6"/>

@@ -51,6 +51,36 @@ class PrerequisiteTests(unittest.TestCase):
             install(root, ["mkl-uml-robustness-diagram"])
             self.assertTrue(checker.check([root])["prerequisites_present"])
 
+    def test_detailed_design_profile_requires_class_and_sequence_skills(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            install(root, checker.REQUIRED_SKILLS)
+            self.assertTrue(checker.check([root])["prerequisites_present"])
+            result = checker.check([root], profile="detailed-design")
+            self.assertFalse(result["prerequisites_present"])
+            self.assertEqual(result["required_count"], 14)
+            self.assertEqual({item["name"] for item in result["missing"]},
+                             {"mkl-uml-design-class-model", "mkl-uml-sequence-diagram"})
+            install(root, ["mkl-uml-design-class-model", "mkl-uml-sequence-diagram"])
+            self.assertTrue(checker.check([root], profile="detailed-design")["prerequisites_present"])
+            self.assertEqual(checker.check([root])["required_count"], 12)
+
+    def test_profile_cli_checks_selected_capabilities_and_rejects_unknown_profile(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            install(root, checker.REQUIRED_SKILLS)
+            command = [sys.executable, str(ROOT / "scripts/check_prerequisites.py"),
+                       "--skills-root", str(root), "--profile", "detailed-design"]
+            missing = subprocess.run(command, capture_output=True, text=True)
+            self.assertEqual(missing.returncode, 1)
+            self.assertEqual(json.loads(missing.stdout)["profile"], "detailed-design")
+            install(root, ["mkl-uml-design-class-model", "mkl-uml-sequence-diagram"])
+            present = subprocess.run(command, capture_output=True, text=True)
+            self.assertEqual(present.returncode, 0)
+            self.assertEqual(json.loads(present.stdout)["required_count"], 14)
+            with self.assertRaises(ValueError):
+                checker.check([root], profile="unknown")
+
     def test_invalid_definitions_do_not_count_as_installed(self):
         for content in ("", "name: tdd", "---\nname: tdd\n", "---\nname: another-skill\n---\n",
                         "---\nname: tdd\nname: tdd\n---\n"):

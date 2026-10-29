@@ -1,161 +1,163 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 1280" width="1280" height="1280" role="img" aria-labelledby="stage-outputs-title stage-outputs-desc" data-generator="fireworks-tech-graph" data-style="1" data-quality-profile="showcase">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 1360" width="1280" height="1360" role="img" aria-labelledby="stage-outputs-title stage-outputs-desc" data-generator="fireworks-tech-graph" data-style="1" data-quality-profile="showcase">
 <title id="stage-outputs-title">Stage outputs for one SOLID development task</title>
 <desc id="stage-outputs-desc">A rooted tree groups all twelve logical stage outputs into framing, design and planning, implementation and improvement, and review and delivery. Each output feeds the next active stage; the tree is not a mandatory directory layout.</desc>
 <style>text{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif}</style>
-<rect data-graph-role="background" width="1280" height="1280" fill="#ffffff"/>
+<rect data-graph-role="background" width="1280" height="1360" fill="#ffffff"/>
 <path id="root-prepare" data-graph-role="edge" data-edge-id="root-prepare" data-source="delivery-root" data-target="prepare" d="M 172 224 L 172 304" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
-<path id="prepare-to-branch" data-graph-role="edge" data-edge-id="prepare-to-branch" data-source="prepare" data-target="prepare-branch-00" d="M 72 392 L 72 432 L 32 432 L 32 524" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
-<path id="prepare-leaf-00" data-graph-role="edge" data-edge-id="prepare-leaf-00" data-source="prepare-branch-00" data-target="stage-00" d="M 36 528 L 80 528" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
-<path id="prepare-spine-01" data-graph-role="edge" data-edge-id="prepare-spine-01" data-source="prepare-branch-00" data-target="prepare-branch-01" d="M 32 532 L 32 708" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
-<path id="prepare-leaf-01" data-graph-role="edge" data-edge-id="prepare-leaf-01" data-source="prepare-branch-01" data-target="stage-01" d="M 36 712 L 80 712" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
-<path id="prepare-spine-02" data-graph-role="edge" data-edge-id="prepare-spine-02" data-source="prepare-branch-01" data-target="prepare-branch-02" d="M 32 716 L 32 892" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
-<path id="prepare-leaf-02" data-graph-role="edge" data-edge-id="prepare-leaf-02" data-source="prepare-branch-02" data-target="stage-02" d="M 36 896 L 80 896" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
+<path id="prepare-to-branch" data-graph-role="edge" data-edge-id="prepare-to-branch" data-source="prepare" data-target="prepare-branch-00" d="M 72 392 L 72 432 L 32 432 L 32 532" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
+<path id="prepare-leaf-00" data-graph-role="edge" data-edge-id="prepare-leaf-00" data-source="prepare-branch-00" data-target="stage-00" d="M 36 536 L 80 536" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
+<path id="prepare-spine-01" data-graph-role="edge" data-edge-id="prepare-spine-01" data-source="prepare-branch-00" data-target="prepare-branch-01" d="M 32 540 L 32 732" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
+<path id="prepare-leaf-01" data-graph-role="edge" data-edge-id="prepare-leaf-01" data-source="prepare-branch-01" data-target="stage-01" d="M 36 736 L 80 736" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
+<path id="prepare-spine-02" data-graph-role="edge" data-edge-id="prepare-spine-02" data-source="prepare-branch-01" data-target="prepare-branch-02" d="M 32 740 L 32 932" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
+<path id="prepare-leaf-02" data-graph-role="edge" data-edge-id="prepare-leaf-02" data-source="prepare-branch-02" data-target="stage-02" d="M 36 936 L 80 936" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
 <path id="root-design" data-graph-role="edge" data-edge-id="root-design" data-source="delivery-root" data-target="design" d="M 484 224 L 484 304" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
-<path id="design-to-branch" data-graph-role="edge" data-edge-id="design-to-branch" data-source="design" data-target="design-branch-03" d="M 384 392 L 384 432 L 344 432 L 344 524" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
-<path id="design-leaf-03" data-graph-role="edge" data-edge-id="design-leaf-03" data-source="design-branch-03" data-target="stage-03" d="M 348 528 L 392 528" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
-<path id="design-spine-04" data-graph-role="edge" data-edge-id="design-spine-04" data-source="design-branch-03" data-target="design-branch-04" d="M 344 532 L 344 708" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
-<path id="design-leaf-04" data-graph-role="edge" data-edge-id="design-leaf-04" data-source="design-branch-04" data-target="stage-04" d="M 348 712 L 392 712" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
-<path id="design-spine-05" data-graph-role="edge" data-edge-id="design-spine-05" data-source="design-branch-04" data-target="design-branch-05" d="M 344 716 L 344 892" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
-<path id="design-leaf-05" data-graph-role="edge" data-edge-id="design-leaf-05" data-source="design-branch-05" data-target="stage-05" d="M 348 896 L 392 896" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
-<path id="design-spine-06" data-graph-role="edge" data-edge-id="design-spine-06" data-source="design-branch-05" data-target="design-branch-06" d="M 344 900 L 344 1076" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
-<path id="design-leaf-06" data-graph-role="edge" data-edge-id="design-leaf-06" data-source="design-branch-06" data-target="stage-06" d="M 348 1080 L 392 1080" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
+<path id="design-to-branch" data-graph-role="edge" data-edge-id="design-to-branch" data-source="design" data-target="design-branch-03" d="M 384 392 L 384 432 L 344 432 L 344 532" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
+<path id="design-leaf-03" data-graph-role="edge" data-edge-id="design-leaf-03" data-source="design-branch-03" data-target="stage-03" d="M 348 536 L 392 536" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
+<path id="design-spine-04" data-graph-role="edge" data-edge-id="design-spine-04" data-source="design-branch-03" data-target="design-branch-04" d="M 344 540 L 344 732" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
+<path id="design-leaf-04" data-graph-role="edge" data-edge-id="design-leaf-04" data-source="design-branch-04" data-target="stage-04" d="M 348 736 L 392 736" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
+<path id="design-spine-05" data-graph-role="edge" data-edge-id="design-spine-05" data-source="design-branch-04" data-target="design-branch-05" d="M 344 740 L 344 932" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
+<path id="design-leaf-05" data-graph-role="edge" data-edge-id="design-leaf-05" data-source="design-branch-05" data-target="stage-05" d="M 348 936 L 392 936" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
+<path id="design-spine-06" data-graph-role="edge" data-edge-id="design-spine-06" data-source="design-branch-05" data-target="design-branch-06" d="M 344 940 L 344 1132" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
+<path id="design-leaf-06" data-graph-role="edge" data-edge-id="design-leaf-06" data-source="design-branch-06" data-target="stage-06" d="M 348 1136 L 392 1136" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
 <path id="root-build" data-graph-role="edge" data-edge-id="root-build" data-source="delivery-root" data-target="build" d="M 796 224 L 796 304" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
-<path id="build-to-branch" data-graph-role="edge" data-edge-id="build-to-branch" data-source="build" data-target="build-branch-07" d="M 696 392 L 696 432 L 656 432 L 656 524" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
-<path id="build-leaf-07" data-graph-role="edge" data-edge-id="build-leaf-07" data-source="build-branch-07" data-target="stage-07" d="M 660 528 L 704 528" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
-<path id="build-spine-08" data-graph-role="edge" data-edge-id="build-spine-08" data-source="build-branch-07" data-target="build-branch-08" d="M 656 532 L 656 708" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
-<path id="build-leaf-08" data-graph-role="edge" data-edge-id="build-leaf-08" data-source="build-branch-08" data-target="stage-08" d="M 660 712 L 704 712" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
+<path id="build-to-branch" data-graph-role="edge" data-edge-id="build-to-branch" data-source="build" data-target="build-branch-07" d="M 696 392 L 696 432 L 656 432 L 656 532" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
+<path id="build-leaf-07" data-graph-role="edge" data-edge-id="build-leaf-07" data-source="build-branch-07" data-target="stage-07" d="M 660 536 L 704 536" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
+<path id="build-spine-08" data-graph-role="edge" data-edge-id="build-spine-08" data-source="build-branch-07" data-target="build-branch-08" d="M 656 540 L 656 732" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
+<path id="build-leaf-08" data-graph-role="edge" data-edge-id="build-leaf-08" data-source="build-branch-08" data-target="stage-08" d="M 660 736 L 704 736" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
 <path id="root-review" data-graph-role="edge" data-edge-id="root-review" data-source="delivery-root" data-target="review" d="M 1108 224 L 1108 304" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
-<path id="review-to-branch" data-graph-role="edge" data-edge-id="review-to-branch" data-source="review" data-target="review-branch-09" d="M 1008 392 L 1008 432 L 968 432 L 968 524" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
-<path id="review-leaf-09" data-graph-role="edge" data-edge-id="review-leaf-09" data-source="review-branch-09" data-target="stage-09" d="M 972 528 L 1016 528" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
-<path id="review-spine-10" data-graph-role="edge" data-edge-id="review-spine-10" data-source="review-branch-09" data-target="review-branch-10" d="M 968 532 L 968 708" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
-<path id="review-leaf-10" data-graph-role="edge" data-edge-id="review-leaf-10" data-source="review-branch-10" data-target="stage-10" d="M 972 712 L 1016 712" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
-<path id="review-spine-11" data-graph-role="edge" data-edge-id="review-spine-11" data-source="review-branch-10" data-target="review-branch-11" d="M 968 716 L 968 892" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
-<path id="review-leaf-11" data-graph-role="edge" data-edge-id="review-leaf-11" data-source="review-branch-11" data-target="stage-11" d="M 972 896 L 1016 896" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
+<path id="review-to-branch" data-graph-role="edge" data-edge-id="review-to-branch" data-source="review" data-target="review-branch-09" d="M 1008 392 L 1008 432 L 968 432 L 968 532" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
+<path id="review-leaf-09" data-graph-role="edge" data-edge-id="review-leaf-09" data-source="review-branch-09" data-target="stage-09" d="M 972 536 L 1016 536" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
+<path id="review-spine-10" data-graph-role="edge" data-edge-id="review-spine-10" data-source="review-branch-09" data-target="review-branch-10" d="M 968 540 L 968 732" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
+<path id="review-leaf-10" data-graph-role="edge" data-edge-id="review-leaf-10" data-source="review-branch-10" data-target="stage-10" d="M 972 736 L 1016 736" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
+<path id="review-spine-11" data-graph-role="edge" data-edge-id="review-spine-11" data-source="review-branch-10" data-target="review-branch-11" d="M 968 740 L 968 932" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
+<path id="review-leaf-11" data-graph-role="edge" data-edge-id="review-leaf-11" data-source="review-branch-11" data-target="stage-11" d="M 972 936 L 1016 936" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round"/>
 <g id="delivery-root" data-graph-role="node" data-node-id="delivery-root" data-graph-bounds="48 136 1232 224" data-full-text="One task delivery | Logical outputs stored in existing documents or named sections">
 <rect x="48" y="136" width="1184" height="88" rx="8" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/>
 <text x="640.0" y="166" font-size="30" font-weight="600" fill="#111827" text-anchor="middle" >One task delivery</text>
-<text x="640.0" y="198" font-size="20" font-weight="400" fill="#6b7280" text-anchor="middle" >Logical outputs stored in existing documents or named sections</text>
+<text x="640.0" y="194" font-size="20" font-weight="400" fill="#6b7280" text-anchor="middle" >Logical outputs stored in existing documents or named sections</text>
 </g>
 <g id="prepare" data-graph-role="node" data-node-id="prepare" data-graph-bounds="48 304 296 392" data-full-text="Frame the task | 00–02">
 <rect x="48" y="304" width="248" height="88" rx="8" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/>
 <text x="172.0" y="334" font-size="24" font-weight="600" fill="#111827" text-anchor="middle" >Frame the task</text>
-<text x="172.0" y="366" font-size="20" font-weight="400" fill="#6b7280" text-anchor="middle" >00–02</text>
+<text x="172.0" y="362" font-size="20" font-weight="400" fill="#6b7280" text-anchor="middle" >00–02</text>
 </g>
-<circle id="prepare-branch-00" data-graph-role="node" data-node-id="prepare-branch-00" data-graph-bounds="28 524 36 532" cx="32" cy="528" r="4" fill="#2563eb"/>
-<g id="stage-00" data-graph-role="node" data-node-id="stage-00" data-graph-bounds="80 456 296 600" data-full-text="00 Scope + setup | Scope, baseline, | selected stages and | usable configuration">
-<rect x="80" y="456" width="216" height="144" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5"/>
+<circle id="prepare-branch-00" data-graph-role="node" data-node-id="prepare-branch-00" data-graph-bounds="28 532 36 540" cx="32" cy="536" r="4" fill="#2563eb"/>
+<g id="stage-00" data-graph-role="node" data-node-id="stage-00" data-graph-bounds="80 456 296 616" data-full-text="00 Scope + setup | Scope, baseline, | selected stages and | usable configuration">
+<rect x="80" y="456" width="216" height="160" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5"/>
 <text x="96" y="486" font-size="22" font-weight="600" fill="#111827" text-anchor="start" >00 Scope + setup</text>
-<text x="96" y="518" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >Scope, baseline,</text>
-<text x="96" y="543" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >selected stages and</text>
-<text x="96" y="568" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >usable configuration</text>
+<text x="96" y="514" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >Scope, baseline,</text>
+<text x="96" y="539" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >selected stages and</text>
+<text x="96" y="564" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >usable configuration</text>
 </g>
-<circle id="prepare-branch-01" data-graph-role="node" data-node-id="prepare-branch-01" data-graph-bounds="28 708 36 716" cx="32" cy="712" r="4" fill="#2563eb"/>
-<g id="stage-01" data-graph-role="node" data-node-id="stage-01" data-graph-bounds="80 640 296 784" data-full-text="01 Business rules | Confirmed rules, | sources and flows, | acceptance scenarios, | open decisions">
-<rect x="80" y="640" width="216" height="144" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5"/>
-<text x="96" y="670" font-size="22" font-weight="600" fill="#111827" text-anchor="start" >01 Business rules</text>
-<text x="96" y="702" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >Confirmed rules,</text>
-<text x="96" y="724" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >sources and flows,</text>
-<text x="96" y="746" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >acceptance scenarios,</text>
-<text x="96" y="768" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >open decisions</text>
+<circle id="prepare-branch-01" data-graph-role="node" data-node-id="prepare-branch-01" data-graph-bounds="28 732 36 740" cx="32" cy="736" r="4" fill="#2563eb"/>
+<g id="stage-01" data-graph-role="node" data-node-id="stage-01" data-graph-bounds="80 656 296 816" data-full-text="01 Business rules | Confirmed rules, | sources and flows, | acceptance scenarios, | open decisions">
+<rect x="80" y="656" width="216" height="160" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5"/>
+<text x="96" y="686" font-size="22" font-weight="600" fill="#111827" text-anchor="start" >01 Business rules</text>
+<text x="96" y="714" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >Confirmed rules,</text>
+<text x="96" y="736" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >sources and flows,</text>
+<text x="96" y="758" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >acceptance scenarios,</text>
+<text x="96" y="780" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >open decisions</text>
 </g>
-<circle id="prepare-branch-02" data-graph-role="node" data-node-id="prepare-branch-02" data-graph-bounds="28 892 36 900" cx="32" cy="896" r="4" fill="#2563eb"/>
-<g id="stage-02" data-graph-role="node" data-node-id="stage-02" data-graph-bounds="80 824 296 968" data-full-text="02 Domain model | Terms, relationships | and invariants">
-<rect x="80" y="824" width="216" height="144" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5"/>
-<text x="96" y="854" font-size="22" font-weight="600" fill="#111827" text-anchor="start" >02 Domain model</text>
-<text x="96" y="886" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >Terms, relationships</text>
-<text x="96" y="911" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >and invariants</text>
+<circle id="prepare-branch-02" data-graph-role="node" data-node-id="prepare-branch-02" data-graph-bounds="28 932 36 940" cx="32" cy="936" r="4" fill="#2563eb"/>
+<g id="stage-02" data-graph-role="node" data-node-id="stage-02" data-graph-bounds="80 856 296 1016" data-full-text="02 Domain model | Terms, relationships | and invariants">
+<rect x="80" y="856" width="216" height="160" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5"/>
+<text x="96" y="886" font-size="22" font-weight="600" fill="#111827" text-anchor="start" >02 Domain model</text>
+<text x="96" y="914" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >Terms, relationships</text>
+<text x="96" y="939" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >and invariants</text>
 </g>
 <g id="design" data-graph-role="node" data-node-id="design" data-graph-bounds="360 304 608 392" data-full-text="Design &amp; plan | 03–06">
 <rect x="360" y="304" width="248" height="88" rx="8" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/>
 <text x="484.0" y="334" font-size="24" font-weight="600" fill="#111827" text-anchor="middle" >Design &amp; plan</text>
-<text x="484.0" y="366" font-size="20" font-weight="400" fill="#6b7280" text-anchor="middle" >03–06</text>
+<text x="484.0" y="362" font-size="20" font-weight="400" fill="#6b7280" text-anchor="middle" >03–06</text>
 </g>
-<circle id="design-branch-03" data-graph-role="node" data-node-id="design-branch-03" data-graph-bounds="340 524 348 532" cx="344" cy="528" r="4" fill="#2563eb"/>
-<g id="stage-03" data-graph-role="node" data-node-id="stage-03" data-graph-bounds="392 456 608 600" data-full-text="03 Robustness | BCE responsibilities, | sources, success and | failure coverage">
-<rect x="392" y="456" width="216" height="144" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5"/>
+<circle id="design-branch-03" data-graph-role="node" data-node-id="design-branch-03" data-graph-bounds="340 532 348 540" cx="344" cy="536" r="4" fill="#2563eb"/>
+<g id="stage-03" data-graph-role="node" data-node-id="stage-03" data-graph-bounds="392 456 608 616" data-full-text="03 Robustness | BCE responsibilities, | sources, success and | failure coverage">
+<rect x="392" y="456" width="216" height="160" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5"/>
 <text x="408" y="486" font-size="22" font-weight="600" fill="#111827" text-anchor="start" >03 Robustness</text>
-<text x="408" y="518" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >BCE responsibilities,</text>
-<text x="408" y="543" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >sources, success and</text>
-<text x="408" y="568" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >failure coverage</text>
+<text x="408" y="514" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >BCE responsibilities,</text>
+<text x="408" y="539" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >sources, success and</text>
+<text x="408" y="564" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >failure coverage</text>
 </g>
-<circle id="design-branch-04" data-graph-role="node" data-node-id="design-branch-04" data-graph-bounds="340 708 348 716" cx="344" cy="712" r="4" fill="#2563eb"/>
-<g id="stage-04" data-graph-role="node" data-node-id="stage-04" data-graph-bounds="392 640 608 784" data-full-text="04 Interfaces | Responsibilities, | contracts and | dependencies, | design trade-offs">
-<rect x="392" y="640" width="216" height="144" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5"/>
-<text x="408" y="670" font-size="22" font-weight="600" fill="#111827" text-anchor="start" >04 Interfaces</text>
-<text x="408" y="702" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >Responsibilities,</text>
-<text x="408" y="724" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >contracts and</text>
-<text x="408" y="746" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >dependencies,</text>
-<text x="408" y="768" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >design trade-offs</text>
+<circle id="design-branch-04" data-graph-role="node" data-node-id="design-branch-04" data-graph-bounds="340 732 348 740" cx="344" cy="736" r="4" fill="#2563eb"/>
+<g id="stage-04" data-graph-role="node" data-node-id="stage-04" data-graph-bounds="392 656 608 816" data-full-text="04 Design views | Class / module | + sequence views | + state if required | Contracts + cross- | view consistency">
+<rect x="392" y="656" width="216" height="160" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5"/>
+<text x="408" y="686" font-size="22" font-weight="600" fill="#111827" text-anchor="start" >04 Design views</text>
+<text x="408" y="714" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >Class / module</text>
+<text x="408" y="736" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >+ sequence views</text>
+<text x="408" y="758" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >+ state if required</text>
+<text x="408" y="780" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >Contracts + cross-</text>
+<text x="408" y="802" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >view consistency</text>
 </g>
-<circle id="design-branch-05" data-graph-role="node" data-node-id="design-branch-05" data-graph-bounds="340 892 348 900" cx="344" cy="896" r="4" fill="#2563eb"/>
-<g id="stage-05" data-graph-role="node" data-node-id="stage-05" data-graph-bounds="392 824 608 968" data-full-text="05 Specification | Scope, acceptance, | design constraints | and test seams">
-<rect x="392" y="824" width="216" height="144" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5"/>
-<text x="408" y="854" font-size="22" font-weight="600" fill="#111827" text-anchor="start" >05 Specification</text>
-<text x="408" y="886" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >Scope, acceptance,</text>
-<text x="408" y="911" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >design constraints</text>
-<text x="408" y="936" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >and test seams</text>
+<circle id="design-branch-05" data-graph-role="node" data-node-id="design-branch-05" data-graph-bounds="340 932 348 940" cx="344" cy="936" r="4" fill="#2563eb"/>
+<g id="stage-05" data-graph-role="node" data-node-id="stage-05" data-graph-bounds="392 856 608 1016" data-full-text="05 Specification | Scope, acceptance, | design constraints | and test seams">
+<rect x="392" y="856" width="216" height="160" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5"/>
+<text x="408" y="886" font-size="22" font-weight="600" fill="#111827" text-anchor="start" >05 Specification</text>
+<text x="408" y="914" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >Scope, acceptance,</text>
+<text x="408" y="939" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >design constraints</text>
+<text x="408" y="964" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >and test seams</text>
 </g>
-<circle id="design-branch-06" data-graph-role="node" data-node-id="design-branch-06" data-graph-bounds="340 1076 348 1084" cx="344" cy="1080" r="4" fill="#2563eb"/>
-<g id="stage-06" data-graph-role="node" data-node-id="stage-06" data-graph-bounds="392 1008 608 1152" data-full-text="06 Task slices | Verifiable tasks, | blocking edges and | slice acceptance">
-<rect x="392" y="1008" width="216" height="144" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5"/>
-<text x="408" y="1038" font-size="22" font-weight="600" fill="#111827" text-anchor="start" >06 Task slices</text>
-<text x="408" y="1070" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >Verifiable tasks,</text>
-<text x="408" y="1095" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >blocking edges and</text>
-<text x="408" y="1120" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >slice acceptance</text>
+<circle id="design-branch-06" data-graph-role="node" data-node-id="design-branch-06" data-graph-bounds="340 1132 348 1140" cx="344" cy="1136" r="4" fill="#2563eb"/>
+<g id="stage-06" data-graph-role="node" data-node-id="stage-06" data-graph-bounds="392 1056 608 1216" data-full-text="06 Task slices | Verifiable tasks, | blocking edges and | slice acceptance">
+<rect x="392" y="1056" width="216" height="160" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5"/>
+<text x="408" y="1086" font-size="22" font-weight="600" fill="#111827" text-anchor="start" >06 Task slices</text>
+<text x="408" y="1114" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >Verifiable tasks,</text>
+<text x="408" y="1139" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >blocking edges and</text>
+<text x="408" y="1164" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >slice acceptance</text>
 </g>
 <g id="build" data-graph-role="node" data-node-id="build" data-graph-bounds="672 304 920 392" data-full-text="Build &amp; improve | 07–08">
 <rect x="672" y="304" width="248" height="88" rx="8" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/>
 <text x="796.0" y="334" font-size="24" font-weight="600" fill="#111827" text-anchor="middle" >Build &amp; improve</text>
-<text x="796.0" y="366" font-size="20" font-weight="400" fill="#6b7280" text-anchor="middle" >07–08</text>
+<text x="796.0" y="362" font-size="20" font-weight="400" fill="#6b7280" text-anchor="middle" >07–08</text>
 </g>
-<circle id="build-branch-07" data-graph-role="node" data-node-id="build-branch-07" data-graph-bounds="652 524 660 532" cx="656" cy="528" r="4" fill="#2563eb"/>
-<g id="stage-07" data-graph-role="node" data-node-id="stage-07" data-graph-bounds="704 456 920 600" data-full-text="07 Implement | Code, actual checks, | coverage and gaps">
-<rect x="704" y="456" width="216" height="144" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5"/>
+<circle id="build-branch-07" data-graph-role="node" data-node-id="build-branch-07" data-graph-bounds="652 532 660 540" cx="656" cy="536" r="4" fill="#2563eb"/>
+<g id="stage-07" data-graph-role="node" data-node-id="stage-07" data-graph-bounds="704 456 920 616" data-full-text="07 Implement | Code, actual checks, | coverage and gaps">
+<rect x="704" y="456" width="216" height="160" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5"/>
 <text x="720" y="486" font-size="22" font-weight="600" fill="#111827" text-anchor="start" >07 Implement</text>
-<text x="720" y="518" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >Code, actual checks,</text>
-<text x="720" y="543" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >coverage and gaps</text>
+<text x="720" y="514" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >Code, actual checks,</text>
+<text x="720" y="539" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >coverage and gaps</text>
 </g>
-<circle id="build-branch-08" data-graph-role="node" data-node-id="build-branch-08" data-graph-bounds="652 708 660 716" cx="656" cy="712" r="4" fill="#2563eb"/>
-<g id="stage-08" data-graph-role="node" data-node-id="stage-08" data-graph-bounds="704 640 920 784" data-full-text="08 Refactoring | Final code + | regression evidence, | or a justified | retain decision">
-<rect x="704" y="640" width="216" height="144" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5"/>
-<text x="720" y="670" font-size="22" font-weight="600" fill="#111827" text-anchor="start" >08 Refactoring</text>
-<text x="720" y="702" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >Final code +</text>
-<text x="720" y="724" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >regression evidence,</text>
-<text x="720" y="746" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >or a justified</text>
-<text x="720" y="768" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >retain decision</text>
+<circle id="build-branch-08" data-graph-role="node" data-node-id="build-branch-08" data-graph-bounds="652 732 660 740" cx="656" cy="736" r="4" fill="#2563eb"/>
+<g id="stage-08" data-graph-role="node" data-node-id="stage-08" data-graph-bounds="704 656 920 816" data-full-text="08 Refactoring | Final code + current | views and regression | evidence, or a | justified retain | decision">
+<rect x="704" y="656" width="216" height="160" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5"/>
+<text x="720" y="686" font-size="22" font-weight="600" fill="#111827" text-anchor="start" >08 Refactoring</text>
+<text x="720" y="714" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >Final code + current</text>
+<text x="720" y="736" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >views and regression</text>
+<text x="720" y="758" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >evidence, or a</text>
+<text x="720" y="780" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >justified retain</text>
+<text x="720" y="802" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >decision</text>
 </g>
 <g id="review" data-graph-role="node" data-node-id="review" data-graph-bounds="984 304 1232 392" data-full-text="Review &amp; deliver | 09–11">
 <rect x="984" y="304" width="248" height="88" rx="8" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/>
 <text x="1108.0" y="334" font-size="24" font-weight="600" fill="#111827" text-anchor="middle" >Review &amp; deliver</text>
-<text x="1108.0" y="366" font-size="20" font-weight="400" fill="#6b7280" text-anchor="middle" >09–11</text>
+<text x="1108.0" y="362" font-size="20" font-weight="400" fill="#6b7280" text-anchor="middle" >09–11</text>
 </g>
-<circle id="review-branch-09" data-graph-role="node" data-node-id="review-branch-09" data-graph-bounds="964 524 972 532" cx="968" cy="528" r="4" fill="#2563eb"/>
-<g id="stage-09" data-graph-role="node" data-node-id="stage-09" data-graph-bounds="1016 456 1232 600" data-full-text="09 Change review | Two-axis findings, | corrections and | current evidence">
-<rect x="1016" y="456" width="216" height="144" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5"/>
+<circle id="review-branch-09" data-graph-role="node" data-node-id="review-branch-09" data-graph-bounds="964 532 972 540" cx="968" cy="536" r="4" fill="#2563eb"/>
+<g id="stage-09" data-graph-role="node" data-node-id="stage-09" data-graph-bounds="1016 456 1232 616" data-full-text="09 Change review | Two-axis findings, | corrections and | current evidence">
+<rect x="1016" y="456" width="216" height="160" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5"/>
 <text x="1032" y="486" font-size="22" font-weight="600" fill="#111827" text-anchor="start" >09 Change review</text>
-<text x="1032" y="518" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >Two-axis findings,</text>
-<text x="1032" y="543" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >corrections and</text>
-<text x="1032" y="568" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >current evidence</text>
+<text x="1032" y="514" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >Two-axis findings,</text>
+<text x="1032" y="539" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >corrections and</text>
+<text x="1032" y="564" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >current evidence</text>
 </g>
-<circle id="review-branch-10" data-graph-role="node" data-node-id="review-branch-10" data-graph-bounds="964 708 972 716" cx="968" cy="712" r="4" fill="#2563eb"/>
-<g id="stage-10" data-graph-role="node" data-node-id="stage-10" data-graph-bounds="1016 640 1232 784" data-full-text="10 Architecture | Scoped change / | retain decisions, | maintenance | triggers">
-<rect x="1016" y="640" width="216" height="144" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5"/>
-<text x="1032" y="670" font-size="22" font-weight="600" fill="#111827" text-anchor="start" >10 Architecture</text>
-<text x="1032" y="702" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >Scoped change /</text>
-<text x="1032" y="724" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >retain decisions,</text>
-<text x="1032" y="746" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >maintenance</text>
-<text x="1032" y="768" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >triggers</text>
+<circle id="review-branch-10" data-graph-role="node" data-node-id="review-branch-10" data-graph-bounds="964 732 972 740" cx="968" cy="736" r="4" fill="#2563eb"/>
+<g id="stage-10" data-graph-role="node" data-node-id="stage-10" data-graph-bounds="1016 656 1232 816" data-full-text="10 Architecture | Scoped change / | retain decisions, | maintenance | triggers">
+<rect x="1016" y="656" width="216" height="160" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5"/>
+<text x="1032" y="686" font-size="22" font-weight="600" fill="#111827" text-anchor="start" >10 Architecture</text>
+<text x="1032" y="714" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >Scoped change /</text>
+<text x="1032" y="736" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >retain decisions,</text>
+<text x="1032" y="758" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >maintenance</text>
+<text x="1032" y="780" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >triggers</text>
 </g>
-<circle id="review-branch-11" data-graph-role="node" data-node-id="review-branch-11" data-graph-bounds="964 892 972 900" cx="968" cy="896" r="4" fill="#2563eb"/>
-<g id="stage-11" data-graph-role="node" data-node-id="stage-11" data-graph-bounds="1016 824 1232 968" data-full-text="11 Final delivery | Linked outcomes, | evidence, decisions, | limits for the user">
-<rect x="1016" y="824" width="216" height="144" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5"/>
-<text x="1032" y="854" font-size="22" font-weight="600" fill="#111827" text-anchor="start" >11 Final delivery</text>
-<text x="1032" y="886" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >Linked outcomes,</text>
-<text x="1032" y="911" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >evidence, decisions,</text>
-<text x="1032" y="936" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >limits for the user</text>
+<circle id="review-branch-11" data-graph-role="node" data-node-id="review-branch-11" data-graph-bounds="964 932 972 940" cx="968" cy="936" r="4" fill="#2563eb"/>
+<g id="stage-11" data-graph-role="node" data-node-id="stage-11" data-graph-bounds="1016 856 1232 1016" data-full-text="11 Final delivery | Linked outcomes, | evidence, decisions, | limits for the user">
+<rect x="1016" y="856" width="216" height="160" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5"/>
+<text x="1032" y="886" font-size="22" font-weight="600" fill="#111827" text-anchor="start" >11 Final delivery</text>
+<text x="1032" y="914" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >Linked outcomes,</text>
+<text x="1032" y="939" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >evidence, decisions,</text>
+<text x="1032" y="964" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" >limits for the user</text>
 </g>
 <text x="48" y="52" font-size="36" font-weight="600" fill="#111827" text-anchor="start" data-graph-role="label">Stage outputs</text>
 <text x="48" y="90" font-size="22" font-weight="400" fill="#6b7280" text-anchor="start" data-graph-role="label">A complete handoff, from scoped request to reviewed delivery.</text>
-<text x="48" y="1210" font-size="22" font-weight="400" fill="#111827" text-anchor="start" data-graph-role="label">Read stages in numbered order; each output feeds the next active stage.</text>
-<text x="48" y="1246" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" data-graph-role="label">Combine or skip stages with reasons. These are deliverables, not twelve required files.</text>
+<text x="48" y="1290" font-size="22" font-weight="400" fill="#111827" text-anchor="start" data-graph-role="label">Read stages in numbered order; each output feeds the next active stage.</text>
+<text x="48" y="1326" font-size="20" font-weight="400" fill="#6b7280" text-anchor="start" data-graph-role="label">Combine or skip stages with reasons. These are deliverables, not twelve required files.</text>
 </svg>

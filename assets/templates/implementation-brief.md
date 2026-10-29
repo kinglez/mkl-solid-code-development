@@ -31,7 +31,16 @@ Record confirmed rules and their sources, actors and flows, acceptance scenarios
 
 ## Responsibility and design outputs
 
-Record boundary/entity/control responsibilities and normal/failure coverage, unresolved model deltas, module responsibilities, contracts, dependencies, and justified SOLID/pattern trade-offs. Add diagrams where useful. State what specification and implementation must preserve.
+Record the selected detailed/lightweight scope and rationale, boundary/entity/control coverage, actual design views, contracts, dependencies, and SOLID/pattern trade-offs. Detailed work needs a class model or justified module equivalent and sequence views; lifecycle-dependent behavior also needs a state view. Record state applicability as required, not applicable, or unresolved, with its source-based reason.
+
+| View / design result | Actual source or response section | Produced/reused/skipped and why | Check / review evidence and limits | Next consumer |
+|---|---|---|---|---|
+| Structure: class or module view | | pending | | Interaction / implementation |
+| Sequence: principal and relevant exception paths | | pending | | Operations / acceptance |
+| State: lifecycle applicability and relevant transitions | | pending assessment | | Interactions / state tests |
+| Cross-view consistency | | pending | | Specification / implementation |
+
+Trace required flows to responsibilities, interactions, owned operations/events, relevant state effects, and acceptance. Check names, input/result meanings, guards, failure effects, and dependencies across actual views. Record unresolved design issues before handing off. A renderer exit code alone does not establish semantic completeness.
 
 ## Specification and slice outputs
 
@@ -39,7 +48,7 @@ Connect rules, design constraints, acceptance, and public verification entry poi
 
 ## Implementation, refactoring, and review outputs
 
-Link actual code changes and commands/results. State behavior preserved during refactoring, design decisions or reasons to retain the design, review findings, corrections, rerun evidence, and unresolved issues. Keep each logical output distinguishable even when stored here.
+Link actual code changes and commands/results. State behavior preserved during refactoring, design decisions or reasons to retain the design, review findings, corrections, rerun evidence, and unresolved issues. Synchronize affected view sources with the implemented operations, dependencies, and transitions; recheck them before final review. Keep each logical output distinguishable even when stored here.
 
 ## Architecture and delivery outputs
 

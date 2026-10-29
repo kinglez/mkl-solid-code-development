@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 1080" width="1280" height="1080" role="img" aria-labelledby="design-views-title design-views-desc" data-generator="fireworks-tech-graph" data-schema-version="1" data-style-id="1" data-visual-theme="Flat Icon" data-diagram-type="flowchart" data-semantic-profile="generic" data-semantic-valid="true" data-quality-profile="showcase">
+<title id="design-views-title">Detailed design before implementation</title>
+<desc id="design-views-desc">BCE responsibilities guide class or module, sequence and applicable lifecycle views, refined and reviewed together before contracts pass to specification and code.</desc>
+<style>text { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }</style>
+<defs>
+<marker id="design-views-blue" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="10" refX="12" refY="5" orient="auto"><path d="M 0,0 L 12,5 L 0,10 Z" fill="#2563eb"/></marker>
+<marker id="design-views-green" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="10" refX="12" refY="5" orient="auto"><path d="M 0,0 L 12,5 L 0,10 Z" fill="#16a34a"/></marker>
+</defs>
+<rect data-graph-role="background" x="0" y="0" width="1280" height="1080" fill="#ffffff"/>
+<text x="48" y="56" font-size="32" font-weight="600" fill="#111827" >Detailed design before implementation</text>
+<text x="48" y="96" font-size="22" font-weight="400" fill="#6b7280" >Required views for new use cases and complex changes.</text>
+<text x="440" y="136" font-size="20" font-weight="400" fill="#6b7280" >Structure and interactions refine one another.</text>
+<path id="responsibility-structure" data-graph-role="edge" data-edge-id="responsibility-structure" data-source="bce" data-target="structure" data-edge-kind="flow" data-flow="handoff" d="M 328,256 L 440,256" fill="none" stroke="#2563eb" stroke-width="3" marker-end="url(#design-views-blue)"/>
+<path id="structure-sequence" data-graph-role="edge" data-edge-id="structure-sequence" data-source="structure" data-target="sequence" data-edge-kind="flow" data-flow="handoff" d="M 792,232 L 880,232" fill="none" stroke="#2563eb" stroke-width="3" marker-end="url(#design-views-blue)"/>
+<path id="sequence-structure" data-graph-role="edge" data-edge-id="sequence-structure" data-source="sequence" data-target="structure" data-edge-kind="flow" data-flow="handoff" d="M 880,312 L 792,312" fill="none" stroke="#2563eb" stroke-width="3" marker-end="url(#design-views-blue)"/>
+<path id="structure-state" data-graph-role="edge" data-edge-id="structure-state" data-source="structure" data-target="lifecycle" data-edge-kind="flow" data-flow="handoff" d="M 616,384 L 616,520" fill="none" stroke="#2563eb" stroke-width="3" marker-end="url(#design-views-blue)"/>
+<path id="structure-consistency" data-graph-role="edge" data-edge-id="structure-consistency" data-source="structure" data-target="consistency" data-edge-kind="flow" data-flow="handoff" d="M 792,348 L 832,348 L 832,600 L 880,600" fill="none" stroke="#2563eb" stroke-width="3" marker-end="url(#design-views-blue)"/>
+<path id="sequence-consistency" data-graph-role="edge" data-edge-id="sequence-consistency" data-source="sequence" data-target="consistency" data-edge-kind="flow" data-flow="handoff" d="M 1056,384 L 1056,520" fill="none" stroke="#2563eb" stroke-width="3" marker-end="url(#design-views-blue)"/>
+<path id="state-consistency" data-graph-role="edge" data-edge-id="state-consistency" data-source="lifecycle" data-target="consistency" data-edge-kind="flow" data-flow="handoff" d="M 792,664 L 880,664" fill="none" stroke="#2563eb" stroke-width="3" marker-end="url(#design-views-blue)"/>
+<path id="consistency-handoff" data-graph-role="edge" data-edge-id="consistency-handoff" data-source="consistency" data-target="handoff" data-edge-kind="flow" data-flow="handoff" d="M 1056,728 L 1056,848" fill="none" stroke="#16a34a" stroke-width="3" marker-end="url(#design-views-green)"/>
+<text x="648" y="458" font-size="19" font-weight="500" fill="#2563eb" >Assess lifecycle</text>
+<text x="1088" y="794" font-size="18" font-weight="600" fill="#16a34a" >READY DESIGN</text>
+<g id="bce" data-graph-role="node" data-node-id="bce" data-semantic-role="process" data-graph-bounds="48,160,328,384">
+<rect x="48" y="160" width="280" height="224" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6"/>
+<text x="72" y="200" font-size="28" font-weight="600" fill="#111827" >BCE input</text>
+<text x="72" y="240" font-size="20" font-weight="400" fill="#6b7280" >Boundaries, entities,</text>
+<text x="72" y="268" font-size="20" font-weight="400" fill="#6b7280" >control responsibilities</text>
+<text x="72" y="314" font-size="20" font-weight="400" fill="#111827" >From confirmed rules</text>
+<text x="72" y="342" font-size="20" font-weight="400" fill="#111827" >and use-case flows</text>
+</g>
+<g id="structure" data-graph-role="node" data-node-id="structure" data-semantic-role="process" data-graph-bounds="440,160,792,384">
+<rect x="440" y="160" width="352" height="224" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6"/>
+<text x="464" y="200" font-size="28" font-weight="600" fill="#111827" >Class / module</text>
+<text x="464" y="240" font-size="20" font-weight="400" fill="#6b7280" >Types, operations, dependencies</text>
+<text x="464" y="284" font-size="19" font-weight="400" fill="#2563eb" >OO: mkl-uml-design-class-model</text>
+<text x="464" y="336" font-size="20" font-weight="400" fill="#111827" >Owned interface contracts</text>
+</g>
+<g id="sequence" data-graph-role="node" data-node-id="sequence" data-semantic-role="process" data-graph-bounds="880,160,1232,384">
+<rect x="880" y="160" width="352" height="224" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6"/>
+<text x="904" y="200" font-size="28" font-weight="600" fill="#111827" >Sequence views</text>
+<text x="904" y="240" font-size="20" font-weight="400" fill="#6b7280" >Calls, alternatives, failures</text>
+<text x="904" y="284" font-size="19" font-weight="400" fill="#2563eb" >mkl-uml-sequence-diagram</text>
+<text x="904" y="336" font-size="20" font-weight="400" fill="#111827" >Messages match operations</text>
+</g>
+<g id="lifecycle" data-graph-role="node" data-node-id="lifecycle" data-semantic-role="process" data-graph-bounds="440,520,792,728">
+<rect x="440" y="520" width="352" height="208" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6"/>
+<text x="464" y="560" font-size="28" font-weight="600" fill="#111827" >Lifecycle assessment</text>
+<text x="464" y="600" font-size="20" font-weight="400" fill="#111827" >Required: state diagram</text>
+<text x="464" y="632" font-size="20" font-weight="400" fill="#6b7280" >Not applicable: give reason</text>
+<text x="464" y="664" font-size="20" font-weight="400" fill="#6b7280" >Unresolved: pause design</text>
+<text x="464" y="696" font-size="20" font-weight="400" fill="#6b7280" >States, events, guards, effects</text>
+</g>
+<g id="consistency" data-graph-role="node" data-node-id="consistency" data-semantic-role="process" data-graph-bounds="880,520,1232,728">
+<rect x="880" y="520" width="352" height="208" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6"/>
+<text x="904" y="560" font-size="28" font-weight="600" fill="#111827" >Consistency review</text>
+<text x="904" y="600" font-size="20" font-weight="400" fill="#111827" >Responsibilities + contracts</text>
+<text x="904" y="632" font-size="20" font-weight="400" fill="#111827" >Interactions + state rules</text>
+<text x="904" y="664" font-size="20" font-weight="400" fill="#6b7280" >Acceptance + unresolved issues</text>
+<text x="904" y="696" font-size="20" font-weight="400" fill="#6b7280" >Review actual view sources</text>
+</g>
+<g id="handoff" data-graph-role="node" data-node-id="handoff" data-semantic-role="process" data-graph-bounds="880,848,1232,1000">
+<rect x="880" y="848" width="352" height="152" rx="8" fill="#f0fdf4" stroke="#86efac" stroke-width="1.6"/>
+<text x="904" y="888" font-size="28" font-weight="600" fill="#16a34a" >To spec &amp; code</text>
+<text x="904" y="928" font-size="20" font-weight="400" fill="#111827" >Reviewed views + contracts</text>
+<text x="904" y="960" font-size="20" font-weight="400" fill="#6b7280" >Tests for behavior and transitions</text>
+</g>
+<text x="48" y="554" font-size="22" font-weight="600" fill="#111827" >Trace each relevant behavior</text>
+<text x="48" y="600" font-size="20" font-weight="400" fill="#6b7280" >Rule / use-case flow</text>
+<text x="48" y="634" font-size="20" font-weight="400" fill="#6b7280" >Responsibility</text>
+<text x="48" y="668" font-size="20" font-weight="400" fill="#6b7280" >Message / owned operation</text>
+<text x="48" y="702" font-size="20" font-weight="400" fill="#6b7280" >State effect, if applicable</text>
+<text x="48" y="736" font-size="20" font-weight="400" fill="#6b7280" >Public acceptance check</text>
+<text x="48" y="918" font-size="20" font-weight="500" fill="#111827" >Keep views current after implementation or refactoring.</text>
+<text x="48" y="958" font-size="20" font-weight="400" fill="#6b7280" >design_ready checks declarations; meaning needs review.</text>
+<text x="48" y="994" font-size="20" font-weight="400" fill="#6b7280" >Lightweight work can reuse design with a scoped reason.</text>
+<g data-graph-role="legend">
+<line x1="48" y1="1048" x2="80" y2="1048" stroke="#2563eb" stroke-width="3" marker-end="url(#design-views-blue)"/>
+<text x="92" y="1054" font-size="19" font-weight="400" fill="#6b7280" >Design relation</text>
+<line x1="356" y1="1048" x2="388" y2="1048" stroke="#16a34a" stroke-width="3" marker-end="url(#design-views-green)"/>
+<text x="400" y="1054" font-size="19" font-weight="400" fill="#6b7280" >Reviewed handoff</text>
+</g></svg>

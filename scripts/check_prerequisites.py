@@ -2,7 +2,7 @@
 """Check required workflow skill definitions in explicit local skill roots.
 
 Read-only: no installation, overwrite, network access, or skill execution.
-Exit: 0 all definitions present; 1 missing/invalid definitions; 2 invalid input.
+Exit: 0 selected definitions present; 1 missing/invalid definitions; 2 invalid input.
 This does not prove agent activation, repository setup, or upstream provenance.
 Requires PyYAML 6.x to parse the actual frontmatter safely.
 """
@@ -58,17 +58,22 @@ REQUIRED_SKILLS = (
     "improve-codebase-architecture",
 )
 
+DETAILED_DESIGN_SKILLS = ("mkl-uml-design-class-model", "mkl-uml-sequence-diagram")
 
-def check(roots: list[Path]) -> dict:
+
+def check(roots: list[Path], profile: str = "core") -> dict:
     if yaml is None:
         raise ValueError("Prerequisite checking requires PyYAML 6.x; install this skill's requirements.txt.")
+    if profile not in ("core", "detailed-design"):
+        raise ValueError("Expected profile core or detailed-design.")
+    required = REQUIRED_SKILLS + (DETAILED_DESIGN_SKILLS if profile == "detailed-design" else ())
     if not roots:
         raise ValueError("Provide at least one skill root.")
     for root in roots:
         if not root.is_dir():
             raise ValueError(f"Skill root is not a directory: {root}")
     present, missing = [], []
-    for name in REQUIRED_SKILLS:
+    for name in required:
         attempts = []
         for root in roots:
             path = root / name / "SKILL.md"
@@ -93,8 +98,9 @@ def check(roots: list[Path]) -> dict:
         else:
             missing.append({"name": name, "checked": attempts})
     return {
+        "profile": profile,
         "prerequisites_present": not missing,
-        "required_count": len(REQUIRED_SKILLS),
+        "required_count": len(required),
         "present": present,
         "missing": missing,
         "scope": "Readable named definitions only; verify agent activation and repository setup separately.",
@@ -105,9 +111,11 @@ def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--skills-root", type=Path, action="append", required=True,
                         help="Directory containing skill-name/SKILL.md; repeat to search several roots.")
+    parser.add_argument("--profile", choices=("core", "detailed-design"), default="core",
+                        help="core checks 12 definitions; detailed-design adds class and sequence skills.")
     args = parser.parse_args(argv)
     try:
-        result = check([path.expanduser() for path in args.skills_root])
+        result = check([path.expanduser() for path in args.skills_root], profile=args.profile)
     except (OSError, ValueError) as exc:
         print(json.dumps({"input_error": str(exc)}), file=sys.stderr)
         return 2

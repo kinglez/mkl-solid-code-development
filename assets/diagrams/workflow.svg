@@ -11,7 +11,7 @@
 <text x="48" y="94" font-size="22" font-weight="400" fill="#6b7280" >Each stage passes a usable result to its next consumer.</text>
 <g data-graph-role="container" id="preflight" data-graph-bounds="48,120,1232,184"><rect x="48" y="120" width="1184" height="64" rx="8" fill="#eff6ff" stroke="#bfdbfe"/>
 <text x="72" y="146" font-size="16" font-weight="600" fill="#2563eb" >BEFORE STARTING</text>
-<text x="272" y="146" font-size="20" font-weight="500" fill="#111827" >Verify 12 prerequisite skills and the target repository configuration.</text>
+<text x="272" y="146" font-size="20" font-weight="500" fill="#111827" >Verify 12 core skills; detailed design adds 2 modeling skills.</text>
 <text x="272" y="172" font-size="19" font-weight="400" fill="#6b7280" >setup-matt-pocock-skills + the local setup adapter where needed</text>
 </g>
 <path id="understand-design" data-graph-role="edge" data-edge-id="understand-design" data-source="understand" data-target="design" data-edge-kind="flow" data-flow="handoff" d="M 400,356 L 464,356" fill="none" stroke="#2563eb" stroke-width="3" marker-end="url(#workflow-blue)"/>
@@ -34,12 +34,12 @@
 <rect x="464" y="224" width="352" height="264" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6"/>
 <text x="488" y="264" font-size="28" font-weight="600" fill="#111827" >Design</text>
 <text x="784" y="262" font-size="18" font-weight="600" fill="#2563eb" text-anchor="end">02</text>
-<text x="488" y="300" font-size="20" font-weight="400" fill="#6b7280" >BCE roles and interfaces</text>
+<text x="488" y="300" font-size="20" font-weight="400" fill="#6b7280" >BCE + structure + interactions</text>
 <text x="488" y="344" font-size="19" font-weight="500" fill="#2563eb" >mkl-uml-robustness-diagram</text>
 <text x="488" y="374" font-size="19" font-weight="500" fill="#2563eb" >codebase-design</text>
 <line x1="488" y1="392" x2="792" y2="392" stroke="#e5e7eb" stroke-width="1"/>
-<text x="488" y="430" font-size="20" font-weight="500" fill="#111827" >Responsibilities</text>
-<text x="488" y="456" font-size="20" font-weight="500" fill="#111827" >+ interface contracts</text>
+<text x="488" y="430" font-size="20" font-weight="500" fill="#111827" >Class / module + sequences</text>
+<text x="488" y="456" font-size="20" font-weight="500" fill="#111827" >+ state when lifecycle applies</text>
 </g>
 <g id="plan" data-graph-role="node" data-node-id="plan" data-semantic-role="process" data-graph-bounds="880,224,1232,488">
 <rect x="880" y="224" width="352" height="264" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6"/>
@@ -55,11 +55,11 @@
 <rect x="880" y="592" width="352" height="264" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6"/>
 <text x="904" y="632" font-size="28" font-weight="600" fill="#111827" >Build</text>
 <text x="1200" y="630" font-size="18" font-weight="600" fill="#2563eb" text-anchor="end">04</text>
-<text x="904" y="668" font-size="20" font-weight="400" fill="#6b7280" >Code, tests and refactoring</text>
+<text x="904" y="668" font-size="20" font-weight="400" fill="#6b7280" >Code, tests and current views</text>
 <text x="904" y="712" font-size="19" font-weight="500" fill="#2563eb" >implement / local adapter</text>
 <text x="904" y="742" font-size="19" font-weight="500" fill="#2563eb" >tdd · codebase-design</text>
 <line x1="904" y1="760" x2="1208" y2="760" stroke="#e5e7eb" stroke-width="1"/>
-<text x="904" y="798" font-size="20" font-weight="500" fill="#111827" >Working code</text>
+<text x="904" y="798" font-size="20" font-weight="500" fill="#111827" >Working code + current views</text>
 <text x="904" y="824" font-size="20" font-weight="500" fill="#111827" >+ regression evidence</text>
 </g>
 <g id="review" data-graph-role="node" data-node-id="review" data-semantic-role="process" data-graph-bounds="464,592,816,856">
@@ -84,7 +84,7 @@
 <text x="72" y="824" font-size="20" font-weight="500" fill="#111827" >engineering decision</text>
 </g>
 <text x="48" y="914" font-size="20" font-weight="400" fill="#6b7280" >Use only relevant stages. Unresolved decisions pause dependent work.</text>
-<text x="48" y="946" font-size="20" font-weight="400" fill="#6b7280" >Review findings return to the affected stage; local changes use the named adapters.</text>
+<text x="48" y="946" font-size="20" font-weight="400" fill="#6b7280" >Keep applicable views current after code, refactors and rule changes.</text>
 <g data-graph-role="legend">
 <line x1="48" y1="976" x2="80" y2="976" stroke="#2563eb" stroke-width="3" marker-end="url(#workflow-blue)"/>
 <text x="92" y="982" font-size="19" font-weight="400" fill="#6b7280" >Stage handoff</text>
