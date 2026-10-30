@@ -58,7 +58,7 @@ Required descriptions, sources, scenarios, and summaries must be nonempty text. 
 
 ### Coverage and task intent
 
-Final delivery readiness for all intents requires the task to be declared `complete`, a completed review linked to passed inspection evidence, and no declared completion-blocking rules or limitations. Pre-implementation `design_ready` is separate; future implementation/review work need not already be complete.
+Final delivery readiness for all intents requires the task to be declared `complete`, a completed review linked to passed inspection evidence, and no declared completion-blocking rules or limitations. The design-bundle and selected-stage gates are separate; future implementation/review work need not already be complete.
 
 - **implement:** Confirmed rules have acceptance scenarios. Acceptance references confirmed rules and passed behavior or contract evidence. Required corrections are resolved. Unsettled future-scope rules may remain nonblocking, but any unresolved rule used by current acceptance still blocks readiness.
 - **design:** Design decisions include reasons and trade-offs, linked to design or structural inspection evidence. Required design corrections are resolved; `open` and `deferred` both block readiness. Code and runtime behavior tests are not required.
@@ -105,6 +105,14 @@ Legacy schema-version-1 records without `handoffs` retain their existing validat
 
 The checker validates declared references, statuses, and file existence. It does not infer which stages a task needs, verify document sections or source versions, prove that inputs were read, or automatically detect changes to artifact contents. The agent/reviewer must check those semantics and invalidate affected consumers when upstream results change.
 
+### Require a ready stage prefix
+
+Use `--require-through HANDOFF_ID` to require readiness from the first selected stage through a specific producer, identified by its actual stable handoff ID. The target must exist and be `completed` or `reused`. Every active stage through it needs a ready output and connected, ready predecessor inputs. Reasoned skips before the target retain their normal rules. A missing, skipped or unfinished target fails the gate.
+
+The result has `through_ready` and `through_blockers[]`; without this option they are `null` and `[]`. Later pending, blocked or invalidated stages and unfinished task/final-review status do not by themselves block this prefix. The entire record must still be structurally valid, including future draft entries. Read other blockers for their relevance to the current work; the prefix gate checks declared handoff dependencies, not arbitrary business meaning or unassociated limitations.
+
+For pre-coding readiness, combine this option with `--require-design`. Replace `HANDOFF_ID` with the current detailed-design producer's ID, not its stage label. Arbitrary stage labels/counts and old records keep their existing behavior when this new option is omitted. Do not add `--require-ready` merely to start coding: final delivery is intentionally unfinished at that point.
+
 ## Design views and the pre-implementation gate
 
 Use the optional `design_views` bundle for the scope selected under [Design Views](design-views.md). It adds declared source/evidence checks, not a UML parser or another final-delivery review.
@@ -126,15 +134,15 @@ Completed/reused views need a real local source `artifact` and passed `structure
 
 Detailed design needs a usable `class` or `module` view and a usable `sequence` view. State requirement `required` needs a usable state view even in lightweight work; `unresolved` blocks readiness. A not-applicable assessment needs a reason. The checker trusts the declared scope and cannot infer lifecycle rules or whether lightweight was justified.
 
-Consistency review must be completed, cover the active views, link passed `manual_review` or `design_review` evidence, and declare no unresolved design issues. Check actual contracts and rule coverage using the semantic guide. Within selected `rule_ids`, unconfirmed completion-blocking rules also block design readiness. Unrelated work outside those inputs and later code-review findings do not automatically block the pre-coding gate.
+Consistency review must be completed, cover the active views, link passed `manual_review` or `design_review` evidence, and declare no unresolved design issues. Check actual contracts and rule coverage using the semantic guide. Every selected `rule_id` is a current design input and must be confirmed, even when its global `blocks_completion` flag is false. Unrelated future rules outside those inputs and later code-review findings do not automatically block the design bundle.
 
-Run this **before implementation**, while the task may still be `in_progress` and future checks/review/handoffs are pending:
+Run this **before implementation**, while the task may still be `in_progress` and future checks/review/handoffs are pending. Replace `HANDOFF_ID` with the completed detailed-design producer's actual ID:
 
 ```bash
-python3 scripts/validate_delivery.py path/to/delivery-record.json --project-root path/to/project --require-design
+python3 scripts/validate_delivery.py path/to/delivery-record.json --project-root path/to/project --require-design --require-through HANDOFF_ID
 ```
 
-`design_ready: true` means the declared design bundle passes its own mechanical checks. `record_ready` may be false because implementation or final review is unfinished. `--require-design` returns `0` only for a structurally valid record and ready design; it does not imply final readiness. Combine it with `--require-ready` or `--require-handoffs` to require both gates.
+`design_ready: true` means the declared design bundle passes its own mechanical checks. `through_ready: true` means the selected producer prefix passes its handoff checks. Both must be true for the command above to return `0`; `record_ready` may still be false because implementation or final review is unfinished. `--require-design` alone retains its bundle-only contract and does not check a producer prefix. Combine final-readiness options only when checking final delivery.
 
 Without a bundle or the new flag, legacy records retain their original behavior and return `design_ready: null` (not evaluated). With `--require-design`, a missing bundle returns false and blocks that gate. A present unready bundle also blocks final record readiness. Completing the task status cannot make missing/stale/unreviewed views ready.
 
@@ -151,15 +159,18 @@ python3 scripts/validate_delivery.py path/to/delivery-record.json --project-root
 python3 scripts/validate_delivery.py path/to/delivery-record.json --project-root path/to/project --require-ready
 python3 scripts/validate_delivery.py path/to/delivery-record.json --project-root path/to/project --require-handoffs
 python3 scripts/validate_delivery.py path/to/delivery-record.json --project-root path/to/project --require-design
+python3 scripts/validate_delivery.py path/to/delivery-record.json --project-root path/to/project --require-design --require-through HANDOFF_ID
 ```
 
-The JSON result contains `structure_valid`, `record_ready`, `design_ready`, `errors[]`, `blockers[]`, and separate `design_blockers[]`.
+The JSON result contains `structure_valid`, `record_ready`, `design_ready`, `through_ready`, `errors[]`, `blockers[]`, and separate `design_blockers[]` / `through_blockers[]`.
 
 - By default, exit code `0` means only that the structure is valid. Also inspect `record_ready` and the blockers.
 - With `--require-ready`, structural errors or incomplete declared coverage return exit code `1`.
 - `--require-handoffs` requires a nonempty, connected chain of usable stage results and implies `--require-ready`. It returns `1` when the record or chain is incomplete.
-- `--require-design` independently checks pre-implementation readiness; combined final-readiness options remain cumulative.
+- `--require-design` independently checks the design bundle; `--require-through HANDOFF_ID` checks the selected producer prefix. Their combination is the pre-coding gate. All requested gates, including final-readiness options, remain cumulative.
 - Unreadable input, invalid JSON, duplicate JSON keys, or invalid command usage return exit code `2`.
+
+CLI JSON diagnostics use encoding-safe escapes so malformed Unicode identifiers can still produce parseable errors rather than a traceback.
 
 `record_ready` means only that **the declared record and evidence references satisfy mechanical checks**. It is not software acceptance, architecture approval, or SOLID certification. Labeling an unrelated file as passed does not make it relevant evidence; review must examine that semantic relationship.
 

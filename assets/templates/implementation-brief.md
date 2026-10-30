@@ -44,6 +44,8 @@ State detailed/lightweight depth and why. Trace relevant requirements/use cases 
 
 State applicability is required, not applicable or unresolved, with its source-based reason. Required views and necessary design questions must be resolved before dependent coding. Syntax/render success is not semantic completeness. Record actual technical readiness separately from formal approval.
 
+When using the JSON record, record the detailed-design producer's stable handoff ID and check it with `--require-design --require-through HANDOFF_ID` using the installed validator. Both the design bundle and its producer prefix must be ready; later coding/review may stay pending. Every selected design rule must be confirmed. Preserve the actual command, result and remaining semantic limits.
+
 ## Coding, verification and refactoring
 
 Link delivered code, actual commands/results, suitable meaningful red/green checks, coverage and gaps. Record observed design friction and refactoring or justified retain decisions. Synchronize affected views/contracts with implemented operations, dependencies and transitions.

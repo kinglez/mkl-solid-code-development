@@ -29,6 +29,8 @@ This protocol evaluates the skill's decisions and producer/consumer contracts. I
 - Setup/presence success is not invocation, a profile-specific diagram check is not universal semantic verification, and a written test plan is not an executed test.
 - All tasks verify the full 19-definition installation baseline. Scoped tasks may execute only relevant stages, combine logical results, reuse current evidence with an applicability check, and stop at design-only or review-only endpoints.
 - A resume operation reads saved sources, versions, statuses, outputs, unresolved issues, and next consumers instead of reconstructing missing decisions.
+- The pre-coding combination `--require-design --require-through HANDOFF_ID` accepts a ready design prefix while future stages remain pending, rejects a declared invalidated producer or an unconfirmed selected rule, and recovers after the producer/rule is repaired. Unrelated future rules and arbitrary stage labels remain supported.
+- Local capture either contains the selected changes consistently or explicitly rejects unsupported index flags and sparse states. Git submodule-ignore settings cannot hide an unsupported changed submodule, and display settings must not contaminate the machine-readable patch. CLI diagnostics remain structured for malformed Unicode identifiers.
 - Review-only work preserves source and Git state. Local delivery stays within its authorized actions. Actual invocation adapters are named accurately.
 
 ## Record actual results

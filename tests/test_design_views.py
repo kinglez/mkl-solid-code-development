@@ -124,7 +124,7 @@ class DesignViewTests(unittest.TestCase):
         self.record["design_views"]["state_model"] = {"requirement": "not_applicable", "reason": ""}
         self.assertFalse(self.check()["structure_valid"])
 
-    def test_only_selected_blocking_unsettled_rules_block_the_design_gate(self):
+    def test_selected_unsettled_rules_block_design_regardless_of_completion_flag(self):
         self.record["rules"].append({"id": "R-OTHER", "text": "Unrelated branch", "status": "open", "source": "Input", "blocks_completion": True})
         result = self.check()
         self.assertTrue(result["design_ready"])
@@ -132,7 +132,17 @@ class DesignViewTests(unittest.TestCase):
         self.record["design_views"]["rule_ids"].append("R-OTHER")
         self.assertFalse(self.check()["design_ready"])
         self.record["rules"][-1]["blocks_completion"] = False
-        self.assertTrue(self.check()["design_ready"])
+        self.assertFalse(self.check()["design_ready"])
+
+    def test_current_unconfirmed_acceptance_input_cannot_pass_design_as_nonblocking(self):
+        for status in ("open", "proposed", "assumed"):
+            with self.subTest(status=status):
+                self.record["rules"][0].update(status=status, blocks_completion=False)
+                result = self.invoke("--require-design")
+                self.assertEqual(result.returncode, 1, result.stderr)
+                payload = json.loads(result.stdout)
+                self.assertFalse(payload["design_ready"])
+                self.assertIn("DESIGN_INPUT_UNSETTLED", {b["code"] for b in payload["design_blockers"]})
 
     def test_detailed_scope_requires_rule_references_but_lightweight_can_explain_omission(self):
         bundle = self.record["design_views"]

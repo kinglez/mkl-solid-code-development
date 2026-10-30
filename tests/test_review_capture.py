@@ -92,6 +92,92 @@ class ReviewCaptureTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual([item["path"] for item in self.manifest()["files"]], ["literal[1].txt"])
 
+    def test_index_flags_fail_closed_without_changing_source_or_index(self):
+        for flag in ("skip-worktree", "assume-unchanged"):
+            with self.subTest(flag=flag):
+                self.git("update-index", "--" + flag, "local.txt")
+                (self.repo / "local.txt").write_text("hidden changed bytes\n")
+                (self.repo / "staged.txt").write_text("visible changed bytes\n")
+                index_before = (self.repo / ".git/index").read_bytes()
+                source_before = (self.repo / "local.txt").read_bytes()
+                output = self.workspace / flag
+                try:
+                    result = self.capture(output=output)
+                    self.assertEqual(result.returncode, 2, result.stderr)
+                    message = json.loads(result.stderr)["input_error"]
+                    self.assertIn(flag, message)
+                    self.assertIn("local.txt", message)
+                    self.assertFalse(output.exists())
+                    self.assertEqual(index_before, (self.repo / ".git/index").read_bytes())
+                    self.assertEqual(source_before, (self.repo / "local.txt").read_bytes())
+                finally:
+                    self.git("update-index", "--no-" + flag, "local.txt")
+
+    def test_index_flags_outside_selected_scope_do_not_block_capture(self):
+        self.git("update-index", "--skip-worktree", "local.txt")
+        (self.repo / "local.txt").write_text("outside selected scope\n")
+        (self.repo / "staged.txt").write_text("selected changed bytes\n")
+        index_before = (self.repo / ".git/index").read_bytes()
+        result = self.capture("--path", "staged.txt")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual([item["path"] for item in self.manifest()["files"]], ["staged.txt"])
+        self.assertEqual(index_before, (self.repo / ".git/index").read_bytes())
+
+    def test_sparse_committed_changes_fail_closed_and_allow_an_explicit_safe_scope(self):
+        for name in ("active", "inactive"):
+            (self.repo / name).mkdir()
+            (self.repo / name / "source.txt").write_text("baseline bytes\n")
+        self.git("add", ".")
+        self.git("commit", "-qm", "Synthetic sparse baseline")
+        baseline = self.git("rev-parse", "HEAD").decode().strip()
+        (self.repo / "inactive/source.txt").write_text("committed current bytes\n")
+        self.git("add", ".")
+        self.git("commit", "-qm", "Synthetic sparse change")
+        self.git("sparse-checkout", "init", "--cone")
+        self.git("sparse-checkout", "set", "active")
+        self.assertFalse((self.repo / "inactive/source.txt").exists())
+
+        self.assertEqual(self.git("show", "HEAD:inactive/source.txt"), b"committed current bytes\n")
+        (self.repo / "active/source.txt").write_text("selected current bytes\n")
+        index_before = (self.repo / ".git/index").read_bytes()
+        head_before = self.git("rev-parse", "HEAD")
+        result = self.capture(baseline=baseline)
+        self.assertEqual(result.returncode, 2, result.stderr)
+        message = json.loads(result.stderr)["input_error"]
+        self.assertIn("skip-worktree", message)
+        self.assertIn("inactive/source.txt", message)
+        self.assertFalse(self.output.exists())
+        safe_output = self.workspace / "safe-sparse-scope"
+        result = self.capture("--path", "active", baseline=baseline, output=safe_output)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        entries = json.loads((safe_output / "manifest.json").read_text())["files"]
+        self.assertEqual([item["path"] for item in entries], ["active/source.txt"])
+        self.assertEqual((safe_output / entries[0]["snapshot"]).read_bytes(), b"selected current bytes\n")
+        self.assertEqual(index_before, (self.repo / ".git/index").read_bytes())
+        self.assertEqual(head_before, self.git("rev-parse", "HEAD"))
+        self.assertFalse((self.repo / "inactive/source.txt").exists())
+
+    def test_machine_patch_ignores_color_and_prefix_presentation_settings(self):
+        self.git("config", "color.ui", "always")
+        self.git("config", "diff.noprefix", "true")
+        self.git("config", "diff.srcPrefix", "old-display/")
+        self.git("config", "diff.dstPrefix", "new-display/")
+        (self.repo / "local.txt").write_text("tracked changed bytes\n")
+        (self.repo / "new.txt").write_text("new changed bytes\n")
+        result = self.capture()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        patch_path = self.output / "changes.patch"
+        patch = patch_path.read_bytes()
+        self.assertNotIn(b"\x1b[", patch)
+        self.assertIn(b"diff --git a/local.txt b/local.txt\n", patch)
+        self.assertIn(b"diff --git a/new.txt b/new.txt\n", patch)
+        self.git("checkout", "--", "local.txt")
+        (self.repo / "new.txt").unlink()
+        self.git("apply", "--check", str(patch_path))
+        self.git("apply", str(patch_path))
+        self.assertEqual((self.repo / "local.txt").read_bytes(), b"tracked changed bytes\n")
+        self.assertEqual((self.repo / "new.txt").read_bytes(), b"new changed bytes\n")
+
     def test_file_replaced_by_directory_preserves_deleted_path_and_new_children(self):
         (self.repo / "local.txt").unlink()
         (self.repo / "local.txt").mkdir()
@@ -129,6 +215,49 @@ class ReviewCaptureTests(unittest.TestCase):
         self.assertEqual(result.returncode, 2)
         self.assertIn("submodule", json.loads(result.stderr)["input_error"])
         self.assertFalse(self.output.exists())
+
+    def test_submodule_ignore_settings_cannot_hide_changes_from_the_selected_scope(self):
+        source = self.workspace / "dependency-source"
+        source.mkdir()
+        for args in (("init", "-q"), ("config", "user.name", "Local test"),
+                     ("config", "user.email", "local-test@example.invalid")):
+            subprocess.run(["git", *args], cwd=source, capture_output=True, check=True)
+        (source / "source.txt").write_text("dependency baseline\n")
+        subprocess.run(["git", "add", "."], cwd=source, capture_output=True, check=True)
+        subprocess.run(["git", "commit", "-qm", "Synthetic dependency"],
+                       cwd=source, capture_output=True, check=True)
+        self.git("-c", "protocol.file.allow=always", "submodule", "add", "-q", str(source), "dependency")
+        self.git("add", ".")
+        self.git("commit", "-qm", "Synthetic submodule baseline")
+        baseline = self.git("rev-parse", "HEAD").decode().strip()
+        dependency_file = self.repo / "dependency/source.txt"
+        dependency_file.write_text("changed dependency bytes\n")
+        (self.repo / "local.txt").write_text("changed selected bytes\n")
+        settings = (
+            ("diff", ("config",), "diff.ignoreSubmodules"),
+            ("submodule", ("config",), "submodule.dependency.ignore"),
+            ("gitmodules", ("config", "--file", ".gitmodules"), "submodule.dependency.ignore"),
+        )
+        for label, command, key in settings:
+            with self.subTest(setting=label):
+                self.git(*command, key, "all")
+                index_before = (self.repo / ".git/index").read_bytes()
+                try:
+                    output = self.workspace / ("ignored-" + label)
+                    result = self.capture(baseline=baseline, output=output)
+                    self.assertEqual(result.returncode, 2, result.stderr)
+                    self.assertIn("submodule", json.loads(result.stderr)["input_error"])
+                    self.assertFalse(output.exists())
+                    safe_output = self.workspace / ("safe-" + label)
+                    safe = self.capture("--path", "local.txt", baseline=baseline, output=safe_output)
+                    self.assertEqual(safe.returncode, 0, safe.stderr)
+                    entries = json.loads((safe_output / "manifest.json").read_text())["files"]
+                    self.assertEqual([item["path"] for item in entries], ["local.txt"])
+                    self.assertEqual(index_before, (self.repo / ".git/index").read_bytes())
+                    self.assertEqual(dependency_file.read_bytes(), b"changed dependency bytes\n")
+                    self.assertEqual(self.git("rev-parse", "HEAD").decode().strip(), baseline)
+                finally:
+                    self.git(*command, "--unset", key)
 
     def test_ignored_untracked_files_are_excluded(self):
         (self.repo / "local.txt").write_text("after\n")

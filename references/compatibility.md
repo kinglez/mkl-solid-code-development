@@ -27,7 +27,9 @@ Installation, readable definitions, session availability, repository setup, rend
 
 ## Delivery-record compatibility
 
-The seven-stage narrative does not rename stored IDs or migrate existing records. Schema-version-1 records retain their original meaning. Handoffs remain generic and accept older stage counts/names. Optional design-view and strict-gate flags keep their existing contracts; prerequisite-default behavior is the intentional change documented above.
+The seven-stage narrative does not rename stored IDs or migrate existing records. Handoffs remain generic and accept older stage counts/names. The additive `--require-through HANDOFF_ID` gate checks a selected producer prefix without requiring later stages to finish; omitting it preserves existing handoff behavior. `--require-design` retains its bundle-only scope, with one intentional correction: every selected rule must now be confirmed regardless of its global blocking flag. Previously accepted design bundles that selected an unconfirmed nonblocking rule must settle or remove that current dependency before becoming ready.
+
+Review capture explicitly rejects selected `skip-worktree` or `assume-unchanged` index states, including sparse paths, rather than returning incomplete bytes. Narrowing scope is valid only when excluded paths are genuinely outside the task. The helper preserves the repository/index and exports color-free patches; it does not automatically materialize sparse files.
 
 Delivery and capture tools require Python 3.10+; the checker additionally requires PyYAML. Historical regression results and fresh candidate results are distinguished in [verification evidence](../tests/ACCEPTANCE.md). Untested interpreters, operating systems, host activation and integrations need their own verification. Renderer syntax, structural profiles and visual inspection have distinct coverage; none proves all design semantics.
 

@@ -64,7 +64,24 @@ def current_file(root: Path, name: str):
 def read_state(root: Path, baseline: str, scope: list[str]):
     if git(root, "ls-files", "--unmerged", "-z", "--", *scope):
         raise ValueError("The selected scope contains unresolved Git conflicts.")
-    diff_args = ("diff", "--no-ext-diff", "--no-textconv", "--no-renames")
+    hidden = []
+    for entry in git(root, "ls-files", "-v", "-z", "--", *scope).split(b"\0"):
+        if not entry:
+            continue
+        flag = entry[:1]
+        reasons = []
+        if flag.upper() == b"S":
+            reasons.append("skip-worktree")
+        if flag.islower():
+            reasons.append("assume-unchanged")
+        if reasons:
+            name = entry[2:].decode("utf-8", errors="surrogateescape")
+            hidden.append(f"{name!r} ({', '.join(reasons)})")
+    if hidden:
+        raise ValueError("Selected tracked paths have unsupported index flags; scope them out or "
+                         "review them separately: " + "; ".join(hidden))
+    diff_args = ("diff", "--no-ext-diff", "--no-textconv", "--no-renames", "--no-color",
+                 "--src-prefix=a/", "--dst-prefix=b/", "--ignore-submodules=none")
     changed = git(root, *diff_args, "--name-only", "-z", baseline, "--", *scope)
     untracked = git(root, "ls-files", "--others", "--exclude-standard", "-z", "--", *scope)
     names = sorted(set(part.decode("utf-8", errors="surrogateescape")
@@ -84,7 +101,7 @@ def read_state(root: Path, baseline: str, scope: list[str]):
     for raw in untracked.split(b"\0"):
         if raw:
             name = raw.decode("utf-8", errors="surrogateescape")
-            patch += git(root, "diff", "--no-index", "--no-ext-diff", "--no-textconv",
+            patch += git(root, *diff_args, "--no-index",
                          "--binary", "--full-index", "--", os.devnull, name, allowed=(0, 1))
     return {
         "head": git(root, "rev-parse", "--verify", "HEAD^{commit}").decode().strip(),

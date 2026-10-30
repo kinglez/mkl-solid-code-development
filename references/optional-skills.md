@@ -63,6 +63,26 @@ Separate reviewers in independent contexts establish independence; two passes in
 
 Supply current rules, source versions, artifacts, acceptance and scope, then inspect returned results against the [handoff contract](workflow-handoffs.md). Preserve current results and next steps in the existing task record for resumption.
 
+### Host launch checklist
+
+1. **Confirm session access.** After installation, inspect the host's current skill catalog. For Codex, select the installed skill through its skill picker or `$skill-name` mention. In a host exposing slash-command skills, use its actual `/skill-name` command. Follow that host's refresh procedure when an installed definition is absent; a path on disk does not establish current-session availability.
+2. **Start with the wrapper and endpoint.** Supply source requirements, project location and the desired endpoint. The wrapper identifies the next producer, reads its available definition, and supplies the actual preceding outputs. Keep installation/setup work separate from stage-completion evidence.
+3. **Activate selected explicit-only skills.** The checked Matt snapshot marks the following definitions explicit-only. Invoke the actual installed skill when choosing its original route; the wrapper's own mention does not automatically invoke these dependencies.
+
+| Activation point | Explicit-only skill in the checked snapshot |
+|---|---|
+| Missing project configuration | `setup-matt-pocock-skills` |
+| Unresolved requirements | `grill-with-docs` |
+| Ready detailed design to implementation specification | `to-spec` |
+| Ready specification to vertical slices | `to-tickets` |
+| Unblocked implementation work | `implement` |
+| Surrounding architecture investigation | `improve-codebase-architecture` |
+
+4. **Choose a supported route.** When original invocation or tracker/commit actions do not fit authorized local delivery, use the named local adaptation and record that choice. If the host cannot provide a necessary original capability and no applicable adaptation fits, identify that specific blocker before dependent work advances. Do not record upstream execution from a definition read.
+5. **Read back the result.** Check the stage output and actual execution evidence before selecting its next consumer. Resume using the saved handoff rather than restarting setup or assuming previous completion.
+
+Check invocation metadata again when upgrading dependencies; this list describes the documented compatibility snapshot, not every future upstream version.
+
 ## Domain-independent distribution
 
 The skill's own source repository and installed directory contain workflow mechanisms and neutral structural/protocol data only. Task-specific requirements, code, tests and evidence belong in the authorized target project or external acceptance workspace. During maintenance of this skill, keep application acceptance material outside its repository/package; do not import it as fixtures or defaults. This boundary does not prohibit business artifacts in the target application.

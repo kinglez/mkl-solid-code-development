@@ -105,7 +105,7 @@ Supply requirements, relevant evidence, and the intended endpoint:
 
 > Use mkl-solid-code-development to implement the supplied requirements. Establish the requirements baseline and independent acceptance expectations, review analysis and detailed design, implement verifiable slices, and deliver actual checks, change review, and a scoped architecture review.
 
-Invoke explicit-only skills through the host's supported mechanism when selected. Definition reading, installation, and completed execution are different actions. Identify local adapters accurately. Installation does not authorize tracker publication, commits, pushes, or deployment.
+Invoke explicit-only skills through the host's supported mechanism when selected; follow the [host launch checklist](references/optional-skills.md#host-launch-checklist). Definition reading, installation, and completed execution are different actions. Identify local adapters accurately. Installation does not authorize tracker publication, commits, pushes, or deployment.
 
 For pending local changes, the [implementation/review adapter](references/local-review.md) fixes the tracked and untracked delivery against a baseline. Both independent reviewers consume the same snapshot, requirements, design, and standards. Use upstream committed-history review when it covers the intended change.
 
@@ -187,13 +187,13 @@ Delivery tools use Python 3.10+ and the standard library; review capture also ne
 python3 scripts/init_delivery.py path/to/delivery --id TASK-1 --summary "Delivery objective" --intent implement --design-profile detailed --with-brief
 ```
 
-Populate actual rules, view sources, applicability, and evidence. Before coding:
+Populate actual rules, view sources, applicability, evidence, and handoffs. Before coding, replace `HANDOFF_ID` with the completed detailed-design producer's actual ID:
 
 ```bash
-python3 scripts/validate_delivery.py path/to/delivery/delivery-record.json --require-design
+python3 scripts/validate_delivery.py path/to/delivery/delivery-record.json --require-design --require-through HANDOFF_ID
 ```
 
-Design readiness and final readiness are separate: `design_ready` can pass while coding/review remain incomplete. After implementation, corrections, and reviews:
+`design_ready` checks the design bundle, including confirmation of every selected rule. `through_ready` checks the handoff prefix through that ID, including its upstream inputs. Both must pass before dependent coding; later coding/review may remain pending and `record_ready` may still be false. `--require-design` alone remains a bundle-only check. After implementation, corrections, and reviews:
 
 ```bash
 python3 scripts/validate_delivery.py path/to/delivery/delivery-record.json --require-design --require-handoffs
@@ -209,7 +209,7 @@ Run domain-neutral regressions from the skill directory with the checker runtime
 .venv/bin/python -m unittest discover -s tests -v
 ```
 
-Checks cover prerequisites, parsing, evidence paths, generic handoffs, readiness, initialization, and local review capture. Structural fixtures are synthetic protocol data, not application requirements or actual delivery evidence. See [verification evidence](tests/ACCEPTANCE.md) and the [generic evaluation protocol](tests/behavioral-cases.md).
+Checks cover prerequisites, parsing, evidence paths, generic handoffs, scoped readiness, initialization, and local review capture. The [CI workflow](.github/workflows/tests.yml) runs the suite on Linux and macOS with Python 3.10 and 3.14 when pushed or opened as a pull request; configured jobs are distinct from observed CI results. Structural fixtures are synthetic protocol data, not application requirements or actual delivery evidence. See [verification evidence](tests/ACCEPTANCE.md) and the [generic evaluation protocol](tests/behavioral-cases.md).
 
 **This skill's source repository and installed directory, including its tests, are business-independent.** Ordinary task artifacts belong in the user's target application. When maintaining or evaluating this skill itself, keep application requirements, business vectors, named use cases, generated applications, and their end-to-end evidence in separate acceptance workspaces outside the skill repository/package. The target application can contain its own business requirements, code and tests.
 

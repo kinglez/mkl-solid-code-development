@@ -36,10 +36,14 @@ python3 scripts/capture_review.py --repo path/to/project --baseline actual-commi
 The helper produces:
 
 - `manifest.json`: fixed baseline and current HEAD, selected scope, file inventory, current file hashes and types, and capture limits.
-- `changes.patch`: tracked changes from the baseline to final working-tree content, including committed, staged and unstaged changes, plus non-ignored untracked files. Binary changes are retained as Git binary patches.
+- `changes.patch`: tracked changes from the baseline to final working-tree content, including committed, staged and unstaged changes, plus non-ignored untracked files. Binary changes are retained as Git binary patches. Exported diffs explicitly disable terminal color and use conventional `a/` and `b/` prefixes, independent of presentation settings.
 - `files/`: current bytes for each changed regular file, addressed through the manifest. Deleted files are marked absent. Symlinks are stored as link text, never as copies of their targets.
 
 The helper uses Python's standard library and a local Git executable. It does not commit, stage, checkout, change the index, or install anything. It checks the selected source twice and rejects changes observed during capture; this is a consistency check, not a filesystem transaction. It refuses empty captures, unresolved conflicts, invalid commits, output inside the repository, and changed submodules or special file types. Ignored untracked files are excluded; review any intentionally omitted evidence separately and disclose that scope.
+
+Diff comparison explicitly overrides submodule-ignore settings, including repository configuration and `.gitmodules`, so a selected changed submodule is rejected rather than hidden. An explicitly excluded submodule does not block the remaining selected paths; preserve and disclose that review scope.
+
+The selected scope must contain no tracked paths marked `skip-worktree` or `assume-unchanged`. These flags can hide modified bytes or omit sparse-checkout content from disk, so the helper rejects them before producing a snapshot, naming the affected paths and flags. This conservative check also rejects flagged paths that Git reports as unchanged. Flags outside an explicit scope do not block that scope. Preserve the user's index: use a narrower justified scope or separately supplied before/after material for those paths, and disclose any remaining uncovered delivery. Do not silently omit required changes to obtain a successful capture.
 
 Exit `0` returns the snapshot location and baseline as JSON. Exit `2` returns a JSON `input_error` on stderr for an invalid input or capture failure. The snapshot is review material, not an approval or a software-quality certificate.
 

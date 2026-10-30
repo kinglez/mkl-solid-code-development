@@ -93,7 +93,7 @@ Use `mkl-cdr-review` to inspect detailed-model, contract, operation-allocation, 
 
 **Output:** Current views/contracts, design/CDR decisions, implementation specification, and slices.
 
-**Exit check:** Required views exist or were checked as current, relevant contracts agree, and no implementation-changing design question remains unresolved. Specification and slices consume that ready design. With JSON records, `--require-design` checks declared readiness before coding, separately from semantic correctness and final delivery.
+**Exit check:** Required views exist or were checked as current, relevant contracts agree, and no implementation-changing design question remains unresolved. Specification and slices consume that ready design. With JSON records, combine `--require-design` with `--require-through` using the actual detailed-design handoff ID before coding. This checks both the design bundle and its ready stage prefix while future coding/review may remain pending; semantic correctness still requires inspection.
 
 ## 5. Code, verify, and refactor
 
@@ -144,7 +144,7 @@ Deliver linked outcomes, current artifacts, checks actually run, correction/revi
 
 Preserve current sources, readiness, next unblocked stage and questions in the existing task record. On resumption, read those artifacts instead of trusting prior completion claims.
 
-Read [delivery records/tools](references/delivery-record.md) when structured traceability helps. The prerequisite checker reads definitions without installing/executing them; review capture snapshots scoped Git changes without staging/committing; initialization refuses overwrites; validation checks declared references, evidence and readiness without executing commands or interpreting UML meaning. Use `--require-design` before coding and `--require-handoffs` for final selected-stage completion. Existing schema-version-1/arbitrary-stage records retain their meanings. The [brief](assets/templates/implementation-brief.md) can hold the index without seven documents.
+Read [delivery records/tools](references/delivery-record.md) when structured traceability helps. The prerequisite checker reads definitions without installing/executing them; review capture snapshots scoped Git changes without staging/committing; initialization refuses overwrites; validation checks declared references, evidence and readiness without executing commands or interpreting UML meaning. Before coding, use `--require-design --require-through HANDOFF_ID` with the current design producer's ID; use `--require-handoffs` for final selected-stage completion. `--require-design` alone checks only the design bundle. Existing schema-version-1/arbitrary-stage records retain their meanings. The [brief](assets/templates/implementation-brief.md) can hold the index without seven documents.
 
 ## Keep this skill package domain-independent
 

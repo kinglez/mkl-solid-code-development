@@ -65,4 +65,6 @@ Schema-version-1 handoffs accept arbitrary nonempty stage labels. Existing recor
 
 With `--require-handoffs`, the checker requires outputs, valid references/local files, no self/forward references, no consumption of unready outputs, and predecessor-output links between active stages. Skips need reasons and cannot claim results. This is a final-readiness check; pending later stages may correctly leave a pre-code record unready.
 
-The checker does not select required stages, interpret meaning, establish independent expectations, authenticate freshness, prove inputs were read, or automatically invalidate changed content. Assess those semantics separately. Use `--require-design` for declared pre-code readiness; see [delivery tools](delivery-record.md).
+Before dependent coding, use `--require-design --require-through HANDOFF_ID` with the actual completed design producer ID. The scoped handoff gate requires ready, connected outputs through that producer; later pending stages do not block it. The design-bundle gate separately requires the selected rules and views to be ready. Final delivery uses `--require-handoffs` for the entire selected chain.
+
+The checker does not select required stages, interpret meaning, establish independent expectations, authenticate freshness, prove inputs were read, or automatically invalidate changed content. Assess those semantics separately. `--require-design` alone retains its design-bundle-only meaning; see [delivery tools](delivery-record.md).

@@ -2,17 +2,19 @@
 
 This repository contains only domain-independent checks of the skill's tools and operating contracts. Application requirements, illustrative business scenarios, generated applications, independent outcome vectors, and their detailed acceptance evidence are kept in separate workspaces and are not part of this package.
 
-## Current seven-stage candidate
+## Current repaired tool contracts
 
 The default prerequisite check is `full-workflow`: 19 named definitions for every task. Explicit `core` (12) and `detailed-design` (14) checks retain their historical diagnostic behavior; success in those partial profiles does not satisfy the current integrated workflow's prerequisite baseline. Installation presence does not prove activation, setup, invocation, or a working renderer.
 
-New prerequisite regressions were executed against the previous implementation and observed the incorrect ready result when newly required definitions were absent. The corrected checker passed all 18 prerequisite tests in the maintainer's local verification workspace. This is tool-contract evidence, not execution of the installed skills.
+The suite now covers selected index flags and sparse states being rejected without source/index mutation; explicit rejection of changed submodules despite Git ignore settings; color-free applicable patches for tracked and untracked content; a ready handoff prefix with future work pending; invalidated upstream inputs and repair; confirmation of selected design rules; encoding-safe CLI diagnostics; and existing record compatibility. All fixtures and Git payloads remain neutral protocol data.
 
-The current script candidate passed **109 distinct regression tests on Python 3.12.14, 3.13.15, and 3.14.7** on macOS. This includes the 101 historical test methods plus four full-workflow prerequisite tests and four generic seven-stage/legacy-chain tests. The prerequisite tests exercise each newly required definition as a missing-input subcase. Seven-stage tests cover readiness, a blocked producer, revised output identifiers, repaired consumer references, and compatibility with twelve-stage records.
+Before dependent coding, the current command combines `--require-design` with `--require-through HANDOFF_ID`. The first checks the design bundle; the second checks the selected producer prefix. A valid prefix can pass while `record_ready` is false. An unconfirmed selected rule cannot become ready by changing only its global blocking flag. These are declared mechanical contracts, not proof that a requirement or diagram has correct meaning.
 
-The Python 3.13 run required an isolated environment with the declared PyYAML dependency; an earlier unprepared interpreter run is not a product-regression result. This is the script-suite result only. Documentation, diagram, installation and external workflow checks have separate evidence; they are not inferred from this run. Do not inherit historical counts as current candidate results.
+The repository CI configuration selects Linux/macOS and Python 3.10/3.14. A configured matrix is not evidence that those jobs have executed. Preserve actual candidate identity, commands, counts, runtime versions and results in the external verification workspace or corresponding CI run. Distinguish current execution from historical results and do not add repeated interpreter runs into a distinct-test count.
 
 ## Historical tool verification
+
+The v2.0.0 script baseline passed 109 distinct regressions on macOS using Python 3.12.14, 3.13.15 and 3.14.7. Its later audit also passed the unchanged 109-test suite on Python 3.10.21, 3.13.15 and 3.14.7, while independently reproducing the six failure modes corrected by this candidate. Those green baseline tests did not cover the newly demonstrated failures.
 
 Before this refactor, the detailed-design candidate passed 101 distinct script regressions on macOS with Python 3.12.14, 3.13.15 and 3.14.7. Earlier verification recorded 75 regressions before detailed-design tools were added. These are historical observations of their respective revisions, not a claim that the current candidate has already passed on those environments.
 

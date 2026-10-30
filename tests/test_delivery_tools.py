@@ -219,6 +219,28 @@ class DeliveryCliTests(unittest.TestCase):
             p.write_text('{', encoding="utf-8")
             self.assertEqual(self.invoke(p).returncode, 2)
 
+    def test_escaped_surrogate_identifier_has_parseable_diagnostics(self):
+        record = validator.load_record(FIXTURES / "ready.json")
+        record["rules"][0]["id"] = "\ud800"
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "record.json"
+            path.write_text(json.dumps(record), encoding="utf-8")
+            result = self.invoke(path, "--project-root", FIXTURES, "--require-ready")
+            self.assertEqual(result.returncode, 1)
+            self.assertEqual(result.stderr, "")
+            payload = json.loads(result.stdout)
+            self.assertFalse(payload["structure_valid"])
+            self.assertIn("UNKNOWN_REFERENCE", {item["code"] for item in payload["errors"]})
+
+    def test_escaped_surrogate_duplicate_key_has_parseable_input_error(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "record.json"
+            path.write_text('{"\\ud800": 1, "\\ud800": 2}', encoding="utf-8")
+            result = self.invoke(path)
+            self.assertEqual(result.returncode, 2)
+            self.assertEqual(result.stdout, "")
+            self.assertIn("Duplicate JSON key:", json.loads(result.stderr)["input_error"])
+
     def test_symlink_loop_returns_structured_cli_error(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

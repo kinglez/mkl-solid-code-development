@@ -100,8 +100,8 @@ def assess_design_views(bundle, root, rules, evidence, passed, existing_ids):
     if bundle.get("profile") == "detailed" and not selected_rules:
         block("DESIGN_RULES_REQUIRED", location + ".rule_ids", "Detailed design needs its selected rule inputs.")
     for identifier in selected_rules:
-        if rules[identifier].get("status") != "confirmed" and rules[identifier].get("blocks_completion") is True:
-            block("DESIGN_INPUT_UNSETTLED", identifier, "A selected blocking design input is not confirmed.")
+        if rules[identifier].get("status") != "confirmed":
+            block("DESIGN_INPUT_UNSETTLED", identifier, "A selected design input is not confirmed.")
 
     state = bundle.get("state_model")
     state_required = False
@@ -177,7 +177,8 @@ def assess_design_views(bundle, root, rules, evidence, passed, existing_ids):
     return result()
 
 
-def validate(record: object, project_root: Path, require_handoffs: bool = False, require_design: bool = False) -> dict:
+def validate(record: object, project_root: Path, require_handoffs: bool = False, require_design: bool = False,
+             require_through: str | None = None) -> dict:
     errors, blockers = [], []
     root = project_root.resolve()
 
@@ -227,7 +228,8 @@ def validate(record: object, project_root: Path, require_handoffs: bool = False,
     required_top = ("schema_version", "task", "rules", "acceptance", "design", "evidence", "review", "limitations")
     if not fields(record, "$", required_top, ("handoffs", "design_views")):
         return {"structure_valid": False, "record_ready": False, "design_ready": False if require_design else None,
-                "design_blockers": [], "errors": errors, "blockers": blockers}
+                "design_blockers": [], "through_ready": False if require_through is not None else None,
+                "through_blockers": [], "errors": errors, "blockers": blockers}
     if type(record.get("schema_version")) is not int or record["schema_version"] != 1:
         error("SCHEMA_VERSION", "schema_version", "Only schema_version 1 is supported.")
     task = record.get("task")
@@ -393,6 +395,13 @@ def validate(record: object, project_root: Path, require_handoffs: bool = False,
 
     if require_handoffs and "handoffs" not in record:
         block("HANDOFFS_MISSING", "handoffs", "Stage handoffs are required for this validation.")
+    stages, handoff_blockers = {}, {}
+
+    def handoff_block(code, identifier, message):
+        entry = {"code": code, "location": identifier, "message": message}
+        blockers.append(entry)
+        handoff_blockers.setdefault(identifier, []).append(entry)
+
     if "handoffs" in record:
         stages = entries("handoffs", ("id", "stage", "status", "input_ids", "outputs", "notes"))
         usable = ("completed", "reused")
@@ -406,14 +415,14 @@ def validate(record: object, project_root: Path, require_handoffs: bool = False,
             if stage.get("status") != "skipped":
                 active.append(identifier)
                 if stage.get("status") not in usable:
-                    block("HANDOFF_INCOMPLETE", identifier, "The stage output is not ready for handoff.")
+                    handoff_block("HANDOFF_INCOMPLETE", identifier, "The stage output is not ready for handoff.")
             outputs = stage.get("outputs")
             if not isinstance(outputs, list):
                 error("ARRAY_REQUIRED", identifier + ".outputs", "Expected a JSON array.")
                 outputs = []
             stage_outputs[identifier] = set()
             if stage.get("status") in usable and not outputs:
-                block("HANDOFF_OUTPUT_REQUIRED", identifier, "A completed or reused stage needs a usable output.")
+                handoff_block("HANDOFF_OUTPUT_REQUIRED", identifier, "A completed or reused stage needs a usable output.")
             if stage.get("status") == "skipped" and outputs:
                 error("SKIPPED_HANDOFF_HAS_OUTPUT", identifier, "A skipped stage cannot claim produced outputs.")
             for offset, output in enumerate(outputs):
@@ -455,10 +464,29 @@ def validate(record: object, project_root: Path, require_handoffs: bool = False,
                 if producer_index >= index:
                     error("HANDOFF_FORWARD_REFERENCE", identifier, "Inputs must come from an earlier stage.")
                 elif producer_status not in usable:
-                    block("HANDOFF_INPUT_NOT_READY", identifier, "An input comes from an unfinished or invalidated stage.")
+                    handoff_block("HANDOFF_INPUT_NOT_READY", identifier, "An input comes from an unfinished or invalidated stage.")
         for previous, current in zip(active, active[1:]):
             if not stage_outputs[previous].intersection(consumed[current]):
-                block("HANDOFF_NOT_CONNECTED", current, "The next active stage must consume a result of the previous stage.")
+                handoff_block("HANDOFF_NOT_CONNECTED", current, "The next active stage must consume a result of the previous stage.")
+    through_blockers = []
+    if require_through is not None:
+        if not isinstance(require_through, str) or not require_through.strip():
+            issue(through_blockers, "THROUGH_TARGET_INVALID", "handoffs", "The selected target must be a nonempty handoff ID.")
+        elif require_through not in stages:
+            issue(through_blockers, "THROUGH_TARGET_MISSING", "handoffs", f"No handoff has ID: {require_through}.")
+        else:
+            # Earlier-only input references make this ordered prefix include
+            # every declared producer of the selected handoff's inputs.
+            for identifier, stage in stages.items():
+                through_blockers.extend(handoff_blockers.get(identifier, []))
+                if identifier == require_through:
+                    if stage.get("status") == "skipped":
+                        issue(through_blockers, "THROUGH_TARGET_SKIPPED", identifier,
+                              "The selected target must have a completed or reused result.")
+                    break
+        for item in through_blockers:
+            if item not in blockers:
+                blockers.append(item)
     design_ready, design_blockers = None, []
     if "design_views" in record:
         assessment = assess_design_views(record["design_views"], root, rules, evidence, passed, ids)
@@ -472,6 +500,8 @@ def validate(record: object, project_root: Path, require_handoffs: bool = False,
         blockers.extend(design_blockers)
     return {"structure_valid": not errors, "record_ready": not errors and not blockers,
             "design_ready": design_ready, "design_blockers": design_blockers,
+            "through_ready": not errors and not through_blockers if require_through is not None else None,
+            "through_blockers": through_blockers,
             "errors": errors, "blockers": blockers}
 
 
@@ -484,21 +514,24 @@ def main(argv=None) -> int:
                         help="Require linked stage handoffs; also implies --require-ready.")
     parser.add_argument("--require-design", action="store_true",
                         help="Require declared design-view readiness; independent of final delivery readiness.")
+    parser.add_argument("--require-through", metavar="HANDOFF_ID",
+                        help="Require ready handoffs through this stable ID; later stages may remain unfinished.")
     args = parser.parse_args(argv)
     root = args.project_root or args.record.parent
     try:
         if not root.is_dir():
             raise ValueError("project_root is not a directory")
         result = validate(load_record(args.record), root, require_handoffs=args.require_handoffs,
-                          require_design=args.require_design)
+                          require_design=args.require_design, require_through=args.require_through)
     except (OSError, ValueError, RuntimeError) as exc:
-        print(json.dumps({"input_error": str(exc)}, ensure_ascii=False), file=sys.stderr)
+        print(json.dumps({"input_error": str(exc)}, ensure_ascii=True), file=sys.stderr)
         return 2
-    print(json.dumps(result, ensure_ascii=False, indent=2))
+    print(json.dumps(result, ensure_ascii=True, indent=2))
     strict = args.require_ready or args.require_handoffs
     ready = not strict or result["record_ready"]
     design_ready = not args.require_design or result["design_ready"] is True
-    return 0 if result["structure_valid"] and ready and design_ready else 1
+    through_ready = args.require_through is None or result["through_ready"] is True
+    return 0 if result["structure_valid"] and ready and design_ready and through_ready else 1
 
 
 if __name__ == "__main__":
