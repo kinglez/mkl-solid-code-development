@@ -1,246 +1,232 @@
 # MKL SOLID Code Development
 
-**Build AI-assisted code that fits the business and stays easy to change.**
+**Turn business requirements into understandable, extensible, maintainable, and reviewable code.**
 
-An agent skill that connects business rules, robustness analysis, SOLID design, implementation, verification, and review. It works with your project's language and conventions, using Matt Pocock Skills and MKL robustness analysis.
+An agent skill connecting requirements, conceptual analysis, detailed design, implementation, and two levels of review. It combines Matt Pocock Skills with MKL UML Skills and follows the target project's language and conventions.
 
-[Workflow](#workflow-at-a-glance) · [How to use](#how-to-use) · [Stage outputs](#what-each-stage-produces) · [Verification](#verification)
+[Workflow](#seven-stage-workflow) · [Install](#install-and-verify) · [Use](#start-a-task) · [Outputs](#stage-outputs) · [Verification](#verification-and-boundaries)
 
-## Problems this skill addresses
+## Problems it addresses
 
-| Common problem | How the workflow addresses it |
+| Problem | Workflow response |
 | --- | --- |
-| Unclear business rules become silent implementation assumptions. | Clarify concrete scenarios; separate confirmed rules, proposals, and open decisions before dependent work starts. |
-| A use case becomes code without clear responsibility boundaries. | Identify boundary, entity, and control responsibilities, then define modules and interface contracts. |
-| Classes, interfaces, or patterns are added without a reason. | Apply SOLID to actual change scenarios, caller needs, and dependency contracts; explain the costs of each abstraction. |
-| A passing test or green checklist is mistaken for business acceptance. | Connect rules to observable checks and review both requirements conformance and engineering standards. |
-| Changes are difficult to review or resume in a later session. | Preserve a fixed change snapshot, actual stage outputs, current evidence, and the next consumer. |
+| Ambiguous requirements become silent coding assumptions. | Resolve concrete scenarios, preserve sources, and establish a requirements baseline. |
+| Code has no clear responsibility boundaries. | Analyze concepts and boundary/entity/control responsibilities before allocating technical operations. |
+| Diagrams, acceptance, and code describe different behavior. | Trace rules through behavior, responsibilities, interactions, operations, and observable checks. |
+| Interfaces and patterns add unnecessary complexity. | Evaluate actual variations, caller needs, semantic substitution, and dependency ownership. |
+| Review checks style but misses business deviations. | Review the same fixed change snapshot independently for Spec and Standards. |
+| A local improvement creates architectural friction. | Inspect related callers and dependencies, then verify necessary corrections. |
 
-## Workflow at a glance
+## Seven-stage workflow
 
-![Development workflow: understand the business, design responsibilities and interfaces, plan verifiable slices, build and test, then review and deliver.](assets/diagrams/workflow.svg)
+![Seven stages, their skills and usable outputs: clarification, requirements baseline, analysis, detailed design, coding, code review, architecture review.](assets/diagrams/workflow.svg)
 
-Scope and prerequisites (00) come first. The five phases expand into **Understand (01–02), Design (03–04), Plan (05–06), Build (07–08), and Review & deliver (09–11)** in the output tree below.
+Preparation establishes scope, the change baseline, installed capabilities, and applicable configuration. Final delivery collects reviewed outcomes and evidence. They wrap the seven stages.
 
-Every active stage consumes real inputs and produces an output for the next stage. Missing input returns to its producer; a changed upstream rule invalidates affected downstream results until they are rechecked.
+| Stage | Skills and responsibility | Output consumed next |
+| --- | --- | --- |
+| **1. Requirements clarification** | `grill-with-docs` | Answers with sources, conflicts, proposals, and open questions. |
+| **2. Requirements baseline** | This skill coordinates; `mkl-use-case-specifier`; `mkl-uml-use-case-diagram` when useful | Scope, rules, quality constraints, use-case behavior, and independently derived expected outcomes. |
+| **3. Analysis** | `mkl-uml-domain-modeler` leads; `domain-modeling` sharpens concepts when needed; `mkl-uml-robustness-diagram`; exit: `mkl-pdr-review` | Shared vocabulary, conceptual relationships, BCE responsibilities, behavior coverage, and analysis review. |
+| **4. Detailed design** | `codebase-design`, `mkl-uml-sequence-diagram`, `mkl-uml-design-class-model`, `mkl-cdr-review`; then `to-spec`, `to-tickets` | Reviewed structure, interactions, applicable lifecycle model, contracts, implementation specification, and vertical slices. |
+| **5. Coding** | `implement`, `tdd`; named local adapter when needed | Code, actual behavior checks, refactoring decisions, and synchronized design. |
+| **6. Code review** | `code-review`; fixed-snapshot two-axis adapter for pending files | Findings, corrections, regression evidence, and reviewed snapshot. |
+| **7. Architecture review** | `improve-codebase-architecture` | Scoped change/retain decisions, costs, risks, and reconsideration triggers. |
 
-Robustness analysis identifies **boundary, entity, and control** responsibilities. SOLID and design patterns guide concrete design decisions. The depth follows the task: small changes can combine stages, and design-only or review-only requests end at their requested deliverable.
+`grilling` supports clarification; `setup-matt-pocock-skills` supplies configuration when required. Installation does not execute a stage. Respect each skill's invocation contract and name any adapter actually used.
 
-### Design produces actual models before code
+### Keep the stage boundaries clear
 
-For new use cases and complex changes, detailed design includes a **design class model** (or an explicit module/component view for non-OO code) and **sequence diagrams** for the required interactions. A **state diagram** is also required when lifecycle rules determine legal operations or outcomes. State applicability is assessed explicitly.
+The **requirements baseline** states what behavior is required and why. This skill consolidates confirmed sources; the use-case specifier describes normal, alternative, and exception flows. A separate evaluator derives acceptance expectations from requirements, without using implementation output as the answer.
 
-![Detailed design connects BCE responsibilities, class or module structure, sequence interactions and applicable lifecycle states, then reviews their consistency before implementation.](assets/diagrams/design-views.svg)
+The **implementation specification** records the agreed realization and verification after detailed design. `to-spec` consolidates established decisions; `to-tickets` creates verifiable slices. These may be distinct sections of one maintained document.
 
-These views are refined together: use-case/BCE responsibilities map to interactions, owned operations/events, relevant state effects, and acceptance. Check contracts and behavior across the actual views before specification/implementation, then synchronize them after coding or refactoring. Bounded corrections may use checked reuse or a justified lightweight path. See [Design Views](references/design-views.md) for selection, outputs, routing, and readiness.
+Analysis identifies business concepts and responsibilities. MKL leads the conceptual model; Matt's domain-modeling discipline resolves ambiguity in the same shared vocabulary. BCE roles do not require one implementation class each.
 
-## How to use
+Detailed design allocates technical operations and collaboration. New use cases and complex changes normally require a **class model or justified module view**, **sequence diagrams**, and an explicit **state applicability decision**. Produce a state diagram when lifecycle rules determine legal operations or outcomes. Iterate these views together.
 
-![Usage flow: install the skill and prerequisites, verify session availability, configure the target repository, start a scoped task, and inspect the delivery.](assets/diagrams/how-to-use.svg)
+![Structure, interactions, lifecycle applicability and contracts are checked together before implementation planning.](assets/diagrams/design-views.svg)
 
-This is the first-time path for a development repository. Reuse valid installation/setup and select stages that match the request.
+PDR checks analysis consistency; CDR checks detailed-design consistency. Scoped technical review is the default. Formal acceptance needs the applicable evidence and actual decision maker; a validator cannot supply it.
 
-### 1. Install the skill and its prerequisites
+### Return corrections to their source
 
-Use the standard [Skills CLI](https://skills.sh/docs/cli) from your target project. The validated CLI is `1.7.4`, requiring Node.js `>=22.20.0`, npm, Git, and access to npm/GitHub.
+Missing input returns to its producer. Upstream changes invalidate affected downstream results until rechecked. Coding includes testing and refactoring. If architecture review changes code, revisit affected design, implementation, regression checks, and change review before closing delivery.
+
+Small changes can reuse current results, combine adjacent outputs, or justify skips. Design-only and review-only requests retain their endpoints. **Every task still requires the complete prerequisite installation.** Seven stages do not mean seven files or seven automatic human approval pauses.
+
+## Install and verify
+
+![Install the complete skill set, verify current availability, reuse or configure setup, execute relevant stages, and inspect actual evidence.](assets/diagrams/how-to-use.svg)
+
+### 1. Install this skill and both complete upstream collections
+
+Use the standard [Skills CLI](https://skills.sh/docs/cli) in the target project and select your agent:
 
 ```bash
 npx skills add kinglez/mkl-solid-code-development
-npx skills add mattpocock/skills
-npx skills add kinglez/mkl-uml --skill mkl-uml-robustness-diagram
+npx skills add mattpocock/skills --skill '*'
+npx skills add kinglez/mkl-uml --skill '*'
 ```
 
-For the Matt Pocock installation, select the **11 named skills below**. Together with the robustness skill, they form the **12-skill core baseline**. The installer lets you choose target agents; installation is project-scoped by default.
+`--skill '*'` selects every skill in each upstream repository; choose your target agent in the installer. Install the complete collections once and reuse a valid installation. The **19 named workflow prerequisites** (11 Matt and 8 MKL, excluding this skill) are the minimum set checked by this workflow, not the total number installed. Additional upstream skills remain available without being automatically executed. State diagrams use the available project UML toolchain; no dedicated MKL state skill is assumed.
 
-| Purpose | Required skills |
-| --- | --- |
-| Repository setup | `setup-matt-pocock-skills` |
-| Business clarification and domain language | `grill-with-docs`, `grilling`, `domain-modeling` |
-| Boundary, entity, and control analysis | `mkl-uml-robustness-diagram` |
-| Module and interface design | `codebase-design` |
-| Specifications and implementation slices | `to-spec`, `to-tickets` |
-| Implementation and testing | `implement`, `tdd` |
-| Change review | `code-review` |
-| Architecture reassessment | `improve-codebase-architecture` |
+Reuse valid installations, preserve customizations, and use one route per agent. Cross-repository dependencies are not installed automatically. Project-scoped installation is the default; add `-g` for user-wide installation. See [dependency and distribution details](references/compatibility.md).
 
-The detailed-design path additionally requires these **two existing MKL skills**, for 14 definitions in total:
-
-```bash
-npx skills add kinglez/mkl-uml --skill mkl-uml-design-class-model mkl-uml-sequence-diagram
-```
-
-The class skill supports OO structure; the sequence skill supports interactions. State diagrams use the project's available UML toolchain, such as a local PlantUML renderer. No dedicated state-diagram skill is assumed. A missing renderer is reported separately from skill-definition availability.
-
-Installing this skill does not automatically install skills from the other repositories. Required installation also does not mean every task runs every stage. Preserve existing customizations and use one installation route per agent.
-
-For a user-wide installation, add `-g` to the relevant install command. To inspect this skill without installing it:
-
-```bash
-npx skills add kinglez/mkl-solid-code-development --list
-```
-
-For reproducible acceptance or dependency upgrades, use the [validated dependency snapshot](references/compatibility.md).
-
-### 2. Verify availability in the current session
-
-Confirm that the installed definitions are available to your agent. Follow its activation procedure if a new installation requires a fresh session. Installation, session availability, and repository configuration are separate checks.
+### 2. Verify definitions and session availability
 
 #### Prerequisite checker runtime
 
-For filesystem installations, the optional read-only checker parses actual YAML using PyYAML. From the installed `mkl-solid-code-development` directory, create an isolated environment. This is a POSIX-shell example:
+From the installed skill directory, prepare the optional checker's PyYAML runtime:
 
 ```bash
 python3 -m venv .venv
 .venv/bin/python -m pip install -r requirements.txt
 ```
 
-Use the actual directories containing `skill-name/SKILL.md`. The following are command templates; replace each `path/to/...`:
+Supply real directories containing `skill-name/SKILL.md`; these are command templates:
 
 ```bash
 .venv/bin/python scripts/check_prerequisites.py --skills-root path/to/skills
-.venv/bin/python scripts/check_prerequisites.py --skills-root path/to/project-skills --skills-root path/to/global-skills
-.venv/bin/python scripts/check_prerequisites.py --skills-root path/to/skills --profile detailed-design
+.venv/bin/python scripts/check_prerequisites.py --skills-root path/to/project-skills --skills-root path/to/global-skills --profile full-workflow
 ```
 
-Exit `0` means the selected profile's named definitions are readable with matching YAML names: 12 for default `core`, 14 for `detailed-design`. Exit `1` means missing/invalid definitions; `2` means invalid input or parser dependency. This does not prove session activation, provenance, compatible behavior, completed setup, or a working renderer. Plugins can use the installed catalog and definition access instead.
+Default **full-workflow** checks all 19 definitions. Exit `0`: readable matching frontmatter names; `1`: missing/invalid definitions; `2`: invalid input/runtime. It performs no installation or execution and does not prove activation, provenance, setup, or rendering.
 
-### 3. Configure the target repository
+Explicit legacy profiles **core** (12) and **detailed-design** (14) remain for compatibility and diagnosis. **Their success does not satisfy the complete workflow prerequisite.** Check session availability separately; plugin installations may use the host's catalog and definition access.
 
-Complete this setup before selected stages consume repository configuration. A scoped design or review that does not use a tracker does not require a new tracker setup.
+### 3. Reuse or configure repository setup
 
-Make an explicit setup request through your agent's supported invocation mechanism. For example:
+Read actual project guidance and saved configuration. Explicitly use `setup-matt-pocock-skills` when needed, then check tracker, document conventions, and downstream status vocabulary using the [setup contract](references/repository-setup.md). Reuse valid configuration. Work without tracker-dependent stages does not require a new tracker setup.
 
-> Use setup-matt-pocock-skills to configure this repository, then use mkl-solid-code-development to verify the tracker, domain-document conventions, and status mapping needed by downstream stages.
+## Start a task
 
-Confirm the concrete configuration choices when setup asks, and reuse valid existing configuration. The 12-skill baseline omits `triage`; the documented [local setup adapter](references/repository-setup.md) completes any status vocabulary that the upstream setup omitted. Specifications and tickets must read the actual saved configuration.
+Supply requirements, relevant evidence, and the intended endpoint:
 
-### 4. Start a scoped development task
+> Use mkl-solid-code-development to implement the supplied requirements. Establish the requirements baseline and independent acceptance expectations, review analysis and detailed design, implement verifiable slices, and deliver actual checks, change review, and a scoped architecture review.
 
-Supply the requirements, relevant project evidence, and intended endpoint. A starting request can be:
+Invoke explicit-only skills through the host's supported mechanism when selected. Definition reading, installation, and completed execution are different actions. Identify local adapters accurately. Installation does not authorize tracker publication, commits, pushes, or deployment.
 
-> Use mkl-solid-code-development to implement the feature from the requirements I provide. Clarify blocking business decisions, design responsibilities and interfaces before coding, and implement verifiable slices. Deliver the stage outputs, actual verification results, and a scoped review of the changes.
+For pending local changes, the [implementation/review adapter](references/local-review.md) fixes the tracked and untracked delivery against a baseline. Both independent reviewers consume the same snapshot, requirements, design, and standards. Use upstream committed-history review when it covers the intended change.
 
-New use cases default to detailed design. Before coding, inspect the class/module and sequence views, applicable state view, and their consistency review. With a structured record, `--require-design` checks the declared pre-implementation gate; final task/review readiness is checked separately. Keep the diagrams current when operations, dependencies, or lifecycle behavior change.
+For design-only or review-only work, preserve that endpoint. On resumption, read actual outputs, versions, statuses, and the next consumer before advancing.
 
-When a selected upstream stage is user-invoked, invoke that skill explicitly using your host's supported syntax. Typical handoffs are `grill-with-docs` for unresolved rules, `to-spec` for a confirmed design, and `to-tickets` for verifiable slices. The wrapper does not automatically invoke every installed skill. Each stage reads the preceding real output. Installation alone does not authorize commits, tracker publication, or deployment.
+## Stage outputs
 
-For uncommitted code, the [local implementation and two-axis review adapter](references/local-review.md) captures the actual tracked and untracked changes against a fixed baseline. Both review axes receive the same snapshot. The adapter is identified separately from the original upstream `implement`/`code-review` combination. Committed-history review can use the upstream route when it covers the intended delivery.
+![A logical output tree with seven branches, from clarification and requirements through analysis, design, code, change review, and architecture conclusions.](assets/diagrams/stage-outputs.svg)
 
-<details>
-<summary>Other starting requests: design, review, or resume</summary>
+**Every executed stage must produce an inspectable, usable output. Its next consumer must read that output and confirm readiness before advancing. Missing, conflicting, or unready output blocks dependent work.** A stage name, empty directory, completion label, or promise to produce a file is insufficient.
 
-**Design only**
+### Task artifact tree
 
-> Use mkl-solid-code-development to design responsibilities and interfaces for the requirements I provide. End with the design, trade-offs, and proposed verification.
+This is the recommended layout in the **target project**, separate from this skill's own repository layout shown later. Reuse established project locations and document the mapping in `handoffs.md`; the required content and producer/consumer links remain mandatory. Existing documents can hold several named sections instead of one new file per item.
 
-**Review only**
+```text
+target-project/
+├── GLOSSARY.md                         Shared vocabulary; reuse existing context layout
+├── docs/delivery/<task>/
+│   ├── handoffs.md                     Input versions, outputs, readiness and consumers
+│   ├── 01-clarification/
+│   │   └── clarification.md            Questions, source-based answers and open decisions
+│   ├── 02-requirements/
+│   │   ├── requirements.md             Rules, scope, constraints and exclusions
+│   │   ├── use-cases.md                Basic, alternative and exception flows
+│   │   ├── ACCEPTANCE_ORACLE.md        Requirement-derived expected outcomes
+│   │   └── use-cases.puml              When an actor/system-boundary view is useful
+│   ├── 03-analysis/
+│   │   ├── domain.puml                 Conceptual model using shared vocabulary
+│   │   ├── robustness.puml             Boundary/entity/control responsibilities
+│   │   ├── coverage.md                Behavior and information-source correspondence
+│   │   └── pdr-review.md               Findings, corrections and analysis readiness
+│   ├── 04-design/
+│   │   ├── classes.puml                Or a justified module view
+│   │   ├── sequences/                  Principal and relevant failure interactions
+│   │   ├── lifecycle-assessment.md     State-model applicability and its reason
+│   │   ├── state.puml                  When lifecycle behavior requires it
+│   │   ├── contracts.md                Interfaces, dependencies and design trade-offs
+│   │   ├── cdr-review.md               Cross-view findings, corrections and readiness
+│   │   ├── implementation-spec.md      Realization and verification decisions
+│   │   └── tickets/                    Verifiable slices and blocking dependencies
+│   ├── 05-coding/
+│   │   ├── implementation.md           References to actual code and test locations
+│   │   ├── verification.md             Executed checks, results and remaining gaps
+│   │   └── refactoring.md              Changes or justified retention; design sync
+│   ├── 06-code-review/
+│   │   ├── review-input.md             Baseline, immutable snapshot location and identity
+│   │   ├── spec-review.md              Requirements conformance
+│   │   ├── standards-review.md         Standards and design
+│   │   └── corrections.md              Fixes, reruns and review of the changed snapshot
+│   ├── 07-architecture-review/
+│   │   └── architecture-review.md      Scope, retain/adjust decision, costs and triggers
+│   └── delivery-summary.md             Current outcomes and evidence for the user
+├── src/                                Actual implementation; follow the project layout
+└── tests/                              Actual behavior/contract tests; follow its layout
+```
 
-> Use mkl-solid-code-development to review the current pending changes, including new files, against the specification and repository standards. Return findings and their supporting evidence.
+Editable diagram sources and rendered previews stay together where available. A conditional view needs either its actual output or a justified non-applicability decision. `src/`, `tests/`, glossary locations, and filenames follow existing project conventions; coding artifacts are not relocated into documentation. For the Git capture helper, keep immutable snapshot bytes **outside the checkout** and reference them from `review-input.md`. Independently held assessment vectors stay with their evaluator when a blind evaluation is required; the public acceptance contract remains available to downstream stages.
 
-**Resume**
+### Producer and next consumer
 
-> Use mkl-solid-code-development to continue from the task record I provide. Read the referenced artifacts, check their current applicability, and continue the next unblocked stage.
+| Producer | Required output | Next consumer |
+| --- | --- | --- |
+| 1. Clarification | Answers, sources, conflicts and open decisions | 2 builds the requirements baseline from them. |
+| 2. Requirements baseline | Requirements, use-case behavior and independent expected outcomes | 3 analyzes the behavior; design, coding and review retain these sources. |
+| 3. Analysis | Shared vocabulary, domain/BCE coverage and PDR result | 4 allocates technical collaborations from the ready analysis. |
+| 4. Detailed design | Current views/contracts, CDR, implementation specification and slices | 5 implements an unblocked slice and its acceptance. |
+| 5. Coding | Actual code/tests, execution results, refactoring outcome and current design | 6 reviews the delivered change against its requirements and design. |
+| 6. Code review | Same-snapshot Spec/Standards reports, corrections and rerun evidence | 7 evaluates the reviewed implementation in its surrounding structure. |
+| 7. Architecture review | Scoped conclusion, costs, triggers and verified adjustments | Final delivery and the user consume the current results. |
 
-</details>
-
-### 5. Inspect the delivery
-
-Use the stage-output tree below to check what actually exists:
-
-- Which confirmed rules and acceptance scenarios does the code implement?
-- Which preceding outputs did each active stage consume, and which decisions remain open?
-- Which checks ran, what happened, and what remains unverified?
-- What did the requirements and standards reviews find, and which corrections were verified?
-- Which architecture decisions affect future maintenance?
-
-The entry point for the agent is [SKILL.md](SKILL.md). Detailed execution and invocation contracts are in [Workflow Prerequisites and Skill Routing](references/optional-skills.md).
-
-## What each stage produces
-
-![Logical deliverable tree for one task: scope and setup, business rules, domain model, robustness responsibilities, interface design, specification, slices, code and checks, refactoring, review corrections, architecture decisions, and final delivery.](assets/diagrams/stage-outputs.svg)
-
-**This is a tree of logical deliverables, not a mandatory directory layout or twelve required files.** Keep outputs in existing project materials or named sections of one working document. The next active stage consumes the preceding output; the final consumer is the user.
-
-<details>
-<summary>Text version: the twelve logical stage outputs</summary>
-
-| Stage | Output used by the next stage |
-| --- | --- |
-| 00 · Scope and prerequisites | Scoped request, baseline, available capabilities, usable configuration, and selected stages |
-| 01 · Business clarification | Confirmed rules, flows, acceptance scenarios, sources, and open decisions |
-| 02 · Domain modeling | Agreed terms, concepts, relationships, and invariants |
-| 03 · Robustness analysis | Boundary/entity/control responsibilities, information sources, and success/failure coverage |
-| 04 · Detailed views and contracts | Class/module and sequence sources, applicable state sources, contracts/dependencies, consistency review, and trade-offs |
-| 05 · Implementation specification | Scope, acceptance, design constraints, and observable test seams |
-| 06 · Task slicing | Verifiable tasks, blocking edges, and slice acceptance |
-| 07 · Implementation and verification | Code changes, actual checks/results, coverage, and remaining gaps |
-| 08 · Refactoring | Final code, synchronized affected views, and regression evidence, or a justified retain decision |
-| 09 · Review and corrections | Two-axis findings, corrections, current snapshot, and rerun evidence |
-| 10 · Architecture reassessment | Scoped change/retain decisions, maintenance costs, and reconsideration triggers |
-| 11 · Final delivery | Linked outcomes, current artifacts, evidence, decisions, and limitations for the user |
-
-</details>
-
-Reused outputs need a current applicability check. Skipped stages need a reason; pending results remain unready. An upstream change requires affected consumers to be rechecked. See [Stage Outputs and Handoffs](references/workflow-handoffs.md) for the complete input/output contract. The [implementation brief](assets/templates/implementation-brief.md) includes a compact handoff index.
+Record **inputs consumed, actual output, readiness and limits, and next consumer** at every handoff. Reuse requires a current applicability check; a justified skipped stage claims no output; a full seven-stage development run must account for all seven results. Upstream changes invalidate affected consumers until rechecked. See [handoffs](references/workflow-handoffs.md) and the [brief template](assets/templates/implementation-brief.md).
 
 ## Optional delivery-record tools
 
-The delivery-record tools and local review capture use Python 3.10+ and its standard library; review capture also needs Git. The separate prerequisite checker requires the PyYAML runtime above.
-
-From the skill directory, initialize a detailed-design draft. This is a command template; replace the path, ID, and objective:
+Delivery tools use Python 3.10+ and the standard library; review capture also needs Git. Initialize a draft using actual paths and identifiers:
 
 ```bash
 python3 scripts/init_delivery.py path/to/delivery --id TASK-1 --summary "Delivery objective" --intent implement --design-profile detailed --with-brief
 ```
 
-Fill in the actual rules, view sources, applicability, and consistency-review evidence. Before coding, check the design gate:
+Populate actual rules, view sources, applicability, and evidence. Before coding:
 
 ```bash
 python3 scripts/validate_delivery.py path/to/delivery/delivery-record.json --require-design
 ```
 
-The draft starts unready and invents no completed views or review. `--require-design` can pass before coding with `design_ready: true` while `record_ready` remains false. After implementation and final review, require both gates:
+Design readiness and final readiness are separate: `design_ready` can pass while coding/review remain incomplete. After implementation, corrections, and reviews:
 
 ```bash
 python3 scripts/validate_delivery.py path/to/delivery/delivery-record.json --require-design --require-handoffs
 ```
 
-For existing/simple records, omitting `--design-profile` retains the previous format; lightweight design can be explicitly selected when justified.
+Initialization refuses overwrites. The validator checks declarations, references and evidence; it never executes recorded commands, interprets UML semantics, or automatically detects stale content. Older records retain their stage names/count and schema meaning. See [delivery records](references/delivery-record.md).
 
-Initialization refuses to overwrite existing files. Validation checks structure, references, declared evidence coverage, and readiness; it never executes recorded commands. **A ready record is not proof of correct software or SOLID compliance.** It does not judge semantic completeness or automatically detect stale content. See [Delivery Records and Tools](references/delivery-record.md) for fields, evidence requirements, and exit codes.
+## Verification and boundaries
 
-## Verification
-
-With the checker runtime prepared, run this command from the skill directory:
+Run domain-neutral regressions from the skill directory with the checker runtime prepared:
 
 ```bash
 .venv/bin/python -m unittest discover -s tests -v
 ```
 
-The detailed-design update passed **101 regression tests on Python 3.12.14, 3.13.15, and 3.14.7** on macOS. These include conditional modeling prerequisites, draft initialization, independent design/final readiness gates, YAML and evidence-path failures, and actual local review capture. They are 101 distinct tests exercised on three interpreters.
+Checks cover prerequisites, parsing, evidence paths, generic handoffs, readiness, initialization, and local review capture. Structural fixtures are synthetic protocol data, not application requirements or actual delivery evidence. See [verification evidence](tests/ACCEPTANCE.md) and the [generic evaluation protocol](tests/behavioral-cases.md).
 
-The [acceptance record](tests/ACCEPTANCE.md) distinguishes executed installation, script, and independent workflow scenarios from untested environments. The [forward-testing protocol](tests/behavioral-cases.md) describes future evaluations. Neither test counts nor scenario descriptions establish correctness for every generated program.
+**This skill's source repository and installed directory, including its tests, are business-independent.** Ordinary task artifacts belong in the user's target application. When maintaining or evaluating this skill itself, keep application requirements, business vectors, named use cases, generated applications, and their end-to-end evidence in separate acceptance workspaces outside the skill repository/package. The target application can contain its own business requirements, code and tests.
 
-<details>
-<summary>Repository layout and additional modeling support</summary>
+Tests, diagrams and records support bounded conclusions, not SOLID certification, whole-system correctness, formal business acceptance, or production readiness. Measure performance before making performance claims; report gaps explicitly.
 
 ```text
-SKILL.md                  Agent entry point
-agents/openai.yaml        Skill metadata and icon references
-references/               Analysis, design, setup, routing, and tool contracts
-scripts/                  Prerequisite checker, delivery records, review capture
-assets/diagrams/          Workflow, detailed views, usage, and deliverable tree
-assets/templates/         Delivery-record, design-view, and brief templates
-tests/                    Regressions, synthetic fixtures, acceptance, scenarios
-requirements.txt          Pinned YAML parser for the optional checker
-LICENSE, NOTICE           Project license and attribution
-licenses/                 Original third-party notices
+SKILL.md                  Seven-stage agent entry point
+agents/                   Skill metadata
+references/               Handoffs, routing, design, setup and tool contracts
+scripts/                  Prerequisite checks and delivery tools
+assets/diagrams/           Business-independent workflow and output views
+assets/templates/          Reusable records and brief
+tests/                    Domain-neutral regressions and protocol fixtures
+requirements.txt          YAML parser dependency
+LICENSE, NOTICE, licenses/ Authorization and third-party notices
 ```
-
-Beyond the conditional detailed-design pair, further MKL domain/use-case modeling aids remain optional. Required views follow the selected scope; installing skills does not enter a formal MKL gate. Teaching examples and synthetic fixtures do not supply business rules for another task.
-
-</details>
 
 ## License
 
-Apache-2.0; see [LICENSE](LICENSE) and [NOTICE](NOTICE). Independently installed dependencies retain their own licenses. Original notices and guidance for additional offline redistribution are in [Validated Dependencies and Distribution](references/compatibility.md).
+Apache-2.0; see [LICENSE](LICENSE) and [NOTICE](NOTICE). Independently installed dependencies retain their licenses; see [distribution guidance](references/compatibility.md).

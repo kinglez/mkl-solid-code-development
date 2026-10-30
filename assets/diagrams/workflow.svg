@@ -1,93 +1,75 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 1000" width="1280" height="1000" role="img" aria-labelledby="workflow-title workflow-desc" data-generator="fireworks-tech-graph" data-schema-version="1" data-style-id="1" data-visual-theme="Flat Icon" data-diagram-type="flowchart" data-semantic-profile="generic" data-semantic-valid="true" data-quality-profile="showcase">
-<title id="workflow-title">From business intent to reviewed code</title>
-<desc id="workflow-desc">Five development phases carry confirmed business rules through design, planning, implementation and independent review into a traceable delivery, using the named skills and local adapters.</desc>
-<style>text { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }</style>
-<defs>
-<marker id="workflow-blue" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="10" refX="12" refY="5" orient="auto"><path d="M 0,0 L 12,5 L 0,10 Z" fill="#2563eb"/></marker>
-<marker id="workflow-green" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="10" refX="12" refY="5" orient="auto"><path d="M 0,0 L 12,5 L 0,10 Z" fill="#16a34a"/></marker>
-</defs>
-<rect data-graph-role="background" x="0" y="0" width="1280" height="1000" fill="#ffffff"/>
-<text x="48" y="56" font-size="32" font-weight="600" fill="#111827" >From business intent to reviewed code</text>
-<text x="48" y="94" font-size="22" font-weight="400" fill="#6b7280" >Each stage passes a usable result to its next consumer.</text>
-<g data-graph-role="container" id="preflight" data-graph-bounds="48,120,1232,184"><rect x="48" y="120" width="1184" height="64" rx="8" fill="#eff6ff" stroke="#bfdbfe"/>
-<text x="72" y="146" font-size="16" font-weight="600" fill="#2563eb" >BEFORE STARTING</text>
-<text x="272" y="146" font-size="20" font-weight="500" fill="#111827" >Verify 12 core skills; detailed design adds 2 modeling skills.</text>
-<text x="272" y="172" font-size="19" font-weight="400" fill="#6b7280" >setup-matt-pocock-skills + the local setup adapter where needed</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 2310" width="1440" height="2310" role="img" aria-labelledby="workflow-title workflow-desc" data-generator="fireworks-tech-graph" data-schema-version="1" data-style-id="1" data-visual-theme="Flat Icon" data-diagram-type="flowchart" data-semantic-profile="generic" data-semantic-valid="true" data-quality-profile="showcase">
+<title id="workflow-title">Seven stages from requirements to maintainable code</title>
+<desc id="workflow-desc">Seven connected development stages show the skills used and the actual result handed to the next stage. Preparation and final delivery wrap the workflow.</desc>
+<style>text{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif}</style>
+<defs><marker id="workflow-arrow" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="10" refX="12" refY="5" orient="auto"><path d="M 0,0 L 12,5 L 0,10 Z" fill="#2563eb"/></marker></defs>
+<rect data-graph-role="background" x="0" y="0" width="1440" height="2310" fill="#ffffff"/>
+<text x="48" y="58" font-size="38" font-weight="600" fill="#111827">Seven stages from requirements to maintainable code</text>
+<text x="48" y="100" font-size="25" font-weight="400" fill="#6b7280">Real inputs. Usable outputs. Reviewed transitions.</text>
+<g id="preflight" data-graph-role="container" data-graph-bounds="48,132,1392,218"><rect x="48" y="132" width="1344" height="86" rx="8" fill="#eff6ff" stroke="#bfdbfe"/>
+<text x="72" y="166" font-size="20" font-weight="600" fill="#2563eb">PREPARATION</text>
+<text x="300" y="166" font-size="24" font-weight="500" fill="#111827">Install both full collections; verify the 19-skill workflow minimum.</text>
+<text x="300" y="198" font-size="22" font-weight="400" fill="#6b7280">Reuse valid setup; select the stages and design depth the request needs.</text>
 </g>
-<path id="understand-design" data-graph-role="edge" data-edge-id="understand-design" data-source="understand" data-target="design" data-edge-kind="flow" data-flow="handoff" d="M 400,356 L 464,356" fill="none" stroke="#2563eb" stroke-width="3" marker-end="url(#workflow-blue)"/>
-<path id="design-plan" data-graph-role="edge" data-edge-id="design-plan" data-source="design" data-target="plan" data-edge-kind="flow" data-flow="handoff" d="M 816,356 L 880,356" fill="none" stroke="#2563eb" stroke-width="3" marker-end="url(#workflow-blue)"/>
-<path id="plan-build" data-graph-role="edge" data-edge-id="plan-build" data-source="plan" data-target="build" data-edge-kind="flow" data-flow="handoff" d="M 1056,488 L 1056,592" fill="none" stroke="#2563eb" stroke-width="3" marker-end="url(#workflow-blue)"/>
-<path id="build-review" data-graph-role="edge" data-edge-id="build-review" data-source="build" data-target="review" data-edge-kind="flow" data-flow="handoff" d="M 880,724 L 816,724" fill="none" stroke="#2563eb" stroke-width="3" marker-end="url(#workflow-blue)"/>
-<path id="review-delivery" data-graph-role="edge" data-edge-id="review-delivery" data-source="review" data-target="delivery" data-edge-kind="flow" data-flow="handoff" d="M 464,724 L 400,724" fill="none" stroke="#16a34a" stroke-width="3" marker-end="url(#workflow-green)"/>
-<g id="understand" data-graph-role="node" data-node-id="understand" data-semantic-role="process" data-graph-bounds="48,224,400,488">
-<rect x="48" y="224" width="352" height="264" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6"/>
-<text x="72" y="264" font-size="28" font-weight="600" fill="#111827" >Understand</text>
-<text x="368" y="262" font-size="18" font-weight="600" fill="#2563eb" text-anchor="end">01</text>
-<text x="72" y="300" font-size="20" font-weight="400" fill="#6b7280" >Rules and domain language</text>
-<text x="72" y="344" font-size="19" font-weight="500" fill="#2563eb" >grill-with-docs · grilling</text>
-<text x="72" y="374" font-size="19" font-weight="500" fill="#2563eb" >domain-modeling</text>
-<line x1="72" y1="392" x2="376" y2="392" stroke="#e5e7eb" stroke-width="1"/>
-<text x="72" y="430" font-size="20" font-weight="500" fill="#111827" >Confirmed rules</text>
-<text x="72" y="456" font-size="20" font-weight="500" fill="#111827" >+ domain meaning</text>
+<g id="stage-1" data-graph-role="node" data-node-id="stage-1" data-semantic-role="process" data-graph-bounds="48,270,1392,490">
+<rect x="48" y="270" width="1344" height="220" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6"/>
+<text x="76" y="312" font-size="30" font-weight="600" fill="#111827">1. Requirements clarification</text>
+<text x="76" y="352" font-size="24" font-weight="400" fill="#6b7280">Resolve ambiguity and retain the source of each answer.</text>
+<text x="76" y="392" font-size="22" font-weight="500" fill="#2563eb">grill-with-docs</text>
+<text x="76" y="466" font-size="24" font-weight="500" fill="#111827">OUTPUT  Answers, conflicts, proposals and open questions.</text>
 </g>
-<g id="design" data-graph-role="node" data-node-id="design" data-semantic-role="process" data-graph-bounds="464,224,816,488">
-<rect x="464" y="224" width="352" height="264" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6"/>
-<text x="488" y="264" font-size="28" font-weight="600" fill="#111827" >Design</text>
-<text x="784" y="262" font-size="18" font-weight="600" fill="#2563eb" text-anchor="end">02</text>
-<text x="488" y="300" font-size="20" font-weight="400" fill="#6b7280" >BCE + structure + interactions</text>
-<text x="488" y="344" font-size="19" font-weight="500" fill="#2563eb" >mkl-uml-robustness-diagram</text>
-<text x="488" y="374" font-size="19" font-weight="500" fill="#2563eb" >codebase-design</text>
-<line x1="488" y1="392" x2="792" y2="392" stroke="#e5e7eb" stroke-width="1"/>
-<text x="488" y="430" font-size="20" font-weight="500" fill="#111827" >Class / module + sequences</text>
-<text x="488" y="456" font-size="20" font-weight="500" fill="#111827" >+ state when lifecycle applies</text>
+<path id="flow-1-2" data-graph-role="edge" data-edge-id="flow-1-2" data-source="stage-1" data-target="stage-2" data-edge-kind="flow" data-flow="handoff" d="M 720,490 L 720,540" fill="none" stroke="#2563eb" stroke-width="3" stroke-linejoin="round" marker-end="url(#workflow-arrow)"/>
+<g id="stage-2" data-graph-role="node" data-node-id="stage-2" data-semantic-role="process" data-graph-bounds="48,540,1392,760">
+<rect x="48" y="540" width="1344" height="220" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6"/>
+<text x="76" y="582" font-size="30" font-weight="600" fill="#111827">2. Requirements baseline</text>
+<text x="76" y="622" font-size="24" font-weight="400" fill="#6b7280">Consolidate requirements and derive independent expected outcomes.</text>
+<text x="76" y="662" font-size="22" font-weight="500" fill="#2563eb">This skill coordinates · mkl-use-case-specifier</text>
+<text x="76" y="694" font-size="22" font-weight="500" fill="#2563eb">mkl-uml-use-case-diagram (when useful)</text>
+<text x="76" y="736" font-size="24" font-weight="500" fill="#111827">OUTPUT  Scope, rules, use cases and independent expected outcomes.</text>
 </g>
-<g id="plan" data-graph-role="node" data-node-id="plan" data-semantic-role="process" data-graph-bounds="880,224,1232,488">
-<rect x="880" y="224" width="352" height="264" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6"/>
-<text x="904" y="264" font-size="28" font-weight="600" fill="#111827" >Plan</text>
-<text x="1200" y="262" font-size="18" font-weight="600" fill="#2563eb" text-anchor="end">03</text>
-<text x="904" y="300" font-size="20" font-weight="400" fill="#6b7280" >Specifications and slices</text>
-<text x="904" y="344" font-size="19" font-weight="500" fill="#2563eb" >to-spec · to-tickets</text>
-<line x1="904" y1="392" x2="1208" y2="392" stroke="#e5e7eb" stroke-width="1"/>
-<text x="904" y="430" font-size="20" font-weight="500" fill="#111827" >Implementable specification</text>
-<text x="904" y="456" font-size="20" font-weight="500" fill="#111827" >+ verifiable tasks</text>
+<path id="flow-2-3" data-graph-role="edge" data-edge-id="flow-2-3" data-source="stage-2" data-target="stage-3" data-edge-kind="flow" data-flow="handoff" d="M 720,760 L 720,810" fill="none" stroke="#2563eb" stroke-width="3" stroke-linejoin="round" marker-end="url(#workflow-arrow)"/>
+<g id="stage-3" data-graph-role="node" data-node-id="stage-3" data-semantic-role="process" data-graph-bounds="48,810,1392,1030">
+<rect x="48" y="810" width="1344" height="220" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6"/>
+<text x="76" y="852" font-size="30" font-weight="600" fill="#111827">3. Analysis</text>
+<text x="76" y="892" font-size="24" font-weight="400" fill="#6b7280">Refine one vocabulary, conceptual model and BCE responsibility set.</text>
+<text x="76" y="932" font-size="22" font-weight="500" fill="#2563eb">mkl-uml-domain-modeler · mkl-uml-robustness-diagram</text>
+<text x="76" y="964" font-size="22" font-weight="500" fill="#2563eb">domain-modeling (as needed) · mkl-pdr-review (exit check)</text>
+<text x="76" y="1006" font-size="24" font-weight="500" fill="#111827">OUTPUT  Concepts, responsibilities, flow coverage and PDR findings.</text>
 </g>
-<g id="build" data-graph-role="node" data-node-id="build" data-semantic-role="process" data-graph-bounds="880,592,1232,856">
-<rect x="880" y="592" width="352" height="264" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6"/>
-<text x="904" y="632" font-size="28" font-weight="600" fill="#111827" >Build</text>
-<text x="1200" y="630" font-size="18" font-weight="600" fill="#2563eb" text-anchor="end">04</text>
-<text x="904" y="668" font-size="20" font-weight="400" fill="#6b7280" >Code, tests and current views</text>
-<text x="904" y="712" font-size="19" font-weight="500" fill="#2563eb" >implement / local adapter</text>
-<text x="904" y="742" font-size="19" font-weight="500" fill="#2563eb" >tdd · codebase-design</text>
-<line x1="904" y1="760" x2="1208" y2="760" stroke="#e5e7eb" stroke-width="1"/>
-<text x="904" y="798" font-size="20" font-weight="500" fill="#111827" >Working code + current views</text>
-<text x="904" y="824" font-size="20" font-weight="500" fill="#111827" >+ regression evidence</text>
+<path id="flow-3-4" data-graph-role="edge" data-edge-id="flow-3-4" data-source="stage-3" data-target="stage-4" data-edge-kind="flow" data-flow="handoff" d="M 720,1030 L 720,1080" fill="none" stroke="#2563eb" stroke-width="3" stroke-linejoin="round" marker-end="url(#workflow-arrow)"/>
+<g id="stage-4" data-graph-role="node" data-node-id="stage-4" data-semantic-role="process" data-graph-bounds="48,1080,1392,1300">
+<rect x="48" y="1080" width="1344" height="220" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6"/>
+<text x="76" y="1122" font-size="30" font-weight="600" fill="#111827">4. Detailed design</text>
+<text x="76" y="1162" font-size="24" font-weight="400" fill="#6b7280">Allocate operations, contracts and collaborations; inspect them together.</text>
+<text x="76" y="1202" font-size="22" font-weight="500" fill="#2563eb">codebase-design · mkl-uml-sequence-diagram · mkl-uml-design-class-model</text>
+<text x="76" y="1234" font-size="22" font-weight="500" fill="#2563eb">mkl-cdr-review (exit check), then to-spec · to-tickets</text>
+<text x="76" y="1276" font-size="24" font-weight="500" fill="#111827">OUTPUT  Reviewed views, contracts, implementation specification and slices.</text>
 </g>
-<g id="review" data-graph-role="node" data-node-id="review" data-semantic-role="process" data-graph-bounds="464,592,816,856">
-<rect x="464" y="592" width="352" height="264" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6"/>
-<text x="488" y="632" font-size="28" font-weight="600" fill="#111827" >Review &amp; deliver</text>
-<text x="784" y="630" font-size="18" font-weight="600" fill="#2563eb" text-anchor="end">05</text>
-<text x="488" y="668" font-size="20" font-weight="400" fill="#6b7280" >Two axes and architecture</text>
-<text x="488" y="712" font-size="19" font-weight="500" fill="#2563eb" >code-review / local adapter</text>
-<text x="488" y="742" font-size="19" font-weight="500" fill="#2563eb" >improve-codebase-architecture</text>
-<line x1="488" y1="760" x2="792" y2="760" stroke="#e5e7eb" stroke-width="1"/>
-<text x="488" y="798" font-size="20" font-weight="500" fill="#111827" >Findings + architecture</text>
-<text x="488" y="824" font-size="20" font-weight="500" fill="#111827" >decision + delivery context</text>
+<path id="flow-4-5" data-graph-role="edge" data-edge-id="flow-4-5" data-source="stage-4" data-target="stage-5" data-edge-kind="flow" data-flow="handoff" d="M 720,1300 L 720,1350" fill="none" stroke="#2563eb" stroke-width="3" stroke-linejoin="round" marker-end="url(#workflow-arrow)"/>
+<g id="stage-5" data-graph-role="node" data-node-id="stage-5" data-semantic-role="process" data-graph-bounds="48,1350,1392,1570">
+<rect x="48" y="1350" width="1344" height="220" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6"/>
+<text x="76" y="1392" font-size="30" font-weight="600" fill="#111827">5. Coding</text>
+<text x="76" y="1432" font-size="24" font-weight="400" fill="#6b7280">Implement vertical slices; verify behavior and refactor continuously.</text>
+<text x="76" y="1472" font-size="22" font-weight="500" fill="#2563eb">implement · tdd · named local implementation adapter when needed</text>
+<text x="76" y="1546" font-size="24" font-weight="500" fill="#111827">OUTPUT  Code, executed checks, refactoring result and current design.</text>
 </g>
-<g id="delivery" data-graph-role="node" data-node-id="delivery" data-semantic-role="process" data-graph-bounds="48,592,400,856">
-<rect x="48" y="592" width="352" height="264" rx="8" fill="#f0fdf4" stroke="#86efac" stroke-width="1.6"/>
-<text x="72" y="632" font-size="28" font-weight="600" fill="#16a34a" >Your delivery</text>
-<text x="72" y="672" font-size="22" font-weight="500" fill="#111827" >Linked artifacts</text>
-<text x="72" y="708" font-size="20" font-weight="400" fill="#111827" >Actual checks and results</text>
-<text x="72" y="740" font-size="20" font-weight="400" fill="#111827" >Decisions and limitations</text>
-<line x1="72" y1="760" x2="376" y2="760" stroke="#bbf7d0"/>
-<text x="72" y="798" font-size="20" font-weight="500" fill="#111827" >Ready for your next</text>
-<text x="72" y="824" font-size="20" font-weight="500" fill="#111827" >engineering decision</text>
+<path id="flow-5-6" data-graph-role="edge" data-edge-id="flow-5-6" data-source="stage-5" data-target="stage-6" data-edge-kind="flow" data-flow="handoff" d="M 720,1570 L 720,1620" fill="none" stroke="#2563eb" stroke-width="3" stroke-linejoin="round" marker-end="url(#workflow-arrow)"/>
+<g id="stage-6" data-graph-role="node" data-node-id="stage-6" data-semantic-role="process" data-graph-bounds="48,1620,1392,1840">
+<rect x="48" y="1620" width="1344" height="220" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6"/>
+<text x="76" y="1662" font-size="30" font-weight="600" fill="#111827">6. Code review</text>
+<text x="76" y="1702" font-size="24" font-weight="400" fill="#6b7280">Review the same fixed change on requirements and standards axes.</text>
+<text x="76" y="1742" font-size="22" font-weight="500" fill="#2563eb">code-review · fixed-snapshot local adapter for pending files</text>
+<text x="76" y="1816" font-size="24" font-weight="500" fill="#111827">OUTPUT  Located findings, corrections, regression and reviewed snapshot.</text>
 </g>
-<text x="48" y="914" font-size="20" font-weight="400" fill="#6b7280" >Use only relevant stages. Unresolved decisions pause dependent work.</text>
-<text x="48" y="946" font-size="20" font-weight="400" fill="#6b7280" >Keep applicable views current after code, refactors and rule changes.</text>
-<g data-graph-role="legend">
-<line x1="48" y1="976" x2="80" y2="976" stroke="#2563eb" stroke-width="3" marker-end="url(#workflow-blue)"/>
-<text x="92" y="982" font-size="19" font-weight="400" fill="#6b7280" >Stage handoff</text>
-<line x1="300" y1="976" x2="332" y2="976" stroke="#16a34a" stroke-width="3" marker-end="url(#workflow-green)"/>
-<text x="344" y="982" font-size="19" font-weight="400" fill="#6b7280" >Reviewed output</text>
-</g></svg>
+<path id="flow-6-7" data-graph-role="edge" data-edge-id="flow-6-7" data-source="stage-6" data-target="stage-7" data-edge-kind="flow" data-flow="handoff" d="M 720,1840 L 720,1890" fill="none" stroke="#2563eb" stroke-width="3" stroke-linejoin="round" marker-end="url(#workflow-arrow)"/>
+<g id="stage-7" data-graph-role="node" data-node-id="stage-7" data-semantic-role="process" data-graph-bounds="48,1890,1392,2110">
+<rect x="48" y="1890" width="1344" height="220" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6"/>
+<text x="76" y="1932" font-size="30" font-weight="600" fill="#111827">7. Architecture review</text>
+<text x="76" y="1972" font-size="24" font-weight="400" fill="#6b7280">Assess the final code with its relevant callers and dependencies.</text>
+<text x="76" y="2012" font-size="22" font-weight="500" fill="#2563eb">improve-codebase-architecture</text>
+<text x="76" y="2086" font-size="24" font-weight="500" fill="#111827">OUTPUT  Scoped retain/adjust decision, costs and reconsideration triggers.</text>
+</g>
+<text x="48" y="2190" font-size="24" font-weight="500" fill="#111827">Missing input returns to its producer; upstream changes invalidate affected results.</text>
+<text x="48" y="2230" font-size="23" font-weight="400" fill="#6b7280">Architecture changes return through design, coding, checks and code review before closure.</text>
+<text x="48" y="2272" font-size="23" font-weight="500" fill="#2563eb">FINAL DELIVERY  Link current outcomes, evidence, decisions and remaining limitations.</text>
+</svg>

@@ -43,6 +43,7 @@ if yaml is not None:
                             f"found duplicate key: {key!r}", key_node.start_mark)
             return super().construct_mapping(node, deep=deep)
 
+# Historical public constant retained for explicit core-profile compatibility.
 REQUIRED_SKILLS = (
     "setup-matt-pocock-skills",
     "grill-with-docs",
@@ -60,13 +61,27 @@ REQUIRED_SKILLS = (
 
 DETAILED_DESIGN_SKILLS = ("mkl-uml-design-class-model", "mkl-uml-sequence-diagram")
 
+ADDITIONAL_WORKFLOW_SKILLS = (
+    "mkl-use-case-specifier",
+    "mkl-uml-use-case-diagram",
+    "mkl-uml-domain-modeler",
+    "mkl-pdr-review",
+    "mkl-cdr-review",
+)
+FULL_WORKFLOW_SKILLS = REQUIRED_SKILLS + DETAILED_DESIGN_SKILLS + ADDITIONAL_WORKFLOW_SKILLS
+PROFILES = {
+    "full-workflow": FULL_WORKFLOW_SKILLS,
+    "core": REQUIRED_SKILLS,
+    "detailed-design": REQUIRED_SKILLS + DETAILED_DESIGN_SKILLS,
+}
 
-def check(roots: list[Path], profile: str = "core") -> dict:
+
+def check(roots: list[Path], profile: str = "full-workflow") -> dict:
     if yaml is None:
         raise ValueError("Prerequisite checking requires PyYAML 6.x; install this skill's requirements.txt.")
-    if profile not in ("core", "detailed-design"):
-        raise ValueError("Expected profile core or detailed-design.")
-    required = REQUIRED_SKILLS + (DETAILED_DESIGN_SKILLS if profile == "detailed-design" else ())
+    if profile not in PROFILES:
+        raise ValueError("Expected profile full-workflow, core, or detailed-design.")
+    required = PROFILES[profile]
     if not roots:
         raise ValueError("Provide at least one skill root.")
     for root in roots:
@@ -111,8 +126,9 @@ def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--skills-root", type=Path, action="append", required=True,
                         help="Directory containing skill-name/SKILL.md; repeat to search several roots.")
-    parser.add_argument("--profile", choices=("core", "detailed-design"), default="core",
-                        help="core checks 12 definitions; detailed-design adds class and sequence skills.")
+    parser.add_argument("--profile", choices=tuple(PROFILES), default="full-workflow",
+                        help="Default full-workflow checks all 19 definitions. Explicit core (12) and "
+                             "detailed-design (14) are legacy diagnostic profiles, not full-workflow readiness.")
     args = parser.parse_args(argv)
     try:
         result = check([path.expanduser() for path in args.skills_root], profile=args.profile)

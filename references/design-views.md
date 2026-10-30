@@ -1,6 +1,6 @@
 # Design Views: From Responsibilities to Implementable Contracts
 
-Read this during scope selection, after robustness analysis, and before specification or implementation. Its output is an agreed design supported by actual views and cross-checks, not a list of diagrams to draw later.
+Read this in stage 4 after ready analysis/PDR results and before CDR, implementation specification, task slicing or coding. Its output is an agreed design supported by actual views and cross-checks, not a list of diagrams to draw later.
 
 ## Select the depth from the task
 
@@ -44,30 +44,32 @@ Cross-check the actual artifacts:
 
 ## Route to available modeling tools
 
-The core prerequisite baseline remains 12 skills. Detailed design additionally requires:
+Install both upstream collections in full as described in [stage routing](optional-skills.md). The checker verifies 19 named workflow capabilities within those collections; the dedicated class/sequence pair is included. Install the complete MKL collection with:
 
 ```bash
-npx skills add kinglez/mkl-uml --skill mkl-uml-design-class-model mkl-uml-sequence-diagram
+npx skills add kinglez/mkl-uml --skill '*'
 ```
 
-Verify the selected **14-skill** profile in the target environment. From the installed skill root and prepared Python environment, this is a command template:
+Verify the **19-skill full-workflow** profile in the target environment. Legacy partial profiles do not establish integrated readiness. From the installed skill root and prepared Python environment, this is a command template:
 
 ```bash
-.venv/bin/python scripts/check_prerequisites.py --skills-root path/to/skills --profile detailed-design
+.venv/bin/python scripts/check_prerequisites.py --skills-root path/to/skills --profile full-workflow
 ```
 
-Use `mkl-uml-design-class-model` for design class models and `mkl-uml-sequence-diagram` for interactions, reading their installed instructions and supported arguments. Their standalone modes remain the default. Supply the actual available use-case, domain, robustness, and related design artifacts; missing sources limit coverage claims. A module view is a stated alternative, not a claim that the class-specific validator verified it. The conceptual domain modeler remains an optional aid when a domain diagram is needed.
+Use `mkl-uml-design-class-model` for design class models and `mkl-uml-sequence-diagram` for interactions, reading their installed instructions and supported arguments. Their standalone modes remain the default. Supply the actual available use-case, domain, robustness, and related design artifacts; missing sources limit coverage claims. A module view is a stated alternative, not a claim that the class-specific validator verified it. Stage 3 uses the installed conceptual domain modeler as the primary modeling capability; keep that model distinct from technical design classes.
 
 For state diagrams, use the project's available UML toolchain, such as PlantUML state syntax and its local renderer. An available `plantuml-skill` can assist, but no dedicated MKL state skill is assumed. Check the renderer separately from skill-definition presence. Preserve source confidentiality and the authorized backend; a missing local renderer does not authorize uploading project sources to a public service.
 
 ## Complete and hand off the design
 
-Before specification or implementation consumes it, deliver:
+Use `mkl-cdr-review` for the stage-4 exit check, comparing the actual detailed views, use-case behavior, contracts, operation allocation and test design. Preserve findings, corrections, coverage and technical disposition; do not infer formal acceptance from mechanical results or unavailable participants. Scoped technical readiness can be recorded without claiming formal approval.
+
+Before implementation specification, slices or coding consume the design, deliver:
 
 - The selected depth and rationale, state applicability, and confirmed inputs.
 - Actual editable view sources or response sections, including version/source references for reuse. Supply rendered previews when available; report an unavailable render as a verification gap and do not claim a visual review.
 - Contracts, relevant SOLID/pattern decisions, and the rule-to-view/operation/acceptance cross-references.
-- Actual syntax/profile/render results with warnings, skipped coverage layers, manual consistency findings, and unresolved issues. An exit code of zero does not prove every validator layer ran or that the design is semantically correct.
+- Actual syntax/profile/render results with warnings, skipped coverage layers, CDR/manual consistency findings, and unresolved issues. An exit code of zero does not prove every validator layer ran or that the design is semantically correct.
 
 The design is ready only when required views are produced or checked as current, relevant cross-view responsibilities and contracts agree, and implementation-changing questions within its scope are resolved. An unresolved state assessment, missing required view, stale reuse, or unreviewed inconsistency remains unready. Return missing input to its producer and continue only independent work with sufficient inputs.
 

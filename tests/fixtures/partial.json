@@ -1,15 +1,15 @@
 {
   "schema_version": 1,
   "task": {
-    "id": "EXAMPLE-2",
+    "id": "FIXTURE-2",
     "intent": "implement",
-    "summary": "Synthetic fixture: duplicate reservation semantics are unresolved",
+    "summary": "Synthetic structural fixture: required input remains unspecified",
     "status": "partial"
   },
   "rules": [
     {
       "id": "R1",
-      "text": "Should a duplicate request return the existing reservation or attempt another reservation?",
+      "text": "Which source defines the required input contract?",
       "status": "open",
       "source": "Unanswered question in a synthetic fixture",
       "blocks_completion": true
@@ -26,7 +26,7 @@
   "limitations": [
     {
       "id": "L1",
-      "description": "Core semantics remain unresolved; business behavior has not been implemented",
+      "description": "A required input is unresolved; dependent work is not complete",
       "blocks_completion": true
     }
   ]

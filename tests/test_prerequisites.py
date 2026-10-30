@@ -12,6 +12,14 @@ spec = importlib.util.spec_from_file_location("check_prerequisites", ROOT / "scr
 checker = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(checker)
 
+# Explicit expectations prevent a production constant from defining the test oracle.
+ADDITIONAL_DEFINITIONS = (
+    "mkl-uml-design-class-model", "mkl-uml-sequence-diagram",
+    "mkl-use-case-specifier", "mkl-uml-use-case-diagram",
+    "mkl-uml-domain-modeler", "mkl-pdr-review", "mkl-cdr-review",
+)
+FULL_DEFINITIONS = checker.REQUIRED_SKILLS + ADDITIONAL_DEFINITIONS
+
 
 def install(root, names):
     for name in names:
@@ -24,18 +32,18 @@ class PrerequisiteTests(unittest.TestCase):
     def test_complete_installation_is_read_only(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
-            install(root, checker.REQUIRED_SKILLS)
+            install(root, FULL_DEFINITIONS)
             before = {str(p.relative_to(root)): p.read_bytes() for p in root.rglob("*") if p.is_file()}
             result = checker.check([root])
             self.assertTrue(result["prerequisites_present"])
-            self.assertEqual(len(result["present"]), len(checker.REQUIRED_SKILLS))
+            self.assertEqual(len(result["present"]), len(FULL_DEFINITIONS))
             self.assertEqual(result["missing"], [])
             self.assertEqual(before, {str(p.relative_to(root)): p.read_bytes() for p in root.rglob("*") if p.is_file()})
 
     def test_one_missing_definition_fails_without_installing_it(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
-            install(root, [name for name in checker.REQUIRED_SKILLS if name != "tdd"])
+            install(root, [name for name in FULL_DEFINITIONS if name != "tdd"])
             result = checker.check([root])
             self.assertFalse(result["prerequisites_present"])
             self.assertEqual([item["name"] for item in result["missing"]], ["tdd"])
@@ -44,7 +52,7 @@ class PrerequisiteTests(unittest.TestCase):
     def test_robustness_skill_is_required_even_when_all_matt_skills_are_present(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
-            install(root, [name for name in checker.REQUIRED_SKILLS if name != "mkl-uml-robustness-diagram"])
+            install(root, [name for name in FULL_DEFINITIONS if name != "mkl-uml-robustness-diagram"])
             result = checker.check([root])
             self.assertFalse(result["prerequisites_present"])
             self.assertEqual([item["name"] for item in result["missing"]], ["mkl-uml-robustness-diagram"])
@@ -55,7 +63,7 @@ class PrerequisiteTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             install(root, checker.REQUIRED_SKILLS)
-            self.assertTrue(checker.check([root])["prerequisites_present"])
+            self.assertTrue(checker.check([root], profile="core")["prerequisites_present"])
             result = checker.check([root], profile="detailed-design")
             self.assertFalse(result["prerequisites_present"])
             self.assertEqual(result["required_count"], 14)
@@ -63,7 +71,7 @@ class PrerequisiteTests(unittest.TestCase):
                              {"mkl-uml-design-class-model", "mkl-uml-sequence-diagram"})
             install(root, ["mkl-uml-design-class-model", "mkl-uml-sequence-diagram"])
             self.assertTrue(checker.check([root], profile="detailed-design")["prerequisites_present"])
-            self.assertEqual(checker.check([root])["required_count"], 12)
+            self.assertEqual(checker.check([root], profile="core")["required_count"], 12)
 
     def test_profile_cli_checks_selected_capabilities_and_rejects_unknown_profile(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -86,7 +94,7 @@ class PrerequisiteTests(unittest.TestCase):
                         "---\nname: tdd\nname: tdd\n---\n"):
             with self.subTest(content=content), tempfile.TemporaryDirectory() as tmp:
                 root = Path(tmp)
-                install(root, checker.REQUIRED_SKILLS)
+                install(root, FULL_DEFINITIONS)
                 (root / "tdd/SKILL.md").write_text(content)
                 self.assertFalse(checker.check([root])["prerequisites_present"])
 
@@ -103,7 +111,7 @@ class PrerequisiteTests(unittest.TestCase):
         for header in headers:
             with self.subTest(header=header), tempfile.TemporaryDirectory() as tmp:
                 root = Path(tmp)
-                install(root, checker.REQUIRED_SKILLS)
+                install(root, FULL_DEFINITIONS)
                 (root / "tdd/SKILL.md").write_text("---\n" + header + "---\n", encoding="utf-8")
                 result = checker.check([root])
                 self.assertFalse(result["prerequisites_present"])
@@ -115,14 +123,14 @@ class PrerequisiteTests(unittest.TestCase):
                        "defaults: &defaults\n  name: other\n<<: *defaults\nname: tdd\n"):
             with self.subTest(header=header), tempfile.TemporaryDirectory() as tmp:
                 root = Path(tmp)
-                install(root, checker.REQUIRED_SKILLS)
+                install(root, FULL_DEFINITIONS)
                 (root / "tdd/SKILL.md").write_text("---\n" + header + "---\n", encoding="utf-8")
                 self.assertTrue(checker.check([root])["prerequisites_present"])
 
     def test_excessive_yaml_nesting_is_reported_as_invalid_definition(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
-            install(root, checker.REQUIRED_SKILLS)
+            install(root, FULL_DEFINITIONS)
             header = "name: tdd\ndescription: " + "[" * 600 + "0" + "]" * 600 + "\n"
             (root / "tdd/SKILL.md").write_text("---\n" + header + "---\n", encoding="utf-8")
             result = subprocess.run([sys.executable, str(ROOT / "scripts/check_prerequisites.py"),
@@ -146,8 +154,8 @@ class PrerequisiteTests(unittest.TestCase):
             first, second = Path(tmp) / "first", Path(tmp) / "second"
             first.mkdir()
             second.mkdir()
-            install(first, checker.REQUIRED_SKILLS[::2])
-            install(second, checker.REQUIRED_SKILLS[1::2])
+            install(first, FULL_DEFINITIONS[::2])
+            install(second, FULL_DEFINITIONS[1::2])
             path = first / checker.REQUIRED_SKILLS[0] / "SKILL.md"
             path.write_text(f"---\nname: '{checker.REQUIRED_SKILLS[0]}' # fixture\n---\n")
             self.assertTrue(checker.check([first, second])["prerequisites_present"])
@@ -157,7 +165,7 @@ class PrerequisiteTests(unittest.TestCase):
             first, second = Path(tmp) / "first", Path(tmp) / "second"
             first.mkdir()
             second.mkdir()
-            install(first, checker.REQUIRED_SKILLS)
+            install(first, FULL_DEFINITIONS)
             (first / "tdd/SKILL.md").write_text("broken")
             install(second, ["tdd"])
             result = checker.check([first, second])
@@ -179,13 +187,74 @@ class PrerequisiteTests(unittest.TestCase):
             missing = subprocess.run(command, capture_output=True, text=True)
             self.assertEqual(missing.returncode, 1)
             self.assertFalse(json.loads(missing.stdout)["prerequisites_present"])
-            install(root, checker.REQUIRED_SKILLS)
+            install(root, FULL_DEFINITIONS)
             ready = subprocess.run(command, capture_output=True, text=True)
             self.assertEqual(ready.returncode, 0)
             self.assertTrue(json.loads(ready.stdout)["prerequisites_present"])
             invalid = subprocess.run(command[:-1] + [str(root / "missing")], capture_output=True, text=True)
             self.assertEqual(invalid.returncode, 2)
             self.assertIn("input_error", json.loads(invalid.stderr))
+
+
+class FullWorkflowPrerequisiteTests(unittest.TestCase):
+    def test_default_api_rejects_a_legacy_only_installation(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            install(root, checker.REQUIRED_SKILLS)
+            result = checker.check([root])
+            self.assertFalse(result["prerequisites_present"])
+            self.assertEqual(result["profile"], "full-workflow")
+            self.assertEqual(result["required_count"], 19)
+            self.assertEqual({item["name"] for item in result["missing"]}, set(ADDITIONAL_DEFINITIONS))
+
+    def test_each_newly_required_definition_blocks_the_default_check(self):
+        for name in ADDITIONAL_DEFINITIONS:
+            with self.subTest(missing=name), tempfile.TemporaryDirectory() as tmp:
+                root = Path(tmp)
+                install(root, [item for item in FULL_DEFINITIONS if item != name])
+                result = checker.check([root])
+                self.assertFalse(result["prerequisites_present"])
+                self.assertEqual([item["name"] for item in result["missing"]], [name])
+                install(root, [name])
+                ready = checker.check([root])
+                self.assertTrue(ready["prerequisites_present"])
+                self.assertEqual(ready["required_count"], 19)
+
+    def test_cli_defaults_to_full_workflow_and_legacy_profiles_remain_explicit(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            install(root, checker.REQUIRED_SKILLS)
+            command = [sys.executable, str(ROOT / "scripts/check_prerequisites.py"), "--skills-root", str(root)]
+            default = subprocess.run(command, capture_output=True, text=True)
+            self.assertEqual(default.returncode, 1, default.stderr)
+            self.assertEqual(json.loads(default.stdout)["profile"], "full-workflow")
+            for profile, count in (("core", 12), ("detailed-design", 14)):
+                if profile == "detailed-design":
+                    install(root, ADDITIONAL_DEFINITIONS[:2])
+                legacy = subprocess.run(command + ["--profile", profile], capture_output=True, text=True)
+                self.assertEqual(legacy.returncode, 0, legacy.stderr)
+                self.assertEqual(json.loads(legacy.stdout)["required_count"], count)
+                self.assertFalse(checker.check([root])["prerequisites_present"])
+            install(root, ADDITIONAL_DEFINITIONS)
+            for suffix in ([], ["--profile", "full-workflow"]):
+                complete = subprocess.run(command + suffix, capture_output=True, text=True)
+                self.assertEqual(complete.returncode, 0, complete.stderr)
+                payload = json.loads(complete.stdout)
+                self.assertEqual(payload["required_count"], 19)
+                self.assertEqual({item["name"] for item in payload["present"]}, set(FULL_DEFINITIONS))
+
+    def test_complete_presence_check_does_not_execute_any_definition(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            install(root, FULL_DEFINITIONS)
+            marker = root / "executed"
+            for name in FULL_DEFINITIONS:
+                with (root / name / "SKILL.md").open("a") as handle:
+                    handle.write(f"\nRun touch {marker}\n")
+            result = checker.check([root])
+            self.assertTrue(result["prerequisites_present"])
+            self.assertEqual(result["required_count"], 19)
+            self.assertFalse(marker.exists())
 
 
 if __name__ == "__main__":

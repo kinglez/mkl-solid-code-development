@@ -12,7 +12,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
-EXAMPLES = ROOT / "tests" / "examples"
+FIXTURES = ROOT / "tests" / "fixtures"
 
 
 def module(name):
@@ -28,27 +28,27 @@ initializer = module("init_delivery")
 
 class DeliveryValidationTests(unittest.TestCase):
     def setUp(self):
-        self.record = validator.load_record(EXAMPLES / "ready.json")
+        self.record = validator.load_record(FIXTURES / "ready.json")
 
     def check(self, record=None):
-        return validator.validate(self.record if record is None else record, EXAMPLES)
+        return validator.validate(self.record if record is None else record, FIXTURES)
 
     def codes(self, result, key):
         return {i["code"] for i in result[key]}
 
-    def test_ready_example_has_complete_record_coverage(self):
+    def test_ready_fixture_has_complete_record_coverage(self):
         result = self.check()
         self.assertTrue(result["structure_valid"])
         self.assertTrue(result["record_ready"])
 
     def test_partial_is_structurally_valid_but_not_ready(self):
-        result = self.check(validator.load_record(EXAMPLES / "partial.json"))
+        result = self.check(validator.load_record(FIXTURES / "partial.json"))
         self.assertTrue(result["structure_valid"])
         self.assertFalse(result["record_ready"])
         self.assertIn("UNSETTLED_RULE", self.codes(result, "blockers"))
 
-    def test_invalid_example_reports_actual_expected_defects(self):
-        result = self.check(validator.load_record(EXAMPLES / "invalid.json"))
+    def test_invalid_fixture_reports_actual_expected_defects(self):
+        result = self.check(validator.load_record(FIXTURES / "invalid.json"))
         self.assertFalse(result["structure_valid"])
         self.assertTrue({"DUPLICATE_ID", "UNKNOWN_REFERENCE", "PASS_EXIT_MISMATCH", "ARTIFACT_MISSING"}
                         <= self.codes(result, "errors"))
@@ -139,7 +139,7 @@ class DeliveryValidationTests(unittest.TestCase):
         self.assertIn("ARTIFACT_MISSING", self.codes(self.check(), "errors"))
 
     def test_paths_outside_root_are_rejected(self):
-        for value in ("../outside.log", str((EXAMPLES / "evidence/behavior.log").resolve())):
+        for value in ("../outside.log", str((FIXTURES / "evidence/behavior.log").resolve())):
             with self.subTest(value=value):
                 self.record["evidence"][0]["artifact"] = value
                 self.assertIn("ARTIFACT_OUTSIDE_ROOT", self.codes(self.check(), "errors"))
@@ -204,16 +204,16 @@ class DeliveryCliTests(unittest.TestCase):
                               capture_output=True, text=True)
 
     def test_strict_mode_distinguishes_partial_and_ready(self):
-        ready = self.invoke(EXAMPLES / "ready.json", "--require-ready")
-        partial = self.invoke(EXAMPLES / "partial.json", "--require-ready")
-        normal = self.invoke(EXAMPLES / "partial.json")
+        ready = self.invoke(FIXTURES / "ready.json", "--require-ready")
+        partial = self.invoke(FIXTURES / "partial.json", "--require-ready")
+        normal = self.invoke(FIXTURES / "partial.json")
         self.assertEqual(ready.returncode, 0)
         self.assertEqual(partial.returncode, 1)
         self.assertEqual(normal.returncode, 0)
         self.assertFalse(json.loads(normal.stdout)["record_ready"])
 
     def test_unreadable_and_malformed_input_use_exit_two(self):
-        self.assertEqual(self.invoke(EXAMPLES / "missing.json").returncode, 2)
+        self.assertEqual(self.invoke(FIXTURES / "missing.json").returncode, 2)
         with tempfile.TemporaryDirectory() as tmp:
             p = Path(tmp) / "bad.json"
             p.write_text('{', encoding="utf-8")
@@ -227,7 +227,7 @@ class DeliveryCliTests(unittest.TestCase):
                 link.symlink_to("loop.log")
             except (OSError, NotImplementedError):
                 self.skipTest("Symlinks unavailable in this environment")
-            record = validator.load_record(EXAMPLES / "ready.json")
+            record = validator.load_record(FIXTURES / "ready.json")
             record["evidence"][0]["artifact"] = "loop.log"
             record_path = root / "record.json"
             record_path.write_text(json.dumps(record), encoding="utf-8")
@@ -243,16 +243,16 @@ class DeliveryCliTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             p = Path(tmp)
             marker = p / "executed.txt"
-            record = validator.load_record(EXAMPLES / "ready.json")
+            record = validator.load_record(FIXTURES / "ready.json")
             record["evidence"][0]["command"] = f"touch {marker}"
             record_path = p / "record.json"
             record_path.write_text(json.dumps(record), encoding="utf-8")
-            result = self.invoke(record_path, "--project-root", EXAMPLES, "--require-ready")
+            result = self.invoke(record_path, "--project-root", FIXTURES, "--require-ready")
             self.assertEqual(result.returncode, 0)
             self.assertFalse(marker.exists())
 
     def test_required_design_finding_blocks_strict_cli_until_resolved(self):
-        record = validator.load_record(EXAMPLES / "ready.json")
+        record = validator.load_record(FIXTURES / "ready.json")
         record["task"]["intent"] = "design"
         record["design"] = [{"id": "D1", "decision": "Validate input", "reason": "Preserve the interface contract",
                              "tradeoffs": "Reject invalid input", "evidence_ids": ["E2"]}]
@@ -261,14 +261,14 @@ class DeliveryCliTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "design.json"
             path.write_text(json.dumps(record), encoding="utf-8")
-            normal = self.invoke(path, "--project-root", EXAMPLES)
-            strict = self.invoke(path, "--project-root", EXAMPLES, "--require-ready")
+            normal = self.invoke(path, "--project-root", FIXTURES)
+            strict = self.invoke(path, "--project-root", FIXTURES, "--require-ready")
             self.assertEqual(normal.returncode, 0)
             self.assertFalse(json.loads(normal.stdout)["record_ready"])
             self.assertEqual(strict.returncode, 1)
             record["review"]["findings"][0].update(status="resolved", evidence_ids=["E2"])
             path.write_text(json.dumps(record), encoding="utf-8")
-            resolved = self.invoke(path, "--project-root", EXAMPLES, "--require-ready")
+            resolved = self.invoke(path, "--project-root", FIXTURES, "--require-ready")
             self.assertEqual(resolved.returncode, 0)
             self.assertTrue(json.loads(resolved.stdout)["record_ready"])
 
@@ -323,7 +323,7 @@ class InitializationTests(unittest.TestCase):
     def test_initialized_record_is_valid_and_incomplete(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp) / "delivery"
-            outputs = initializer.initialize(root, "TASK-1", "Correct due-date handling", "implement", True)
+            outputs = initializer.initialize(root, "TASK-1", "Preserve the declared input contract", "implement", True)
             self.assertEqual({p.name for p in outputs}, {"delivery-record.json", "implementation-brief.md"})
             record = validator.load_record(root / "delivery-record.json")
             self.assertEqual(record["task"]["id"], "TASK-1")

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "task": {
-    "id": "EXAMPLE-3",
+    "id": "FIXTURE-3",
     "intent": "implement",
     "summary": "Synthetic negative fixture: duplicate IDs, dangling references, and inconsistent results",
     "status": "complete"
@@ -9,7 +9,7 @@
   "rules": [
     {
       "id": "R1",
-      "text": "No fee applies on the due date",
+      "text": "Required input must be supplied",
       "status": "confirmed",
       "source": "Synthetic fixture",
       "blocks_completion": false
@@ -25,8 +25,8 @@
   "acceptance": [
     {
       "id": "AC1",
-      "scenario": "Today is the due date",
-      "expected": "The fee is zero",
+      "scenario": "Required input is present",
+      "expected": "The declared input contract is satisfied",
       "rule_ids": [
         "R404"
       ],
@@ -44,7 +44,7 @@
       "status": "passed",
       "summary": "Synthetic invalid record",
       "artifact": "evidence/missing.log",
-      "command": "synthetic-example-command",
+      "command": "synthetic-not-executed",
       "exit_code": 1
     }
   ],

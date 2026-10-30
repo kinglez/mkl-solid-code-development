@@ -6,7 +6,7 @@ The tools require Python 3.10+ and use only the standard library. They do not de
 
 ## Initialize a record
 
-Run from the skill root. This is an executable command template: replace `path/to/new-delivery`, `TASK-1`, and the summary with task-specific values. The example does not represent an actual task execution.
+Run from the skill root. This is an executable command template: replace `path/to/new-delivery`, `TASK-1`, and the summary with task-specific values. The template does not represent an actual task execution.
 
 ```bash
 python3 scripts/init_delivery.py path/to/new-delivery --id TASK-1 --summary "Delivery objective" --intent implement --with-brief
@@ -28,7 +28,7 @@ python3 scripts/init_delivery.py path/to/new-delivery --id TASK-1 --summary "Del
 
 ## Record format: schema version 1
 
-Field names are checked strictly: unknown fields and duplicate JSON keys are errors. Collections may be empty, so an incomplete draft can still pass structural validation. Item IDs must be unique across the record's collections, review findings, handoff stages, and outputs. Preserve existing IDs when reordering. Example prefixes are for readability, not a naming requirement.
+Field names are checked strictly: unknown fields and duplicate JSON keys are errors. Collections may be empty, so an incomplete draft can still pass structural validation. Item IDs must be unique across the record's collections, review findings, handoff stages, and outputs. Preserve existing IDs when reordering. Identifier prefixes are for readability, not a naming requirement.
 
 | Field | Contents |
 |---|---|
@@ -78,30 +78,30 @@ A completed or reused entry needs at least one output. Each output has a unique 
 
 `input_ids` references output IDs from earlier handoff entries, not rule or evidence IDs. The first active stage may have no such inputs; its notes identify the supplied request and starting materials. Every next active stage must consume at least one output of its preceding active stage and may also reference other earlier results. Self/forward references are invalid. Inputs from unfinished or invalidated producers block readiness. Skipped entries do not interrupt the actual chain. This extension describes one ordered flow, not an arbitrary task DAG. Aggregate concurrent slice results at the stage level or use separate records for independent chains; retain their real dependency relationships.
 
-Example structure only; the text below is not evidence of work performed:
+Neutral record structure only; the declarations below are not execution evidence:
 
 ```json
 {
   "handoffs": [
     {
-      "id": "H1", "stage": "Business clarification", "status": "completed",
+      "id": "H1", "stage": "Requirements clarification", "status": "completed",
       "input_ids": [],
-      "outputs": [{"id": "A1", "summary": "Confirmed rules and acceptance in the cited brief section", "artifact": "brief.md"}],
-      "notes": "Source: the current request and confirmed answers; the next stage reads the rules section."
+      "outputs": [{"id": "A1", "summary": "Source-based clarification results in the cited brief section", "artifact": "brief.md"}],
+      "notes": "Source: current request and supplied answers; the next stage reads the clarification section."
     },
     {
-      "id": "H2", "stage": "Domain modeling", "status": "completed",
+      "id": "H2", "stage": "Requirements baseline", "status": "completed",
       "input_ids": ["A1"],
-      "outputs": [{"id": "A2", "summary": "Agreed concepts and invariants in the domain section", "artifact": "brief.md"}],
-      "notes": "Read A1 and checked its confirmed meanings before producing A2."
+      "outputs": [{"id": "A2", "summary": "Scope, confirmed requirements and derived acceptance in the baseline section", "artifact": "brief.md"}],
+      "notes": "Read A1 and checked its sources before consolidating A2."
     }
   ]
 }
 ```
 
-This example can be a prefix of a design chain; it is not a complete implementation record. Keep unexecuted stages pending rather than copying completed statuses.
+This neutral fragment is only a prefix of the seven-stage chain; it is not a complete implementation record. Keep unexecuted stages pending rather than copying completed statuses.
 
-Legacy schema-version-1 records without `handoffs` retain their existing validation behavior. They do not establish stage-to-stage traceability. New templates include the extension. Use `--require-handoffs` to require it, including when checking a legacy record; that option also implies `--require-ready`. Older validator releases do not understand this extension.
+Legacy schema-version-1 records without `handoffs` retain their existing validation behavior. They do not establish stage-to-stage traceability. New templates include the extension. Seven-stage execution uses the same arbitrary-label schema; no fixed stage count is imposed on legacy records. Use `--require-handoffs` to require it, including when checking a legacy record; that option also implies `--require-ready`. Older validator releases do not understand this extension.
 
 The checker validates declared references, statuses, and file existence. It does not infer which stages a task needs, verify document sections or source versions, prove that inputs were read, or automatically detect changes to artifact contents. The agent/reviewer must check those semantics and invalidate affected consumers when upstream results change.
 
@@ -111,7 +111,7 @@ Use the optional `design_views` bundle for the scope selected under [Design View
 
 | Field | Contents |
 |---|---|
-| `profile` | `detailed/lightweight`; view obligations, distinct from the prerequisite tool's `detailed-design` capability profile |
+| `profile` | `detailed/lightweight`; view obligations, independent of the prerequisite tool's complete installation profile |
 | `reason` | Nonempty task-specific rationale, including justified reuse or lightweight work |
 | `rule_ids[]` | Existing rule IDs selected as this design's inputs; detailed design needs a nonempty set |
 | `state_model` | `requirement: required/not_applicable/unresolved`, with a nonempty source-based `reason` |
@@ -171,4 +171,4 @@ Run the following executable command from the skill root; it has no placeholder 
 python3 -m unittest discover -s tests -v
 ```
 
-Regression tests assert specific defects, exit codes, path constraints, overwrite protection, and non-execution of recorded commands. Validate new workflow behavior through [forward-testing scenarios](../tests/behavioral-cases.md) in isolated workspaces. Passing script tests does not establish the quality of the skill's decisions.
+Regression tests assert specific defects, exit codes, path constraints, overwrite protection, and non-execution of recorded commands. Validate new workflow behavior through [domain-neutral forward-testing protocol](../tests/behavioral-cases.md) in isolated workspaces. Keep particular business requests and applications outside this repository. Passing structural script tests does not establish the quality of the skill's decisions.

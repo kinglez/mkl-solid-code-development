@@ -28,12 +28,14 @@ Classic ICONIX/BCE analysis views typically show actors interacting through boun
 
 These are conventions for this analysis view, not universal dependency restrictions for UML or production code. Domain entities may have relationships and collaborate. A robustness diagram does not require all business rules to live in control classes; detailed design should place invariants in the appropriate domain objects or business functions.
 
-## Move from analysis to implementation
+## Complete analysis and hand off to detailed design
 
 - Boundaries may become interaction entry points or adapters. Distinguish transport validation from domain constraints.
 - Entity candidates may become values, domain objects, or state models, according to their actual invariants.
 - Control responsibilities may be allocated to coordinating functions, domain behavior, or module internals. A verb is not a reason to create a class.
 - Domain views explain concepts and relationships; static views explain modules, contracts, and dependencies; sequence or state views explain collaboration and where failure stops progress. Choose the view that answers the current question.
 - Derive tests from business rules, scenarios, boundary conditions, and state transitions. There is no fixed correspondence between control objects and tests.
+
+Use `mkl-pdr-review` to compare the baseline/use-case flows, conceptual model and robustness coverage before stage 4. Preserve coverage, located findings, required corrections and a scoped technical disposition; absent formal evidence or a decision maker cannot be invented as approval.
 
 When using a diagram validator, report what it actually checks. Valid node connections do not establish complete business coverage, trustworthy facts, or correct exception handling.

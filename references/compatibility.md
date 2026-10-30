@@ -1,34 +1,35 @@
-# Validated Dependencies and Distribution
+# Dependency Compatibility and Distribution
 
-Use this reference when reproducing an accepted environment, upgrading dependencies, or preparing a customer distribution. It records an observed snapshot, not compatibility with all future upstream revisions.
+Use this reference to reproduce a checked environment, upgrade dependencies, or prepare a distribution. The repository and its verification materials are domain-independent; detailed application acceptance stays in a separate workspace.
 
-## Dependency snapshot
+## Current dependency snapshot
 
-| Component | Snapshot used for integration acceptance |
-|---|---|
-| Matt Pocock Skills, the 11 named in [routing](optional-skills.md) | `mattpocock/skills` at `d1478fcb140db0b93c0c8df17bcfd311844749d0` |
-| Robustness; conditional class/sequence skills | `kinglez/mkl-uml` at `f6f21221ef950371700e0db5860f3e94e077bc07` |
-| Skills CLI | `1.7.4`; upstream Node requirement `>=22.20.0` |
-| Prerequisite YAML parser | PyYAML `6.0.3`, pinned in `requirements.txt` |
+| Component | Observed snapshot |
+| --- | --- |
+| Matt Pocock Skills: 11 named definitions | `mattpocock/skills` at `a496f5513d4a4cf889bc48e189e579f4b0bdf6aa` |
+| MKL UML: all 8 definitions | `kinglez/mkl-uml` at `a843431ec8a8cf7889e955361e7425d601278eb9` |
+| Installation route exercised | Skills CLI `1.7.4`, project-scoped copies for Codex |
+| Checker parser | PyYAML `6.0.3`, declared in `requirements.txt` |
 
-To reproduce the dependency sources using the standard Skills CLI, run these commands in the target project and choose the target agent. They install the same 12 named skills without adding `triage`:
+The 19 prerequisite definitions were installed with the standard CLI into an isolated local project. All 431 installed dependency files were compared by Git blob identity with the pinned source trees above; they matched. The default `full-workflow` presence check returned exit 0 for all 19. These facts establish copied bytes and readable names, not execution of every skill or host activation.
 
-```bash
-npx skills@1.7.4 add https://github.com/mattpocock/skills/tree/d1478fcb140db0b93c0c8df17bcfd311844749d0 --skill setup-matt-pocock-skills grill-with-docs grilling domain-modeling codebase-design to-spec to-tickets implement tdd code-review improve-codebase-architecture
-npx skills@1.7.4 add https://github.com/kinglez/mkl-uml/tree/f6f21221ef950371700e0db5860f3e94e077bc07 --skill mkl-uml-robustness-diagram
-```
+For ordinary installation, install both upstream repositories in full with the standard wildcard commands in [README](../README.md#install-and-verify). The source-identity observations above describe the earlier named-subset acceptance, not a claim that only 19 skills are installed by the complete-repository route. To reproduce these exact dependency revisions, select the corresponding source revision with the supported installer and preserve the installation lock and file hashes. Do not describe moving `main` as a pinned installation. Upgrading a dependency calls for checking its changed setup, specification, modeling, implementation and review contracts before relying on prior results.
 
-For the detailed-design profile, install the two additional skills with the standard command:
+## Complete-collection installation check
 
-```bash
-npx skills add kinglez/mkl-uml --skill mkl-uml-design-class-model mkl-uml-sequence-diagram
-```
+The standard wildcard route was exercised on 2026-10-30 in an isolated project: both upstream collections installed successfully, producing 46 definitions (38 Matt and 8 MKL). The `full-workflow` checker then passed its 19 named prerequisites. This is installation/presence evidence, not execution of all optional skills. The older 19-definition source-identity observation above remains scoped to its original subset.
 
-The core profile stays at 12; this conditional profile has 14. A state diagram uses the available project UML renderer, not an assumed state-specific MKL skill. Current local acceptance uses PlantUML 1.2026.7, Java 21.0.9 and Graphviz 15.1.1; renderer syntax/preview checks do not establish cross-view semantics.
+## Capability and legacy profiles
 
-Preserve the target project's installation lock and actual file hashes with its acceptance results. On upgrade, compare the relevant upstream contracts and rerun setup, implementation/review, and scope-handling scenarios against the installed definitions. A matching skill name or successful download does not prove compatible behavior.
+Every integrated task requires **all 19 prerequisites**, regardless of its selected stages. Default `full-workflow` checks that set. Explicit `core` retains its historical 12-definition check; `detailed-design` retains its historical 14-definition check. Those partial modes support old tooling and diagnosis, and do not satisfy the current integrated workflow requirement.
 
-Script regressions are exercised on macOS with Python 3.12, 3.13, and 3.14. The delivery tools require Python 3.10+; older supported versions and other operating systems need separate validation before a customer-specific support claim. Prompt-driven scenario results cover the tested agent/session only.
+Installation, readable definitions, session availability, repository setup, rendering, and completed workflow execution are separate observations. Reuse valid installation and configuration; preserve existing customization. The checker does not add a `triage` requirement, while complete Matt-repository installation can make it available. A state view uses the project's actual available UML toolchain.
+
+## Delivery-record compatibility
+
+The seven-stage narrative does not rename stored IDs or migrate existing records. Schema-version-1 records retain their original meaning. Handoffs remain generic and accept older stage counts/names. Optional design-view and strict-gate flags keep their existing contracts; prerequisite-default behavior is the intentional change documented above.
+
+Delivery and capture tools require Python 3.10+; the checker additionally requires PyYAML. Historical regression results and fresh candidate results are distinguished in [verification evidence](../tests/ACCEPTANCE.md). Untested interpreters, operating systems, host activation and integrations need their own verification. Renderer syntax, structural profiles and visual inspection have distinct coverage; none proves all design semantics.
 
 ## License and third-party notices
 
@@ -39,4 +40,4 @@ This project is licensed under [Apache-2.0](../LICENSE); see [NOTICE](../NOTICE)
 
 The project links these dependencies rather than bundling their implementations. If a distributor additionally packages installed skill directories, retain the appropriate license text, copyright notices, applicable NOTICE material, and modification notices with those actual copies. The current Skills CLI may copy a skill leaf directory without its parent repository's MIT file; include the corresponding original notice in that distribution. Retaining this project's NOTICE alone does not replace notices required by an additional third-party copy.
 
-License sources: [Matt snapshot](https://github.com/mattpocock/skills/blob/d1478fcb140db0b93c0c8df17bcfd311844749d0/LICENSE), [MKL snapshot](https://github.com/kinglez/mkl-uml/blob/f6f21221ef950371700e0db5860f3e94e077bc07/LICENSE). CLI requirements and options: [package](https://github.com/vercel-labs/skills/blob/92a9a34ac3bf88e695e468b90c7bf32f163d32c8/package.json), [commands](https://github.com/vercel-labs/skills/blob/92a9a34ac3bf88e695e468b90c7bf32f163d32c8/docs/commands.md).
+License sources: [Matt snapshot](https://github.com/mattpocock/skills/blob/a496f5513d4a4cf889bc48e189e579f4b0bdf6aa/LICENSE), [MKL snapshot](https://github.com/kinglez/mkl-uml/blob/a843431ec8a8cf7889e955361e7425d601278eb9/LICENSE). CLI requirements and options: [package](https://github.com/vercel-labs/skills/blob/92a9a34ac3bf88e695e468b90c7bf32f163d32c8/package.json), [commands](https://github.com/vercel-labs/skills/blob/92a9a34ac3bf88e695e468b90c7bf32f163d32c8/docs/commands.md).
