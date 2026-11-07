@@ -4,30 +4,46 @@ Use this reference to reproduce a checked environment, upgrade dependencies, or 
 
 ## Current dependency snapshot
 
-| Component | Observed snapshot |
-| --- | --- |
-| Matt Pocock Skills: 11 named definitions | `mattpocock/skills` at `a496f5513d4a4cf889bc48e189e579f4b0bdf6aa` |
-| MKL UML: all 8 definitions | `kinglez/mkl-uml` at `a843431ec8a8cf7889e955361e7425d601278eb9` |
-| Installation route exercised | Skills CLI `1.7.4`, project-scoped copies for Codex |
-| Checker parser | PyYAML `6.0.3`, declared in `requirements.txt` |
+The synchronization targets MKL UML **v1.1.1**, source commit
+`064c2e6eea494c68e2684ae58be155d76cbc13fb`: nine skills including
+`mkl-uml-c4-architecture`. The wrapper now checks 20 named prerequisites: 11 Matt and
+nine MKL definitions. Check the installed definitions and invocation metadata again
+when upgrading; installation, host activation and completed execution are separate.
 
-The 19 prerequisite definitions were installed with the standard CLI into an isolated local project. All 431 installed dependency files were compared by Git blob identity with the pinned source trees above; they matched. The default `full-workflow` presence check returned exit 0 for all 19. These facts establish copied bytes and readable names, not execution of every skill or host activation.
+Matt definitions were checked at `4ae2317ddb22b046e26455e4f9c9b3aaaf62212d`.
+All 516 copied upstream files matched the corresponding tracked sources (413 MKL,
+103 Matt); no copied-source mismatch was observed.
 
-For ordinary installation, install both upstream repositories in full with the standard wildcard commands in [README](../README.md#install-and-verify). The source-identity observations above describe the earlier named-subset acceptance, not a claim that only 19 skills are installed by the complete-repository route. To reproduce these exact dependency revisions, select the corresponding source revision with the supported installer and preserve the installation lock and file hashes. Do not describe moving `main` as a pinned installation. Upgrading a dependency calls for checking its changed setup, specification, modeling, implementation and review contracts before relying on prior results.
+The standard wildcard route was exercised locally on 2026-11-07 with Skills CLI 1.7.4:
+38 Matt definitions and nine MKL definitions were installed in an isolated project.
+The updated `full-workflow` presence check passed all 20 required definitions. This is
+installation/presence evidence, not execution of all 47 skills. The task-specific logs,
+file identities and forward evaluations stay outside this business-independent package.
 
-## Complete-collection installation check
+Ordinary commands remain unpinned `npx skills add` routes in [README](../README.md#install-and-verify).
+Moving `main` is not a reproducible pin. Record source identity/installed hashes for
+reproduction rather than claiming the current dependency checker authenticates provenance.
+Read the actual updated C4, PDR, class, sequence and CDR instructions; reuse only the
+contracts their supported arguments and evidence actually provide.
 
-The standard wildcard route was exercised on 2026-10-30 in an isolated project: both upstream collections installed successfully, producing 46 definitions (38 Matt and 8 MKL). The `full-workflow` checker then passed its 19 named prerequisites. This is installation/presence evidence, not execution of all optional skills. The older 19-definition source-identity observation above remains scoped to its original subset.
+## Historical installation observations
+
+The earlier 19-definition snapshot used Matt at
+`a496f5513d4a4cf889bc48e189e579f4b0bdf6aa` and MKL at
+`a843431ec8a8cf7889e955361e7425d601278eb9`. Its 431 compared dependency files and 19-name
+presence result are historical. The 2026-10-30 complete-collection check installed 46
+skills (38 Matt and eight MKL). Neither observation establishes the new C4 requirement.
+PyYAML 6.0.3 remains the parser declared in `requirements.txt`.
 
 ## Capability and legacy profiles
 
-Every integrated task requires **all 19 prerequisites**, regardless of its selected stages. Default `full-workflow` checks that set. Explicit `core` retains its historical 12-definition check; `detailed-design` retains its historical 14-definition check. Those partial modes support old tooling and diagnosis, and do not satisfy the current integrated workflow requirement.
+Every integrated task requires **all 20 prerequisites**, regardless of its selected stages. Default `full-workflow` checks that set. Explicit `core` retains its historical 12-definition check; `detailed-design` retains its historical 14-definition check. Those partial modes support old tooling and diagnosis, and do not satisfy the current integrated workflow requirement.
 
 Installation, readable definitions, session availability, repository setup, rendering, and completed workflow execution are separate observations. Reuse valid installation and configuration; preserve existing customization. The checker does not add a `triage` requirement, while complete Matt-repository installation can make it available. A state view uses the project's actual available UML toolchain.
 
 ## Delivery-record compatibility
 
-The seven-stage narrative does not rename stored IDs or migrate existing records. Handoffs remain generic and accept older stage counts/names. The additive `--require-through HANDOFF_ID` gate checks a selected producer prefix without requiring later stages to finish; omitting it preserves existing handoff behavior. `--require-design` retains its bundle-only scope, with one intentional correction: every selected rule must now be confirmed regardless of its global blocking flag. Previously accepted design bundles that selected an unconfirmed nonblocking rule must settle or remove that current dependency before becoming ready.
+The eight-stage narrative does not rename stored IDs or migrate existing records. Handoffs remain generic and accept older stage counts/names. The additive `--require-through HANDOFF_ID` gate checks a selected producer prefix without requiring later stages to finish; omitting it preserves existing handoff behavior. `--require-design` retains its narrow detailed-bundle scope for records without architecture. A declared architecture bundle adds upstream readiness and explicit `architecture_view_ids` coverage; `--require-architecture` can check that bundle alone. This is an additive schema-version-1 extension. Every selected architecture/design rule must be confirmed. The earlier correction remains: every selected rule must now be confirmed regardless of its global blocking flag. Previously accepted design bundles that selected an unconfirmed nonblocking rule must settle or remove that current dependency before becoming ready.
 
 Review capture explicitly rejects selected `skip-worktree` or `assume-unchanged` index states, including sparse paths, rather than returning incomplete bytes. Narrowing scope is valid only when excluded paths are genuinely outside the task. The helper preserves the repository/index and exports color-free patches; it does not automatically materialize sparse files.
 

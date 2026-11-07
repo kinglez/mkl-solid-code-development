@@ -4,13 +4,28 @@ This repository contains only domain-independent checks of the skill's tools and
 
 ## Current repaired tool contracts
 
-The default prerequisite check is `full-workflow`: 19 named definitions for every task. Explicit `core` (12) and `detailed-design` (14) checks retain their historical diagnostic behavior; success in those partial profiles does not satisfy the current integrated workflow's prerequisite baseline. Installation presence does not prove activation, setup, invocation, or a working renderer.
+The default prerequisite check is `full-workflow`: 20 named definitions for every task. Explicit `core` (12) and `detailed-design` (14) checks retain their historical diagnostic behavior; success in those partial profiles does not satisfy the current integrated workflow's prerequisite baseline. Installation presence does not prove activation, setup, invocation, or a working renderer.
 
-The suite now covers selected index flags and sparse states being rejected without source/index mutation; explicit rejection of changed submodules despite Git ignore settings; color-free applicable patches for tracked and untracked content; a ready handoff prefix with future work pending; invalidated upstream inputs and repair; confirmation of selected design rules; encoding-safe CLI diagnostics; and existing record compatibility. All fixtures and Git payloads remain neutral protocol data.
+The suite now covers selected index flags and sparse states being rejected without source/index mutation; explicit rejection of changed submodules despite Git ignore settings; color-free applicable patches for tracked and untracked content; a ready handoff prefix with future work pending; invalidated upstream inputs and repair; confirmation of selected design rules; encoding-safe CLI diagnostics; and existing record compatibility. All fixtures and Git payloads remain neutral protocol data. New coverage includes missing C4 definitions; system/bounded/lightweight architecture profiles; inspected quality outputs; architecture-only readiness; required decision blockers; cross-bundle IDs/mapping; and invalidation/repair before dependent design.
 
-Before dependent coding, the current command combines `--require-design` with `--require-through HANDOFF_ID`. The first checks the design bundle; the second checks the selected producer prefix. A valid prefix can pass while `record_ready` is false. An unconfirmed selected rule cannot become ready by changing only its global blocking flag. These are declared mechanical contracts, not proof that a requirement or diagram has correct meaning.
+Before dependent coding, the current command combines `--require-architecture --require-design` with `--require-through HANDOFF_ID`. These check architecture/quality, detailed design with its architecture mapping, and the selected producer prefix. A valid prefix can pass while `record_ready` is false. An unconfirmed selected rule cannot become ready by changing only its global blocking flag. These are declared mechanical contracts, not proof that a requirement or diagram has correct meaning.
 
 The repository CI configuration selects Linux/macOS and Python 3.10/3.14. A configured matrix is not evidence that those jobs have executed. Preserve actual candidate identity, commands, counts, runtime versions and results in the external verification workspace or corresponding CI run. Distinguish current execution from historical results and do not add repeated interpreter runs into a distinct-test count.
+
+## UML synchronization verification — 2026-11-07
+
+The updated candidate passed **152 distinct regressions** locally on macOS with Python
+3.10.21 and 3.14.10. An independent scoped review ran 27 CLI probes and compared 44 legacy
+validation results with the previous source baseline. Its documentation findings were
+corrected and rechecked. These observations cover the tested declarations and tool paths;
+they do not prove every possible workflow or generated application's correctness.
+
+The standard Skills CLI copied the updated wrapper and both complete upstream collections
+in isolated workspaces. All 20 required names passed the presence check, and 516 upstream
+files matched their tracked sources. Architecture-only forward execution and an existing
+external reference integration were inspected separately; no task-specific artifacts or
+business vectors are included in this package. Reused reference artifacts are not a new
+blind implementation, and historical independent review remains historical.
 
 ## Historical tool verification
 

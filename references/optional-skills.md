@@ -1,10 +1,10 @@
 # Complete Prerequisites and Stage Routing
 
-Use [Matt Pocock Skills](https://github.com/mattpocock/skills) with [MKL UML Skills](https://github.com/kinglez/mkl-uml). **Every task requires all 19 prerequisite definitions**, even when only selected stages execute. Installation and execution depth are separate decisions.
+Use [Matt Pocock Skills](https://github.com/mattpocock/skills) with [MKL UML Skills](https://github.com/kinglez/mkl-uml). **Every task requires all 20 prerequisite definitions**, even when only selected stages execute. Installation and execution depth are separate decisions.
 
 ## Required capabilities
 
-The required workflow subset contains 11 Matt capabilities and eight MKL capabilities. Install both upstream repositories in full; the checker verifies this named subset, not every optional skill in those repositories:
+The required workflow subset contains 11 Matt capabilities and nine MKL capabilities. Install both upstream repositories in full; the checker verifies this named subset, not every optional skill in those repositories:
 
 | Purpose / stage | Installed capabilities | Input → result |
 |---|---|---|
@@ -12,10 +12,11 @@ The required workflow subset contains 11 Matt capabilities and eight MKL capabil
 | 1. Requirements clarification | `grill-with-docs`, `grilling`, `domain-modeling` | Sources → clarified answers, terminology and questions |
 | 2. Requirements baseline | `mkl-use-case-specifier`, `mkl-uml-use-case-diagram` | Business basis → use-case behavior; actor/boundary view when needed |
 | 3. Analysis | `mkl-uml-domain-modeler`, `mkl-uml-robustness-diagram`, `mkl-pdr-review`; `domain-modeling` when meanings change | Baseline → domain model, BCE coverage and PDR |
-| 4. Detailed design | `codebase-design`, `mkl-uml-sequence-diagram`, `mkl-uml-design-class-model`, `mkl-cdr-review`, `to-spec`, `to-tickets` | Analysis → reviewed contracts/views, implementation specification and slices |
-| 5. Coding | `implement`, `tdd` | Ready slice → code, behavior checks, refactoring and current views |
-| 6. Code review | `code-review` | Fixed snapshot → two-axis findings and verified corrections |
-| 7. Architecture review | `improve-codebase-architecture` | Reviewed implementation → scoped retain/adjust conclusion |
+| 4. High-level architecture | `mkl-uml-c4-architecture` | Analysis and quality scenarios → scoped C4 views, ownership, decisions and design constraints |
+| 5. Detailed design | `codebase-design`, `mkl-uml-sequence-diagram`, `mkl-uml-design-class-model`, `mkl-cdr-review`, `to-spec`, `to-tickets` | Ready architecture → reviewed contracts/views, implementation specification and slices |
+| 6. Coding | `implement`, `tdd` | Ready slice → code, behavior checks, refactoring and current views |
+| 7. Code review | `code-review` | Fixed snapshot → two-axis findings and verified corrections |
+| 8. Architecture review | `improve-codebase-architecture` | Reviewed implementation → scoped retain/adjust conclusion |
 
 The coordinating skill produces the requirements baseline and arranges independent derivation of expected outcomes in stage 2. The use-case specifier does not replace those activities; no separately named oracle-generation skill is assumed. MKL leads conceptual modeling; Matt's `domain-modeling` actively sharpens meanings across stages instead of maintaining a competing model.
 
@@ -39,7 +40,7 @@ From the installed root and prepared [checker runtime](../README.md#prerequisite
 .venv/bin/python scripts/check_prerequisites.py --skills-root path/to/project-skills --skills-root path/to/global-skills --profile full-workflow
 ```
 
-Default `full-workflow` checks 19 readable definitions with matching frontmatter names. Exit `0` means that presence check passed; `1` means missing/invalid definitions; `2` means invalid input/checker dependency. The checker does not install, overwrite, invoke skills, configure projects or test renderers.
+Default `full-workflow` checks 20 readable definitions with matching frontmatter names. Exit `0` means that presence check passed; `1` means missing/invalid definitions; `2` means invalid input/checker dependency. The checker does not install, overwrite, invoke skills, configure projects or test renderers.
 
 Explicit legacy `core` (12) and `detailed-design` (14) profiles retain their historical subsets as compatibility/diagnostic modes. **Neither satisfies integrated prerequisites**, even for a small or review-only task.
 

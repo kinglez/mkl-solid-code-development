@@ -36,6 +36,6 @@ These are conventions for this analysis view, not universal dependency restricti
 - Domain views explain concepts and relationships; static views explain modules, contracts, and dependencies; sequence or state views explain collaboration and where failure stops progress. Choose the view that answers the current question.
 - Derive tests from business rules, scenarios, boundary conditions, and state transitions. There is no fixed correspondence between control objects and tests.
 
-Use `mkl-pdr-review` to compare the baseline/use-case flows, conceptual model and robustness coverage before stage 4. Preserve coverage, located findings, required corrections and a scoped technical disposition; absent formal evidence or a decision maker cannot be invented as approval.
+Use `mkl-pdr-review` to compare the baseline/use-case flows, conceptual model and robustness coverage before stage 4 high-level architecture. Preserve coverage, located findings, required corrections and a scoped technical disposition; absent formal evidence or a decision maker cannot be invented as approval.
 
 When using a diagram validator, report what it actually checks. Valid node connections do not establish complete business coverage, trustworthy facts, or correct exception handling.

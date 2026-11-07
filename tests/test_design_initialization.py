@@ -14,6 +14,36 @@ spec.loader.exec_module(initializer)
 
 
 class DesignInitializationTests(unittest.TestCase):
+    def test_architecture_only_initialization_stays_unready_without_detailed_design(self):
+        with tempfile.TemporaryDirectory() as temp:
+            destination = Path(temp) / "task"
+            result = subprocess.run([sys.executable, str(ROOT / "scripts/init_delivery.py"), str(destination),
+                                     "--id", "T-1", "--summary", "Architecture scope", "--intent", "design",
+                                     "--architecture-profile", "bounded"], capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            record = json.loads((destination / "delivery-record.json").read_text())
+            self.assertNotIn("design_views", record)
+            bundle = record["architecture_views"]
+            self.assertEqual(bundle["profile"], "bounded")
+            self.assertFalse(bundle["views"])
+            self.assertEqual(bundle["consistency_review"]["status"], "not_run")
+            self.assertTrue(bundle["consistency_review"]["unresolved_issues"])
+
+    def test_integrated_draft_requires_explicit_architecture_mapping(self):
+        with tempfile.TemporaryDirectory() as temp:
+            destination = Path(temp) / "task"
+            initializer.initialize(destination, "T-1", "Current scope", "implement",
+                                   design_profile="detailed", architecture_profile="system")
+            record = json.loads((destination / "delivery-record.json").read_text())
+            self.assertEqual(record["design_views"]["architecture_view_ids"], [])
+
+    def test_invalid_architecture_profile_does_not_create_outputs(self):
+        with tempfile.TemporaryDirectory() as temp:
+            destination = Path(temp) / "task"
+            with self.assertRaises(ValueError):
+                initializer.initialize(destination, "T-1", "Scope", "design", architecture_profile="unknown")
+            self.assertFalse(destination.exists())
+
     def test_profile_cli_creates_an_explicitly_unready_draft(self):
         with tempfile.TemporaryDirectory() as temp:
             destination = Path(temp) / "task"

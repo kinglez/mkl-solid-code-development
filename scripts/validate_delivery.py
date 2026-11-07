@@ -25,12 +25,13 @@ def load_record(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"), object_pairs_hook=unique_keys)
 
 
-def assess_design_views(bundle, root, rules, evidence, passed, existing_ids):
-    """Assess declared design inputs/views independently of future delivery work."""
+def assess_design_views(bundle, root, rules, evidence, passed, existing_ids, *, architecture=False):
+    """Assess declared views; architecture and detailed design share evidence rules."""
     errors, blockers = [], []
 
     def issue(target, code, location, message):
-        target.append({"code": code, "location": location, "message": message})
+        target.append({"code": (code.replace("DESIGN_", "ARCHITECTURE_", 1) if architecture and code.startswith("DESIGN_") else code),
+                       "location": location, "message": message})
 
     def error(code, location, message):
         issue(errors, code, location, message)
@@ -45,7 +46,7 @@ def assess_design_views(bundle, root, rules, evidence, passed, existing_ids):
         for key in sorted(set(required) - obj.keys()):
             error("MISSING_FIELD", f"{location}.{key}", "Required field is missing.")
         for key in sorted(obj.keys() - set(required) - set(optional)):
-            error("UNKNOWN_FIELD", f"{location}.{key}", "Unknown design-view field.")
+            error("UNKNOWN_FIELD", f"{location}.{key}", "Unknown view-bundle field.")
         return True
 
     def text(obj, key, location):
@@ -91,21 +92,26 @@ def assess_design_views(bundle, root, rules, evidence, passed, existing_ids):
     def result():
         return {"ready": not errors and not blockers, "errors": errors, "blockers": blockers}
 
-    location = "design_views"
-    if not fields(bundle, location, ("profile", "reason", "rule_ids", "state_model", "views", "consistency_review")):
+    location = "architecture_views" if architecture else "design_views"
+    required = ("profile", "reason", "rule_ids", "views", "consistency_review")
+    if not architecture:
+        required += ("state_model",)
+    optional = () if architecture else ("architecture_view_ids",)
+    if not fields(bundle, location, required, optional):
         return result()
-    choice(bundle, "profile", ("detailed", "lightweight"), location)
+    profiles = ("system", "bounded", "lightweight") if architecture else ("detailed", "lightweight")
+    choice(bundle, "profile", profiles, location)
     text(bundle, "reason", location)
     selected_rules = refs(bundle, "rule_ids", rules, location)
-    if bundle.get("profile") == "detailed" and not selected_rules:
-        block("DESIGN_RULES_REQUIRED", location + ".rule_ids", "Detailed design needs its selected rule inputs.")
+    if bundle.get("profile") in ("detailed", "system", "bounded") and not selected_rules:
+        block("DESIGN_RULES_REQUIRED", location + ".rule_ids", "This scope needs its selected requirement inputs.")
     for identifier in selected_rules:
         if rules[identifier].get("status") != "confirmed":
             block("DESIGN_INPUT_UNSETTLED", identifier, "A selected design input is not confirmed.")
 
     state = bundle.get("state_model")
     state_required = False
-    if fields(state, location + ".state_model", ("requirement", "reason")):
+    if not architecture and fields(state, location + ".state_model", ("requirement", "reason")):
         choice(state, "requirement", ("required", "not_applicable", "unresolved"), location + ".state_model")
         text(state, "reason", location + ".state_model")
         state_required = state.get("requirement") == "required"
@@ -119,12 +125,13 @@ def assess_design_views(bundle, root, rules, evidence, passed, existing_ids):
     seen, view_ids, active_ids, usable_kinds = set(existing_ids), set(), set(), set()
     usable = ("completed", "reused")
     for index, view in enumerate(views):
-        loc = f"design_views.views[{index}]"
+        loc = f"{location}.views[{index}]"
         if not fields(view, loc, ("id", "kind", "status", "notes", "evidence_ids"), ("artifact", "preview_artifact")):
             continue
         for key in ("id", "notes"):
             text(view, key, loc)
-        choice(view, "kind", ("class", "module", "sequence", "state", "other"), loc)
+        kinds = ("context", "container", "component", "module", "code", "deployment", "quality", "other") if architecture else ("class", "module", "sequence", "state", "other")
+        choice(view, "kind", kinds, loc)
         choice(view, "status", (*usable, "pending", "blocked", "invalidated", "skipped"), loc)
         identifier = view.get("id")
         if isinstance(identifier, str) and identifier.strip():
@@ -157,6 +164,15 @@ def assess_design_views(bundle, root, rules, evidence, passed, existing_ids):
             block("DESIGN_SEQUENCE_REQUIRED", location + ".views", "Detailed design needs a usable sequence view.")
     if state_required and "state" not in usable_kinds:
         block("DESIGN_STATE_REQUIRED", location + ".views", "The declared lifecycle requires a usable state view.")
+    if architecture:
+        if "quality" not in usable_kinds:
+            block("ARCHITECTURE_QUALITY_REQUIRED", location + ".views", "Architecture needs an inspected quality assessment and verification strategy.")
+        if bundle.get("profile") == "system":
+            for kind in ("context", "container"):
+                if kind not in usable_kinds:
+                    block("ARCHITECTURE_VIEW_REQUIRED", location + ".views", f"System scope needs a usable {kind} view.")
+        if bundle.get("profile") == "bounded" and not usable_kinds.intersection(("component", "module", "code")):
+            block("ARCHITECTURE_SCOPE_REQUIRED", location + ".views", "Bounded scope needs a usable component, module or code view.")
 
     review = bundle.get("consistency_review")
     loc = location + ".consistency_review"
@@ -178,7 +194,7 @@ def assess_design_views(bundle, root, rules, evidence, passed, existing_ids):
 
 
 def validate(record: object, project_root: Path, require_handoffs: bool = False, require_design: bool = False,
-             require_through: str | None = None) -> dict:
+             require_through: str | None = None, require_architecture: bool = False) -> dict:
     errors, blockers = [], []
     root = project_root.resolve()
 
@@ -226,8 +242,9 @@ def validate(record: object, project_root: Path, require_handoffs: bool = False,
         return [v for v in values if v in targets]
 
     required_top = ("schema_version", "task", "rules", "acceptance", "design", "evidence", "review", "limitations")
-    if not fields(record, "$", required_top, ("handoffs", "design_views")):
+    if not fields(record, "$", required_top, ("handoffs", "design_views", "architecture_views")):
         return {"structure_valid": False, "record_ready": False, "design_ready": False if require_design else None,
+                "architecture_ready": False if require_architecture else None, "architecture_blockers": [],
                 "design_blockers": [], "through_ready": False if require_through is not None else None,
                 "through_blockers": [], "errors": errors, "blockers": blockers}
     if type(record.get("schema_version")) is not int or record["schema_version"] != 1:
@@ -487,18 +504,46 @@ def validate(record: object, project_root: Path, require_handoffs: bool = False,
         for item in through_blockers:
             if item not in blockers:
                 blockers.append(item)
+    architecture_ready, architecture_blockers = None, []
+    architecture_ids, architecture_active_ids = set(), set()
+    if "architecture_views" in record:
+        bundle = record["architecture_views"]
+        assessment = assess_design_views(bundle, root, rules, evidence, passed, ids, architecture=True)
+        errors.extend(assessment["errors"])
+        architecture_blockers = assessment["blockers"]
+        blockers.extend(architecture_blockers)
+        architecture_ready = not errors and assessment["ready"]
+        if isinstance(bundle, dict) and isinstance(bundle.get("views"), list):
+            for view in bundle["views"]:
+                if isinstance(view, dict) and isinstance(view.get("id"), str) and view["id"].strip():
+                    architecture_ids.add(view["id"])
+                    if view.get("status") != "skipped":
+                        architecture_active_ids.add(view["id"])
+    elif require_architecture:
+        architecture_ready = False
+        issue(architecture_blockers, "ARCHITECTURE_VIEWS_MISSING", "architecture_views", "The architecture gate requires an explicit architecture_views bundle.")
+        blockers.extend(architecture_blockers)
     design_ready, design_blockers = None, []
     if "design_views" in record:
-        assessment = assess_design_views(record["design_views"], root, rules, evidence, passed, ids)
+        bundle = record["design_views"]
+        assessment = assess_design_views(bundle, root, rules, evidence, passed, ids | architecture_ids)
         errors.extend(assessment["errors"])
         design_blockers = assessment["blockers"]
+        if isinstance(bundle, dict):
+            if "architecture_views" in record or "architecture_view_ids" in bundle:
+                linked = set(refs(bundle, "architecture_view_ids", architecture_ids, "design_views"))
+                if architecture_active_ids - linked:
+                    issue(design_blockers, "DESIGN_ARCHITECTURE_COVERAGE_INCOMPLETE", "design_views.architecture_view_ids", "Detailed design must account for each active architecture output.")
+            if architecture_ready is False:
+                issue(design_blockers, "DESIGN_ARCHITECTURE_NOT_READY", "architecture_views", "The declared upstream architecture needs completion or revalidation.")
         blockers.extend(design_blockers)
-        design_ready = not errors and assessment["ready"]
+        design_ready = not errors and assessment["ready"] and not design_blockers
     elif require_design:
         design_ready = False
         issue(design_blockers, "DESIGN_VIEWS_MISSING", "design_views", "The design gate requires an explicit design_views bundle.")
         blockers.extend(design_blockers)
     return {"structure_valid": not errors, "record_ready": not errors and not blockers,
+            "architecture_ready": architecture_ready, "architecture_blockers": architecture_blockers,
             "design_ready": design_ready, "design_blockers": design_blockers,
             "through_ready": not errors and not through_blockers if require_through is not None else None,
             "through_blockers": through_blockers,
@@ -513,7 +558,9 @@ def main(argv=None) -> int:
     parser.add_argument("--require-handoffs", action="store_true",
                         help="Require linked stage handoffs; also implies --require-ready.")
     parser.add_argument("--require-design", action="store_true",
-                        help="Require declared design-view readiness; independent of final delivery readiness.")
+                        help="Require detailed design and any declared upstream architecture; independent of final delivery.")
+    parser.add_argument("--require-architecture", action="store_true",
+                        help="Require high-level architecture views and quality assessment without requiring coding.")
     parser.add_argument("--require-through", metavar="HANDOFF_ID",
                         help="Require ready handoffs through this stable ID; later stages may remain unfinished.")
     args = parser.parse_args(argv)
@@ -522,7 +569,8 @@ def main(argv=None) -> int:
         if not root.is_dir():
             raise ValueError("project_root is not a directory")
         result = validate(load_record(args.record), root, require_handoffs=args.require_handoffs,
-                          require_design=args.require_design, require_through=args.require_through)
+                          require_design=args.require_design, require_through=args.require_through,
+                          require_architecture=args.require_architecture)
     except (OSError, ValueError, RuntimeError) as exc:
         print(json.dumps({"input_error": str(exc)}, ensure_ascii=True), file=sys.stderr)
         return 2
@@ -530,8 +578,9 @@ def main(argv=None) -> int:
     strict = args.require_ready or args.require_handoffs
     ready = not strict or result["record_ready"]
     design_ready = not args.require_design or result["design_ready"] is True
+    architecture_ready = not args.require_architecture or result["architecture_ready"] is True
     through_ready = args.require_through is None or result["through_ready"] is True
-    return 0 if result["structure_valid"] and ready and design_ready and through_ready else 1
+    return 0 if result["structure_valid"] and ready and design_ready and architecture_ready and through_ready else 1
 
 
 if __name__ == "__main__":

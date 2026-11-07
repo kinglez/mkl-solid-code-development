@@ -1,6 +1,6 @@
 # Design Views: From Responsibilities to Implementable Contracts
 
-Read this in stage 4 after ready analysis/PDR results and before CDR, implementation specification, task slicing or coding. Its output is an agreed design supported by actual views and cross-checks, not a list of diagrams to draw later.
+Read this in stage 5 after ready architecture and analysis/PDR results and before CDR, implementation specification, task slicing or coding. Its output is an agreed design supported by actual views and cross-checks, not a list of diagrams to draw later.
 
 ## Select the depth from the task
 
@@ -9,6 +9,13 @@ Read this in stage 4 after ready analysis/PDR results and before CDR, implementa
 **Lightweight design** fits a bounded correction that preserves established responsibilities, public contracts, interactions, and lifecycle rules. Read the affected existing design, describe the relevant delta and verification, and explain why new views add no value. A requested diagram remains part of the deliverable even when the code change is small. Reuse means reading and checking the current source; it is not an exemption from design review.
 
 Design-only and review-only requests keep their endpoints. If the user requests response-only work, supply the necessary views and review in the response instead of creating project files. Structured records and file-based checks remain optional.
+
+## Consume the architecture first
+
+Read the stage-4 architecture, quality scenarios, ownership boundaries and detailed-design
+constraints. Map architecture elements to modules/types and interactions with stable
+identities. Recheck changed inputs and return unresolved architecture decisions to their
+producer. A PDR pass does not replace architecture design.
 
 ## Produce the views that answer the design questions
 
@@ -29,7 +36,7 @@ Start with the responsibilities and known contracts. Sketch receiver types/modul
 
 For each required flow or rule, keep an explainable trace:
 
-**Rule / use-case behavior → BCE responsibility → interaction → owned operation or event → state effect where applicable → acceptance check.**
+**Rule / use-case behavior → architecture constraint/component → BCE responsibility → interaction → owned operation or event → state effect where applicable → acceptance check.**
 
 Use existing identifiers or a compact cross-reference table. The relationships may be many-to-many; do not invent one class, message, state, or test for every sentence.
 
@@ -44,13 +51,13 @@ Cross-check the actual artifacts:
 
 ## Route to available modeling tools
 
-Install both upstream collections in full as described in [stage routing](optional-skills.md). The checker verifies 19 named workflow capabilities within those collections; the dedicated class/sequence pair is included. Install the complete MKL collection with:
+Install both upstream collections in full as described in [stage routing](optional-skills.md). The checker verifies 20 named workflow capabilities within those collections; the dedicated class/sequence pair is included. Install the complete MKL collection with:
 
 ```bash
 npx skills add kinglez/mkl-uml --skill '*'
 ```
 
-Verify the **19-skill full-workflow** profile in the target environment. Legacy partial profiles do not establish integrated readiness. From the installed skill root and prepared Python environment, this is a command template:
+Verify the **20-skill full-workflow** profile in the target environment. Legacy partial profiles do not establish integrated readiness. From the installed skill root and prepared Python environment, this is a command template:
 
 ```bash
 .venv/bin/python scripts/check_prerequisites.py --skills-root path/to/skills --profile full-workflow
@@ -62,7 +69,7 @@ For state diagrams, use the project's available UML toolchain, such as PlantUML 
 
 ## Complete and hand off the design
 
-Use `mkl-cdr-review` for the stage-4 exit check, comparing the actual detailed views, use-case behavior, contracts, operation allocation and test design. Preserve findings, corrections, coverage and technical disposition; do not infer formal acceptance from mechanical results or unavailable participants. Scoped technical readiness can be recorded without claiming formal approval.
+Use `mkl-cdr-review` for the stage-5 exit check, comparing the actual detailed views, use-case behavior, contracts, operation allocation and test design. Inspect architecture-to-design correspondence semantically; the current class/sequence CLI has no C4-validation flag. For a class-only or non-OO review, use a named scoped manual route when full CLI targets are unavailable. Preserve findings, corrections, coverage and technical disposition; do not infer formal acceptance from mechanical results or unavailable participants. Scoped technical readiness can be recorded without claiming formal approval.
 
 Before implementation specification, slices or coding consume the design, deliver:
 
@@ -73,6 +80,6 @@ Before implementation specification, slices or coding consume the design, delive
 
 The design is ready only when required views are produced or checked as current, relevant cross-view responsibilities and contracts agree, and implementation-changing questions within its scope are resolved. An unresolved state assessment, missing required view, stale reuse, or unreviewed inconsistency remains unready. Return missing input to its producer and continue only independent work with sufficient inputs.
 
-When using a structured delivery record, see [design-view fields and the pre-implementation gate](delivery-record.md#design-views-and-the-pre-implementation-gate). Combine `--require-design` with `--require-through` using the actual design producer's handoff ID before dependent coding. `design_ready` checks the bundle and confirmed selected rules; `through_ready` checks its stage prefix and upstream handoffs. Future coding/review can remain pending. Neither result interprets UML meaning or replaces semantic inspection.
+When using a structured delivery record, see [design-view fields and the pre-implementation gate](delivery-record.md#design-views-and-the-pre-implementation-gate). Combine `--require-architecture --require-design` with `--require-through` using the actual design producer's handoff ID before dependent coding. `design_ready` checks the bundle and confirmed selected rules; `through_ready` checks its stage prefix and upstream handoffs. Future coding/review can remain pending. Neither result interprets UML meaning or replaces semantic inspection.
 
 After coding or refactoring, compare the actual implementation to the design. Update affected operation signatures, participants, dependencies, state transitions, and acceptance references; rerun relevant checks and review the final change snapshot. Recheck affected downstream design on an upstream rule change. Final delivery links the current views and the implementation they describe.

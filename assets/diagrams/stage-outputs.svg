@@ -1,79 +1,78 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 1690" width="1440" height="1690" role="img" aria-labelledby="stage-outputs-title stage-outputs-desc" data-generator="fireworks-tech-graph" data-schema-version="1" data-style-id="1" data-visual-theme="Flat Icon" data-diagram-type="tree" data-semantic-profile="generic" data-semantic-valid="true" data-quality-profile="showcase">
-<title id="stage-outputs-title">What each stage passes forward</title>
-<desc id="stage-outputs-desc">A rooted tree shows seven logical output groups for a scoped task. Each contains consumable results, not mandatory filenames.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 1890" width="1440" height="1890" role="img" aria-labelledby="stage-outputs-title stage-outputs-desc" data-generator="fireworks-tech-graph" data-schema-version="1" data-style-id="1" data-visual-theme="Flat Icon" data-diagram-type="tree" data-semantic-profile="generic" data-semantic-valid="true" data-quality-profile="showcase">
+<title id="stage-outputs-title">Eight usable outputs, one connected delivery</title>
+<desc id="stage-outputs-desc">Logical output tree with architecture and quality before detailed design.</desc>
 <style>text{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif}</style>
 <defs><marker id="stage-outputs-arrow" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="10" refX="12" refY="5" orient="auto"><path d="M 0,0 L 12,5 L 0,10 Z" fill="#2563eb"/></marker></defs>
-<rect data-graph-role="background" x="0" y="0" width="1440" height="1690" fill="#ffffff"/>
-<text x="48" y="58" font-size="38" font-weight="600" fill="#111827">What each stage passes forward</text>
-<text x="48" y="100" font-size="25" font-weight="400" fill="#6b7280">Logical deliverables: use existing documents or named sections.</text>
-<g id="task-root" data-graph-role="node" data-node-id="task-root" data-semantic-role="process" data-graph-bounds="48,140,328,252">
-<rect x="48" y="140" width="280" height="112" rx="8" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.6"/>
-<text x="76" y="182" font-size="27" font-weight="600" fill="#111827">One scoped task</text>
-<text x="76" y="220" font-size="22" font-weight="500" fill="#2563eb">Seven linked outputs</text>
-</g>
+<rect data-graph-role="background" x="0" y="0" width="1440" height="1890" fill="#ffffff"/>
+<text x="48" y="58" font-size="38" font-weight="600" fill="#111827">Eight usable outputs, one connected delivery</text>
+<text x="48" y="100" font-size="25" font-weight="400" fill="#6b7280">Each result becomes an inspected input for the next consumer.</text>
+
+<g id="task-root" data-graph-role="node" data-node-id="task-root" data-semantic-role="process" data-graph-bounds="48,140,328,252"><rect x="48" y="140" width="280" height="112" rx="8" fill="#eff6ff" stroke="#bfdbfe"/><text x="76" y="182" font-size="27" font-weight="600" fill="#111827">One scoped task</text><text x="76" y="220" font-size="22" fill="#2563eb">Eight linked outputs</text></g>
 <g id="junction-1" data-graph-role="node" data-node-id="junction-1" data-semantic-role="junction" data-graph-bounds="184,356,192,364"><circle cx="188" cy="360" r="4" fill="#2563eb"/></g>
-<path id="root-spine" data-graph-role="edge" data-edge-id="root-spine" data-source="task-root" data-target="junction-1" data-edge-kind="flow" data-flow="handoff" d="M 188,252 L 188,356" fill="none" stroke="#2563eb" stroke-width="3" stroke-linejoin="round"/>
-<path id="branch-1" data-graph-role="edge" data-edge-id="branch-1" data-source="junction-1" data-target="output-1" data-edge-kind="flow" data-flow="handoff" d="M 192,360 L 360,360" fill="none" stroke="#2563eb" stroke-width="3" stroke-linejoin="round"/>
-<g id="output-1" data-graph-role="node" data-node-id="output-1" data-semantic-role="process" data-graph-bounds="360,295,1392,425">
-<rect x="360" y="295" width="1032" height="130" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6"/>
-<text x="388" y="331" font-size="27" font-weight="600" fill="#2563eb">1. Clarification</text>
-<text x="388" y="370" font-size="24" font-weight="500" fill="#111827">Answers + sources + conflicts</text>
-<text x="388" y="403" font-size="23" font-weight="400" fill="#6b7280">Proposals, assumptions and unresolved questions</text>
+<path id="spine-1" data-graph-role="edge" data-edge-id="spine-1" data-source="task-root" data-target="junction-1" data-edge-kind="flow" data-flow="handoff" d="M 188,252 L 188,356" fill="none" stroke="#2563eb" stroke-width="3"/>
+<path id="branch-1" data-graph-role="edge" data-edge-id="branch-1" data-source="junction-1" data-target="output-1" data-edge-kind="flow" data-flow="handoff" d="M 192,360 L 360,360" fill="none" stroke="#2563eb" stroke-width="3"/>
+<g id="output-1" data-graph-role="node" data-node-id="output-1" data-semantic-role="process" data-graph-bounds="360,295,1392,425"><rect x="360" y="295" width="1032" height="130" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6"/>
+<text x="388" y="331" font-size="27" fill="#2563eb" font-weight="600">1. Requirements clarification</text>
+<text x="388" y="371" font-size="23" fill="#111827" font-weight="500">Answers, sources, conflicts and open decisions.</text>
+<text x="388" y="403" font-size="21" fill="#6b7280" font-weight="400">Consumer: Requirements baseline</text>
 </g>
 <g id="junction-2" data-graph-role="node" data-node-id="junction-2" data-semantic-role="junction" data-graph-bounds="184,536,192,544"><circle cx="188" cy="540" r="4" fill="#2563eb"/></g>
-<path id="spine-2" data-graph-role="edge" data-edge-id="spine-2" data-source="junction-1" data-target="junction-2" data-edge-kind="flow" data-flow="handoff" d="M 188,364 L 188,536" fill="none" stroke="#2563eb" stroke-width="3" stroke-linejoin="round"/>
-<path id="branch-2" data-graph-role="edge" data-edge-id="branch-2" data-source="junction-2" data-target="output-2" data-edge-kind="flow" data-flow="handoff" d="M 192,540 L 360,540" fill="none" stroke="#2563eb" stroke-width="3" stroke-linejoin="round"/>
-<g id="output-2" data-graph-role="node" data-node-id="output-2" data-semantic-role="process" data-graph-bounds="360,475,1392,605">
-<rect x="360" y="475" width="1032" height="130" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6"/>
-<text x="388" y="511" font-size="27" font-weight="600" fill="#2563eb">2. Requirements baseline</text>
-<text x="388" y="550" font-size="24" font-weight="500" fill="#111827">Scope + rules + constraints + use-case behavior</text>
-<text x="388" y="583" font-size="23" font-weight="400" fill="#6b7280">Independent expected outcomes and their sources</text>
+<path id="spine-2" data-graph-role="edge" data-edge-id="spine-2" data-source="junction-1" data-target="junction-2" data-edge-kind="flow" data-flow="handoff" d="M 188,364 L 188,536" fill="none" stroke="#2563eb" stroke-width="3"/>
+<path id="branch-2" data-graph-role="edge" data-edge-id="branch-2" data-source="junction-2" data-target="output-2" data-edge-kind="flow" data-flow="handoff" d="M 192,540 L 360,540" fill="none" stroke="#2563eb" stroke-width="3"/>
+<g id="output-2" data-graph-role="node" data-node-id="output-2" data-semantic-role="process" data-graph-bounds="360,475,1392,605"><rect x="360" y="475" width="1032" height="130" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6"/>
+<text x="388" y="511" font-size="27" fill="#2563eb" font-weight="600">2. Requirements baseline</text>
+<text x="388" y="551" font-size="23" fill="#111827" font-weight="500">Scope, rules, use cases, qualities and acceptance.</text>
+<text x="388" y="583" font-size="21" fill="#6b7280" font-weight="400">Consumer: Analysis</text>
 </g>
 <g id="junction-3" data-graph-role="node" data-node-id="junction-3" data-semantic-role="junction" data-graph-bounds="184,716,192,724"><circle cx="188" cy="720" r="4" fill="#2563eb"/></g>
-<path id="spine-3" data-graph-role="edge" data-edge-id="spine-3" data-source="junction-2" data-target="junction-3" data-edge-kind="flow" data-flow="handoff" d="M 188,544 L 188,716" fill="none" stroke="#2563eb" stroke-width="3" stroke-linejoin="round"/>
-<path id="branch-3" data-graph-role="edge" data-edge-id="branch-3" data-source="junction-3" data-target="output-3" data-edge-kind="flow" data-flow="handoff" d="M 192,720 L 360,720" fill="none" stroke="#2563eb" stroke-width="3" stroke-linejoin="round"/>
-<g id="output-3" data-graph-role="node" data-node-id="output-3" data-semantic-role="process" data-graph-bounds="360,655,1392,785">
-<rect x="360" y="655" width="1032" height="130" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6"/>
-<text x="388" y="691" font-size="27" font-weight="600" fill="#2563eb">3. Analysis</text>
-<text x="388" y="730" font-size="24" font-weight="500" fill="#111827">Vocabulary + conceptual model + BCE responsibilities</text>
-<text x="388" y="763" font-size="23" font-weight="400" fill="#6b7280">Behavior coverage, PDR findings and corrections</text>
+<path id="spine-3" data-graph-role="edge" data-edge-id="spine-3" data-source="junction-2" data-target="junction-3" data-edge-kind="flow" data-flow="handoff" d="M 188,544 L 188,716" fill="none" stroke="#2563eb" stroke-width="3"/>
+<path id="branch-3" data-graph-role="edge" data-edge-id="branch-3" data-source="junction-3" data-target="output-3" data-edge-kind="flow" data-flow="handoff" d="M 192,720 L 360,720" fill="none" stroke="#2563eb" stroke-width="3"/>
+<g id="output-3" data-graph-role="node" data-node-id="output-3" data-semantic-role="process" data-graph-bounds="360,655,1392,785"><rect x="360" y="655" width="1032" height="130" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6"/>
+<text x="388" y="691" font-size="27" fill="#2563eb" font-weight="600">3. Analysis</text>
+<text x="388" y="731" font-size="23" fill="#111827" font-weight="500">Vocabulary, concepts, BCE coverage and analysis findings.</text>
+<text x="388" y="763" font-size="21" fill="#6b7280" font-weight="400">Consumer: High-level architecture</text>
 </g>
 <g id="junction-4" data-graph-role="node" data-node-id="junction-4" data-semantic-role="junction" data-graph-bounds="184,896,192,904"><circle cx="188" cy="900" r="4" fill="#2563eb"/></g>
-<path id="spine-4" data-graph-role="edge" data-edge-id="spine-4" data-source="junction-3" data-target="junction-4" data-edge-kind="flow" data-flow="handoff" d="M 188,724 L 188,896" fill="none" stroke="#2563eb" stroke-width="3" stroke-linejoin="round"/>
-<path id="branch-4" data-graph-role="edge" data-edge-id="branch-4" data-source="junction-4" data-target="output-4" data-edge-kind="flow" data-flow="handoff" d="M 192,900 L 360,900" fill="none" stroke="#2563eb" stroke-width="3" stroke-linejoin="round"/>
-<g id="output-4" data-graph-role="node" data-node-id="output-4" data-semantic-role="process" data-graph-bounds="360,835,1392,965">
-<rect x="360" y="835" width="1032" height="130" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6"/>
-<text x="388" y="871" font-size="27" font-weight="600" fill="#2563eb">4. Detailed design</text>
-<text x="388" y="910" font-size="24" font-weight="500" fill="#111827">Structure + sequences + state applicability + contracts</text>
-<text x="388" y="943" font-size="23" font-weight="400" fill="#6b7280">CDR result, implementation specification and slices</text>
+<path id="spine-4" data-graph-role="edge" data-edge-id="spine-4" data-source="junction-3" data-target="junction-4" data-edge-kind="flow" data-flow="handoff" d="M 188,724 L 188,896" fill="none" stroke="#2563eb" stroke-width="3"/>
+<path id="branch-4" data-graph-role="edge" data-edge-id="branch-4" data-source="junction-4" data-target="output-4" data-edge-kind="flow" data-flow="handoff" d="M 192,900 L 360,900" fill="none" stroke="#2563eb" stroke-width="3"/>
+<g id="output-4" data-graph-role="node" data-node-id="output-4" data-semantic-role="process" data-graph-bounds="360,835,1392,965"><rect x="360" y="835" width="1032" height="130" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6"/>
+<text x="388" y="871" font-size="27" fill="#2563eb" font-weight="600">4. High-level architecture</text>
+<text x="388" y="911" font-size="23" fill="#111827" font-weight="500">Scoped C4 views, quality assessment and design constraints.</text>
+<text x="388" y="943" font-size="21" fill="#6b7280" font-weight="400">Consumer: Detailed design</text>
 </g>
 <g id="junction-5" data-graph-role="node" data-node-id="junction-5" data-semantic-role="junction" data-graph-bounds="184,1076,192,1084"><circle cx="188" cy="1080" r="4" fill="#2563eb"/></g>
-<path id="spine-5" data-graph-role="edge" data-edge-id="spine-5" data-source="junction-4" data-target="junction-5" data-edge-kind="flow" data-flow="handoff" d="M 188,904 L 188,1076" fill="none" stroke="#2563eb" stroke-width="3" stroke-linejoin="round"/>
-<path id="branch-5" data-graph-role="edge" data-edge-id="branch-5" data-source="junction-5" data-target="output-5" data-edge-kind="flow" data-flow="handoff" d="M 192,1080 L 360,1080" fill="none" stroke="#2563eb" stroke-width="3" stroke-linejoin="round"/>
-<g id="output-5" data-graph-role="node" data-node-id="output-5" data-semantic-role="process" data-graph-bounds="360,1015,1392,1145">
-<rect x="360" y="1015" width="1032" height="130" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6"/>
-<text x="388" y="1051" font-size="27" font-weight="600" fill="#2563eb">5. Coding</text>
-<text x="388" y="1090" font-size="24" font-weight="500" fill="#111827">Code + actual behavior checks + refactoring result</text>
-<text x="388" y="1123" font-size="23" font-weight="400" fill="#6b7280">Synchronized design and remaining verification gaps</text>
+<path id="spine-5" data-graph-role="edge" data-edge-id="spine-5" data-source="junction-4" data-target="junction-5" data-edge-kind="flow" data-flow="handoff" d="M 188,904 L 188,1076" fill="none" stroke="#2563eb" stroke-width="3"/>
+<path id="branch-5" data-graph-role="edge" data-edge-id="branch-5" data-source="junction-5" data-target="output-5" data-edge-kind="flow" data-flow="handoff" d="M 192,1080 L 360,1080" fill="none" stroke="#2563eb" stroke-width="3"/>
+<g id="output-5" data-graph-role="node" data-node-id="output-5" data-semantic-role="process" data-graph-bounds="360,1015,1392,1145"><rect x="360" y="1015" width="1032" height="130" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6"/>
+<text x="388" y="1051" font-size="27" fill="#2563eb" font-weight="600">5. Detailed design</text>
+<text x="388" y="1091" font-size="23" fill="#111827" font-weight="500">Reviewed views, contracts, specification and slices.</text>
+<text x="388" y="1123" font-size="21" fill="#6b7280" font-weight="400">Consumer: Coding</text>
 </g>
 <g id="junction-6" data-graph-role="node" data-node-id="junction-6" data-semantic-role="junction" data-graph-bounds="184,1256,192,1264"><circle cx="188" cy="1260" r="4" fill="#2563eb"/></g>
-<path id="spine-6" data-graph-role="edge" data-edge-id="spine-6" data-source="junction-5" data-target="junction-6" data-edge-kind="flow" data-flow="handoff" d="M 188,1084 L 188,1256" fill="none" stroke="#2563eb" stroke-width="3" stroke-linejoin="round"/>
-<path id="branch-6" data-graph-role="edge" data-edge-id="branch-6" data-source="junction-6" data-target="output-6" data-edge-kind="flow" data-flow="handoff" d="M 192,1260 L 360,1260" fill="none" stroke="#2563eb" stroke-width="3" stroke-linejoin="round"/>
-<g id="output-6" data-graph-role="node" data-node-id="output-6" data-semantic-role="process" data-graph-bounds="360,1195,1392,1325">
-<rect x="360" y="1195" width="1032" height="130" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6"/>
-<text x="388" y="1231" font-size="27" font-weight="600" fill="#2563eb">6. Code review</text>
-<text x="388" y="1270" font-size="24" font-weight="500" fill="#111827">Same-snapshot requirements and standards findings</text>
-<text x="388" y="1303" font-size="23" font-weight="400" fill="#6b7280">Corrections, regressions and review of the actual delta</text>
+<path id="spine-6" data-graph-role="edge" data-edge-id="spine-6" data-source="junction-5" data-target="junction-6" data-edge-kind="flow" data-flow="handoff" d="M 188,1084 L 188,1256" fill="none" stroke="#2563eb" stroke-width="3"/>
+<path id="branch-6" data-graph-role="edge" data-edge-id="branch-6" data-source="junction-6" data-target="output-6" data-edge-kind="flow" data-flow="handoff" d="M 192,1260 L 360,1260" fill="none" stroke="#2563eb" stroke-width="3"/>
+<g id="output-6" data-graph-role="node" data-node-id="output-6" data-semantic-role="process" data-graph-bounds="360,1195,1392,1325"><rect x="360" y="1195" width="1032" height="130" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6"/>
+<text x="388" y="1231" font-size="27" fill="#2563eb" font-weight="600">6. Coding</text>
+<text x="388" y="1271" font-size="23" fill="#111827" font-weight="500">Code, actual checks, refactoring and current design.</text>
+<text x="388" y="1303" font-size="21" fill="#6b7280" font-weight="400">Consumer: Code review</text>
 </g>
 <g id="junction-7" data-graph-role="node" data-node-id="junction-7" data-semantic-role="junction" data-graph-bounds="184,1436,192,1444"><circle cx="188" cy="1440" r="4" fill="#2563eb"/></g>
-<path id="spine-7" data-graph-role="edge" data-edge-id="spine-7" data-source="junction-6" data-target="junction-7" data-edge-kind="flow" data-flow="handoff" d="M 188,1264 L 188,1436" fill="none" stroke="#2563eb" stroke-width="3" stroke-linejoin="round"/>
-<path id="branch-7" data-graph-role="edge" data-edge-id="branch-7" data-source="junction-7" data-target="output-7" data-edge-kind="flow" data-flow="handoff" d="M 192,1440 L 360,1440" fill="none" stroke="#2563eb" stroke-width="3" stroke-linejoin="round"/>
-<g id="output-7" data-graph-role="node" data-node-id="output-7" data-semantic-role="process" data-graph-bounds="360,1375,1392,1505">
-<rect x="360" y="1375" width="1032" height="130" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6"/>
-<text x="388" y="1411" font-size="27" font-weight="600" fill="#2563eb">7. Architecture review</text>
-<text x="388" y="1450" font-size="24" font-weight="500" fill="#111827">Scoped retain/adjust decision + maintenance trade-offs</text>
-<text x="388" y="1483" font-size="23" font-weight="400" fill="#6b7280">Reconsideration triggers and final delivery index</text>
+<path id="spine-7" data-graph-role="edge" data-edge-id="spine-7" data-source="junction-6" data-target="junction-7" data-edge-kind="flow" data-flow="handoff" d="M 188,1264 L 188,1436" fill="none" stroke="#2563eb" stroke-width="3"/>
+<path id="branch-7" data-graph-role="edge" data-edge-id="branch-7" data-source="junction-7" data-target="output-7" data-edge-kind="flow" data-flow="handoff" d="M 192,1440 L 360,1440" fill="none" stroke="#2563eb" stroke-width="3"/>
+<g id="output-7" data-graph-role="node" data-node-id="output-7" data-semantic-role="process" data-graph-bounds="360,1375,1392,1505"><rect x="360" y="1375" width="1032" height="130" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6"/>
+<text x="388" y="1411" font-size="27" fill="#2563eb" font-weight="600">7. Code review</text>
+<text x="388" y="1451" font-size="23" fill="#111827" font-weight="500">Findings, verified corrections and reviewed snapshot.</text>
+<text x="388" y="1483" font-size="21" fill="#6b7280" font-weight="400">Consumer: Architecture review</text>
 </g>
-<text x="48" y="1602" font-size="24" font-weight="500" fill="#111827">Each output carries its source/version, readiness, limitations and next consumer.</text>
-<text x="48" y="1644" font-size="23" font-weight="400" fill="#6b7280">Reused results need an applicability check; skipped stages produce no invented output.</text>
+<g id="junction-8" data-graph-role="node" data-node-id="junction-8" data-semantic-role="junction" data-graph-bounds="184,1616,192,1624"><circle cx="188" cy="1620" r="4" fill="#2563eb"/></g>
+<path id="spine-8" data-graph-role="edge" data-edge-id="spine-8" data-source="junction-7" data-target="junction-8" data-edge-kind="flow" data-flow="handoff" d="M 188,1444 L 188,1616" fill="none" stroke="#2563eb" stroke-width="3"/>
+<path id="branch-8" data-graph-role="edge" data-edge-id="branch-8" data-source="junction-8" data-target="output-8" data-edge-kind="flow" data-flow="handoff" d="M 192,1620 L 360,1620" fill="none" stroke="#2563eb" stroke-width="3"/>
+<g id="output-8" data-graph-role="node" data-node-id="output-8" data-semantic-role="process" data-graph-bounds="360,1555,1392,1685"><rect x="360" y="1555" width="1032" height="130" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6"/>
+<text x="388" y="1591" font-size="27" fill="#2563eb" font-weight="600">8. Architecture review</text>
+<text x="388" y="1631" font-size="23" fill="#111827" font-weight="500">Scoped retain/adjust decision, costs and reconsideration triggers.</text>
+<text x="388" y="1663" font-size="21" fill="#6b7280" font-weight="400">Consumer: Final delivery and the user</text>
+</g>
+<text x="48" y="1782" font-size="24" fill="#111827">Each output carries input versions, readiness, limits and its next consumer.</text>
+<text x="48" y="1824" font-size="23" fill="#6b7280">Reuse requires inspection; skipped stages produce no invented output.</text>
+<text x="48" y="1864" font-size="23" fill="#6b7280">Use established project paths and combine sections when appropriate.</text>
 </svg>

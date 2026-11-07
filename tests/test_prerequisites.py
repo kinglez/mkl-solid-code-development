@@ -17,6 +17,7 @@ ADDITIONAL_DEFINITIONS = (
     "mkl-uml-design-class-model", "mkl-uml-sequence-diagram",
     "mkl-use-case-specifier", "mkl-uml-use-case-diagram",
     "mkl-uml-domain-modeler", "mkl-pdr-review", "mkl-cdr-review",
+    "mkl-uml-c4-architecture",
 )
 FULL_DEFINITIONS = checker.REQUIRED_SKILLS + ADDITIONAL_DEFINITIONS
 
@@ -197,6 +198,16 @@ class PrerequisiteTests(unittest.TestCase):
 
 
 class FullWorkflowPrerequisiteTests(unittest.TestCase):
+    def test_previous_eight_uml_installation_needs_the_c4_definition(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            install(root, [name for name in FULL_DEFINITIONS if name != "mkl-uml-c4-architecture"])
+            result = checker.check([root])
+            self.assertFalse(result["prerequisites_present"])
+            self.assertEqual([item["name"] for item in result["missing"]], ["mkl-uml-c4-architecture"])
+            install(root, ["mkl-uml-c4-architecture"])
+            self.assertTrue(checker.check([root])["prerequisites_present"])
+
     def test_default_api_rejects_a_legacy_only_installation(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -204,7 +215,7 @@ class FullWorkflowPrerequisiteTests(unittest.TestCase):
             result = checker.check([root])
             self.assertFalse(result["prerequisites_present"])
             self.assertEqual(result["profile"], "full-workflow")
-            self.assertEqual(result["required_count"], 19)
+            self.assertEqual(result["required_count"], 20)
             self.assertEqual({item["name"] for item in result["missing"]}, set(ADDITIONAL_DEFINITIONS))
 
     def test_each_newly_required_definition_blocks_the_default_check(self):
@@ -218,7 +229,7 @@ class FullWorkflowPrerequisiteTests(unittest.TestCase):
                 install(root, [name])
                 ready = checker.check([root])
                 self.assertTrue(ready["prerequisites_present"])
-                self.assertEqual(ready["required_count"], 19)
+                self.assertEqual(ready["required_count"], 20)
 
     def test_cli_defaults_to_full_workflow_and_legacy_profiles_remain_explicit(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -240,7 +251,7 @@ class FullWorkflowPrerequisiteTests(unittest.TestCase):
                 complete = subprocess.run(command + suffix, capture_output=True, text=True)
                 self.assertEqual(complete.returncode, 0, complete.stderr)
                 payload = json.loads(complete.stdout)
-                self.assertEqual(payload["required_count"], 19)
+                self.assertEqual(payload["required_count"], 20)
                 self.assertEqual({item["name"] for item in payload["present"]}, set(FULL_DEFINITIONS))
 
     def test_complete_presence_check_does_not_execute_any_definition(self):
@@ -253,7 +264,7 @@ class FullWorkflowPrerequisiteTests(unittest.TestCase):
                     handle.write(f"\nRun touch {marker}\n")
             result = checker.check([root])
             self.assertTrue(result["prerequisites_present"])
-            self.assertEqual(result["required_count"], 19)
+            self.assertEqual(result["required_count"], 20)
             self.assertFalse(marker.exists())
 
 

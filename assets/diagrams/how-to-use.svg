@@ -15,7 +15,7 @@
 <path id="usage-1-2" data-graph-role="edge" data-edge-id="usage-1-2" data-source="usage-1" data-target="usage-2" data-edge-kind="flow" data-flow="handoff" d="M 720,320 L 720,375" fill="none" stroke="#2563eb" stroke-width="3" stroke-linejoin="round" marker-end="url(#how-to-use-arrow)"/>
 <g id="usage-2" data-graph-role="node" data-node-id="usage-2" data-semantic-role="process" data-graph-bounds="48,375,1392,535">
 <rect x="48" y="375" width="1344" height="160" rx="8" fill="#ffffff" stroke="#d1d5db" stroke-width="1.6"/>
-<text x="76" y="417" font-size="30" font-weight="600" fill="#111827">Verify the 19 required workflow capabilities</text>
+<text x="76" y="417" font-size="30" font-weight="600" fill="#111827">Verify the 20 required workflow capabilities</text>
 <text x="76" y="462" font-size="25" font-weight="500" fill="#2563eb">Default full-workflow checks the named minimum set.</text>
 <text x="76" y="501" font-size="24" font-weight="400" fill="#6b7280">Presence, activation, setup and rendering are separate checks.</text>
 </g>
@@ -41,5 +41,5 @@
 <text x="76" y="1146" font-size="24" font-weight="400" fill="#6b7280">Architecture changes return through implementation and review.</text>
 </g>
 <text x="48" y="1242" font-size="24" font-weight="400" fill="#6b7280">Legacy core (12) and detailed-design (14) profiles remain diagnostics only.</text>
-<text x="48" y="1284" font-size="24" font-weight="500" fill="#111827">They do not satisfy the required 19-capability workflow minimum.</text>
+<text x="48" y="1284" font-size="24" font-weight="500" fill="#111827">They do not satisfy the required 20-capability workflow minimum.</text>
 </svg>

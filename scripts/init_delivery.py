@@ -11,19 +11,27 @@ ASSETS = Path(__file__).resolve().parents[1] / "assets" / "templates"
 
 
 def initialize(destination: Path, task_id: str, summary: str, intent: str, with_brief=False,
-               design_profile: str | None = None):
+               design_profile: str | None = None, architecture_profile: str | None = None):
     if not task_id.strip() or not summary.strip():
         raise ValueError("Task ID and summary must be nonempty.")
     if intent not in ("implement", "design", "review"):
         raise ValueError("Unsupported intent.")
     if design_profile not in (None, "detailed", "lightweight"):
         raise ValueError("Unsupported design profile.")
+    if architecture_profile not in (None, "system", "bounded", "lightweight"):
+        raise ValueError("Unsupported architecture profile.")
     record = json.loads((ASSETS / "delivery-record.json").read_text(encoding="utf-8"))
     record["task"].update(id=task_id, summary=summary, intent=intent)
     if design_profile is not None:
         bundle = json.loads((ASSETS / "design-views.json").read_text(encoding="utf-8"))
         bundle["profile"] = design_profile
         record["design_views"] = bundle
+    if architecture_profile is not None:
+        bundle = json.loads((ASSETS / "architecture-views.json").read_text(encoding="utf-8"))
+        bundle["profile"] = architecture_profile
+        record["architecture_views"] = bundle
+        if "design_views" in record:
+            record["design_views"]["architecture_view_ids"] = []
     outputs = {"delivery-record.json": json.dumps(record, ensure_ascii=False, indent=2) + "\n"}
     if with_brief:
         outputs["implementation-brief.md"] = (ASSETS / "implementation-brief.md").read_text(encoding="utf-8")
@@ -55,10 +63,12 @@ def main(argv=None):
     parser.add_argument("--with-brief", action="store_true")
     parser.add_argument("--design-profile", choices=("detailed", "lightweight"),
                         help="Add an explicit, unready design-view draft; omitted for legacy records.")
+    parser.add_argument("--architecture-profile", choices=("system", "bounded", "lightweight"),
+                        help="Add an unready high-level architecture draft; omit --design-profile for architecture-only work.")
     args = parser.parse_args(argv)
     try:
         for path in initialize(args.destination, args.task_id, args.summary, args.intent,
-                               args.with_brief, args.design_profile):
+                               args.with_brief, args.design_profile, args.architecture_profile):
             print(path)
     except (OSError, ValueError) as exc:
         print(f"Cannot initialize: {exc}", file=sys.stderr)

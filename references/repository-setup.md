@@ -1,6 +1,6 @@
 # Repository Setup for the Integrated Workflow
 
-Read this before a selected stage consumes tracker or domain configuration. Full Matt-collection installation includes `triage`, although the workflow checker's required 19-definition subset does not require it. Some setup versions omit label vocabulary when `triage` is unavailable; other runs can still leave consumer inputs incomplete. Inspect the actual outputs consumed by `to-spec` and `to-tickets`. Complete the required inputs once instead of repeating unchanged setup.
+Read this before a selected stage consumes tracker or domain configuration. Full Matt-collection installation includes `triage`, although the workflow checker's required 20-definition subset does not require it. Some setup versions omit label vocabulary when `triage` is unavailable; other runs can still leave consumer inputs incomplete. Inspect the actual outputs consumed by `to-spec` and `to-tickets`. Complete the required inputs once instead of repeating unchanged setup.
 
 ## Reuse the actual repository choices
 

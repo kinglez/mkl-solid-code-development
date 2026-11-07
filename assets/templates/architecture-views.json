@@ -1,0 +1,15 @@
+{
+  "profile": "system",
+  "reason": "Draft: select the architecture scope from supplied requirements and analysis.",
+  "rule_ids": [],
+  "views": [],
+  "consistency_review": {
+    "status": "not_run",
+    "view_ids": [],
+    "evidence_ids": [],
+    "notes": "Draft: inspect responsibilities, data ownership, quality scenarios and detailed-design constraints.",
+    "unresolved_issues": [
+      "Architecture scope, quality assessment and required views have not yet been reviewed."
+    ]
+  }
+}

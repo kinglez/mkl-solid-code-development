@@ -23,7 +23,7 @@ The [delivery-record template](../assets/templates/delivery-record.json) and [im
 For that profile, use this initialization alternative rather than the command above:
 
 ```bash
-python3 scripts/init_delivery.py path/to/new-delivery --id TASK-1 --summary "Delivery objective" --intent implement --design-profile detailed --with-brief
+python3 scripts/init_delivery.py path/to/new-delivery --id TASK-1 --summary "Delivery objective" --intent implement --architecture-profile system --design-profile detailed --with-brief
 ```
 
 ## Record format: schema version 1
@@ -43,6 +43,7 @@ Field names are checked strictly: unknown fields and duplicate JSON keys are err
 | `limitations[]` | `id`, `description`, `blocks_completion` |
 | `handoffs[]` | `id`, `stage`, `status`, `input_ids[]`, `outputs[]`, `notes`; present in new records |
 | `handoffs[].outputs[]` | `id`, `summary`; optional local `artifact` path |
+| `architecture_views` | Optional high-level architecture/quality bundle and scoped readiness check, described below |
 | `design_views` | Optional declared design bundle and independent pre-implementation readiness check, described below |
 
 Required descriptions, sources, scenarios, and summaries must be nonempty text. Boolean fields use JSON `true/false`. Record the actual basis for a rule in `source`; existing code and AI proposals do not establish business confirmation.
@@ -99,9 +100,9 @@ Neutral record structure only; the declarations below are not execution evidence
 }
 ```
 
-This neutral fragment is only a prefix of the seven-stage chain; it is not a complete implementation record. Keep unexecuted stages pending rather than copying completed statuses.
+This neutral fragment is only a prefix of the eight-stage chain; it is not a complete implementation record. Keep unexecuted stages pending rather than copying completed statuses.
 
-Legacy schema-version-1 records without `handoffs` retain their existing validation behavior. They do not establish stage-to-stage traceability. New templates include the extension. Seven-stage execution uses the same arbitrary-label schema; no fixed stage count is imposed on legacy records. Use `--require-handoffs` to require it, including when checking a legacy record; that option also implies `--require-ready`. Older validator releases do not understand this extension.
+Legacy schema-version-1 records without `handoffs` retain their existing validation behavior. They do not establish stage-to-stage traceability. New templates include the extension. Eight-stage execution uses the same arbitrary-label schema; no fixed stage count is imposed on legacy records. Use `--require-handoffs` to require it, including when checking a legacy record; that option also implies `--require-ready`. Older validator releases do not understand this extension.
 
 The checker validates declared references, statuses, and file existence. It does not infer which stages a task needs, verify document sections or source versions, prove that inputs were read, or automatically detect changes to artifact contents. The agent/reviewer must check those semantics and invalidate affected consumers when upstream results change.
 
@@ -111,7 +112,52 @@ Use `--require-through HANDOFF_ID` to require readiness from the first selected 
 
 The result has `through_ready` and `through_blockers[]`; without this option they are `null` and `[]`. Later pending, blocked or invalidated stages and unfinished task/final-review status do not by themselves block this prefix. The entire record must still be structurally valid, including future draft entries. Read other blockers for their relevance to the current work; the prefix gate checks declared handoff dependencies, not arbitrary business meaning or unassociated limitations.
 
-For pre-coding readiness, combine this option with `--require-design`. Replace `HANDOFF_ID` with the current detailed-design producer's ID, not its stage label. Arbitrary stage labels/counts and old records keep their existing behavior when this new option is omitted. Do not add `--require-ready` merely to start coding: final delivery is intentionally unfinished at that point.
+For the updated workflow's pre-coding readiness, combine this option with `--require-architecture --require-design`. Replace `HANDOFF_ID` with the current detailed-design producer's ID, not its stage label. Arbitrary stage labels/counts and old records keep their existing behavior when this new option is omitted. Do not add `--require-ready` merely to start coding: final delivery is intentionally unfinished at that point.
+
+## Architecture views and readiness
+
+`--architecture-profile system`, `bounded` or `lightweight` adds the draft
+[architecture bundle](../assets/templates/architecture-views.json). It starts without
+views or review evidence and cannot pass the gate. Use this option with
+`--design-profile detailed` for a full development draft. For architecture-only work,
+omit the detailed-design option; class and sequence views are not required.
+
+| Field | Meaning |
+|---|---|
+| `profile` | `system/bounded/lightweight`, with an actual scope rationale in `reason` |
+| `rule_ids[]` | Selected confirmed requirement inputs; system/bounded profiles need a nonempty set |
+| `views[]` | Same source/status/evidence shape as detailed views; unique IDs across both bundles and the record |
+| `views[].kind` | `context/container/component/module/code/deployment/quality/other` |
+| `consistency_review` | Completed review, all active view IDs, passed review evidence, notes and `unresolved_issues[]` |
+
+System scope requires usable `context`, `container` and `quality` outputs. Bounded scope
+requires `component`, `module` or `code` plus `quality`. Lightweight work needs an
+inspected `quality` output and a checked reuse/delta rationale; it does not force a new
+system diagram. A quality view links the actual assessment document: applicable
+scenarios, sources/status, verification methods, open targets and affected decisions.
+The checker does not interpret that prose or manufacture numeric targets.
+
+Completed/reused sources and optional previews must exist within the root and link
+passed structure/review evidence. Pending, blocked, invalidated or uncovered views and
+required unresolved consistency issues prevent readiness. Unknown future-scope quality
+targets can remain explicitly open outside selected decision inputs; an unsettled input
+selected by the current architecture cannot be made ready by changing only its global
+completion-blocking flag.
+
+At the architecture exit use its actual handoff ID:
+
+```bash
+python3 scripts/validate_delivery.py path/to/delivery-record.json --require-architecture --require-through ARCHITECTURE_HANDOFF_ID
+```
+
+`architecture_ready` is independent of future detailed design and coding. The prefix
+must still be connected and ready. Missing upstream comparisons limit semantic coverage;
+no successful record invents PDR/CDR acceptance or a completed skill invocation.
+
+A present `architecture_views` bundle is checked even without a CLI gate and can block
+final record readiness. `--require-architecture` fails on a missing bundle. Old records
+without the bundle return `architecture_ready: null`; they retain their original schema
+meaning but do not demonstrate this new stage. Existing stage IDs/counts are not migrated.
 
 ## Design views and the pre-implementation gate
 
@@ -122,6 +168,7 @@ Use the optional `design_views` bundle for the scope selected under [Design View
 | `profile` | `detailed/lightweight`; view obligations, independent of the prerequisite tool's complete installation profile |
 | `reason` | Nonempty task-specific rationale, including justified reuse or lightweight work |
 | `rule_ids[]` | Existing rule IDs selected as this design's inputs; detailed design needs a nonempty set |
+| `architecture_view_ids[]` | Required when an architecture bundle is declared; accounts for every active upstream architecture/quality output |
 | `state_model` | `requirement: required/not_applicable/unresolved`, with a nonempty source-based `reason` |
 | `views[]` | Each has unique `id`, `kind`, `status`, `notes`, `evidence_ids[]`; optional `artifact`, `preview_artifact` |
 | `views[].kind` | `class/module/sequence/state/other`; module is the explicit non-OO structural alternative |
@@ -139,10 +186,10 @@ Consistency review must be completed, cover the active views, link passed `manua
 Run this **before implementation**, while the task may still be `in_progress` and future checks/review/handoffs are pending. Replace `HANDOFF_ID` with the completed detailed-design producer's actual ID:
 
 ```bash
-python3 scripts/validate_delivery.py path/to/delivery-record.json --project-root path/to/project --require-design --require-through HANDOFF_ID
+python3 scripts/validate_delivery.py path/to/delivery-record.json --project-root path/to/project --require-architecture --require-design --require-through HANDOFF_ID
 ```
 
-`design_ready: true` means the declared design bundle passes its own mechanical checks. `through_ready: true` means the selected producer prefix passes its handoff checks. Both must be true for the command above to return `0`; `record_ready` may still be false because implementation or final review is unfinished. `--require-design` alone retains its bundle-only contract and does not check a producer prefix. Combine final-readiness options only when checking final delivery.
+`design_ready: true` means the detailed bundle passes its mechanical checks, including any declared upstream architecture and its explicit ID mapping. `through_ready: true` means the selected producer prefix passes its handoff checks. All three readiness fields must be true for the command above to return `0`; `record_ready` may still be false because implementation or final review is unfinished. `--require-design` includes declared architecture readiness and mapping, but does not check a producer prefix. Records without architecture retain the previous narrow detailed-bundle behavior. Combine final-readiness options only when checking final delivery.
 
 Without a bundle or the new flag, legacy records retain their original behavior and return `design_ready: null` (not evaluated). With `--require-design`, a missing bundle returns false and blocks that gate. A present unready bundle also blocks final record readiness. Completing the task status cannot make missing/stale/unreviewed views ready.
 
@@ -159,15 +206,15 @@ python3 scripts/validate_delivery.py path/to/delivery-record.json --project-root
 python3 scripts/validate_delivery.py path/to/delivery-record.json --project-root path/to/project --require-ready
 python3 scripts/validate_delivery.py path/to/delivery-record.json --project-root path/to/project --require-handoffs
 python3 scripts/validate_delivery.py path/to/delivery-record.json --project-root path/to/project --require-design
-python3 scripts/validate_delivery.py path/to/delivery-record.json --project-root path/to/project --require-design --require-through HANDOFF_ID
+python3 scripts/validate_delivery.py path/to/delivery-record.json --project-root path/to/project --require-architecture --require-design --require-through HANDOFF_ID
 ```
 
-The JSON result contains `structure_valid`, `record_ready`, `design_ready`, `through_ready`, `errors[]`, `blockers[]`, and separate `design_blockers[]` / `through_blockers[]`.
+The JSON result contains `structure_valid`, `record_ready`, `architecture_ready`, `design_ready`, `through_ready`, `errors[]`, `blockers[]`, and separate `architecture_blockers[]`, `design_blockers[]` and `through_blockers[]`.
 
 - By default, exit code `0` means only that the structure is valid. Also inspect `record_ready` and the blockers.
 - With `--require-ready`, structural errors or incomplete declared coverage return exit code `1`.
 - `--require-handoffs` requires a nonempty, connected chain of usable stage results and implies `--require-ready`. It returns `1` when the record or chain is incomplete.
-- `--require-design` independently checks the design bundle; `--require-through HANDOFF_ID` checks the selected producer prefix. Their combination is the pre-coding gate. All requested gates, including final-readiness options, remain cumulative.
+- `--require-architecture` checks high-level views/quality without requiring detailed design. `--require-design` checks detailed design and any declared upstream architecture; `--require-through HANDOFF_ID` checks the selected producer prefix. Use all three for the updated pre-coding gate. Legacy design-only tooling keeps its earlier narrow scope when no architecture is declared. All requested gates, including final-readiness options, remain cumulative.
 - Unreadable input, invalid JSON, duplicate JSON keys, or invalid command usage return exit code `2`.
 
 CLI JSON diagnostics use encoding-safe escapes so malformed Unicode identifiers can still produce parseable errors rather than a traceback.

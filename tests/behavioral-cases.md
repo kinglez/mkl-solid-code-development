@@ -9,14 +9,15 @@ This protocol evaluates the skill's decisions and producer/consumer contracts. I
 3. Give independent requirements and standards reviewers the same fixed final snapshot, source requirements, applicable standards, and actual check evidence. Record the exact scope and any unexamined layers.
 4. Keep inputs, generated applications, models, behavioral vectors, logs, snapshots, and detailed reports outside the distributable skill. A repository-level summary may report generic mechanisms and execution boundaries without embedding the external scenario.
 
-## Evaluate the seven-stage chain
+## Evaluate the eight-stage chain
 
 | Stage | Observable assessment |
 | --- | --- |
 | Requirements clarification | Questions target real uncertainty. Answers retain sources. Supplied decisions, proposals, assumptions, and unresolved issues remain distinct; no interview or approval is invented. |
 | Requirements baseline | Scope, actors/goals, rules, constraints, use-case behavior, and independent observable expectations have a stated basis. Missing behavior-changing decisions keep dependent work unready. |
-| Analysis | Agreed terms, conceptual relationships, BCE responsibilities, and flow coverage agree. PDR findings identify their owning source and are resolved or bounded before dependent detailed design. |
-| Detailed design | Applicable structure, interaction and state views, semantic contracts, traceability, and CDR inspection support implementation. Specification and dependency-linked slices consume the current design. |
+| Analysis | Agreed terms, conceptual relationships, BCE responsibilities, and flow coverage agree. PDR findings identify their owning source and are resolved or bounded before dependent high-level architecture. |
+| High-level architecture | Required C4/scope views, data ownership, decisions, quality scenarios and validation strategy agree; ready outputs constrain detailed design. Architecture-only work preserves its endpoint. |
+| Detailed design | Applicable structure, interaction and state views, semantic contracts, traceability, and CDR inspection account for current architecture and quality constraints before implementation. Specification and dependency-linked slices consume the current design. |
 | Coding | Actual code implements current slices. Meaningful behavioral failure, correction, and regression evidence are distinguished from environment/setup failures. Refactoring preserves established behavior and synchronizes affected designs. |
 | Change review | Independent requirements and standards reviews inspect the same delivered snapshot, including pending and new files. Corrections have verification and review coverage for their actual delta. |
 | Architecture review | The reviewed result is assessed with its relevant callers and dependencies. Retain/adjust decisions explain costs and reconsideration triggers. Implemented architecture changes return through design, checks, and change review. |
@@ -27,12 +28,27 @@ This protocol evaluates the skill's decisions and producer/consumer contracts. I
 - A missing required design view, unresolved lifecycle applicability, or unreviewed cross-view contradiction is not presented as ready. Separate the mechanical declarations checked by scripts from semantic inspection.
 - An upstream revision identifies affected consumers, invalidates their readiness, and gives revised outputs new identifiers. Consumers cannot remain complete while referring to unready inputs. Reinspect the actual revised content before restoring readiness.
 - Setup/presence success is not invocation, a profile-specific diagram check is not universal semantic verification, and a written test plan is not an executed test.
-- All tasks verify the full 19-definition installation baseline. Scoped tasks may execute only relevant stages, combine logical results, reuse current evidence with an applicability check, and stop at design-only or review-only endpoints.
+- All tasks verify the full 20-definition installation baseline. Scoped tasks may execute only relevant stages, combine logical results, reuse current evidence with an applicability check, and stop at design-only or review-only endpoints.
 - A resume operation reads saved sources, versions, statuses, outputs, unresolved issues, and next consumers instead of reconstructing missing decisions.
-- The pre-coding combination `--require-design --require-through HANDOFF_ID` accepts a ready design prefix while future stages remain pending, rejects a declared invalidated producer or an unconfirmed selected rule, and recovers after the producer/rule is repaired. Unrelated future rules and arbitrary stage labels remain supported.
+- The pre-coding combination `--require-architecture --require-design --require-through HANDOFF_ID` accepts a ready design prefix while future stages remain pending, rejects a declared invalidated producer or an unconfirmed selected rule, and recovers after the producer/rule is repaired. Unrelated future rules and arbitrary stage labels remain supported.
 - Local capture either contains the selected changes consistently or explicitly rejects unsupported index flags and sparse states. Git submodule-ignore settings cannot hide an unsupported changed submodule, and display settings must not contaminate the machine-readable patch. CLI diagnostics remain structured for malformed Unicode identifiers.
 - Review-only work preserves source and Git state. Local delivery stays within its authorized actions. Actual invocation adapters are named accurately.
 
 ## Record actual results
 
 Preserve input versions, candidate identity, output references, commands, exit codes, inspected snapshots, findings, corrections, and limitations in the external workspace. A finite success supports only the checked scope. A protocol description or a ready delivery record does not establish that forward execution occurred, that every semantic defect was found, or that arbitrary generated software is correct.
+
+## Architecture and quality synchronization
+
+In an external target workspace, test a full development chain and a scoped architecture-only
+request. Supply sources in a form other than a PRD; leave some quality targets unknown.
+Inspect that clarification reuses settled answers, asks consequential questions, preserves
+open numeric criteria and returns only justified architecture choices. Inspect actual C4
+artifacts and the architecture-to-detailed-design consumer mapping. A module scope must
+not invent a deployed system or force all C4 levels. Architecture-only work stops before
+classes/sequences/code unless explicitly requested.
+
+Check missing C4 installation, missing quality/context/container outputs, unsettled
+required decisions, invalidated architecture, incomplete design mapping and correction
+revalidation. Keep old record/profiles working without claiming they cover the new stage.
+Mechanical gates do not interpret model meaning; inspect actual artifacts separately.

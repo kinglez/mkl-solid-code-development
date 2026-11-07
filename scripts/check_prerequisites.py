@@ -67,6 +67,7 @@ ADDITIONAL_WORKFLOW_SKILLS = (
     "mkl-uml-domain-modeler",
     "mkl-pdr-review",
     "mkl-cdr-review",
+    "mkl-uml-c4-architecture",
 )
 FULL_WORKFLOW_SKILLS = REQUIRED_SKILLS + DETAILED_DESIGN_SKILLS + ADDITIONAL_WORKFLOW_SKILLS
 PROFILES = {
@@ -127,7 +128,7 @@ def main(argv=None) -> int:
     parser.add_argument("--skills-root", type=Path, action="append", required=True,
                         help="Directory containing skill-name/SKILL.md; repeat to search several roots.")
     parser.add_argument("--profile", choices=tuple(PROFILES), default="full-workflow",
-                        help="Default full-workflow checks all 19 definitions. Explicit core (12) and "
+                        help="Default full-workflow checks all 20 definitions. Explicit core (12) and "
                              "detailed-design (14) are legacy diagnostic profiles, not full-workflow readiness.")
     args = parser.parse_args(argv)
     try:
