@@ -128,6 +128,56 @@ class PrerequisiteTests(unittest.TestCase):
                 (root / "tdd/SKILL.md").write_text("---\n" + header + "---\n", encoding="utf-8")
                 self.assertTrue(checker.check([root])["prerequisites_present"])
 
+    def test_frontmatter_controls_remain_invalid_in_all_profiles(self):
+        for profile in ("full-workflow", "core", "detailed-design"):
+            with tempfile.TemporaryDirectory() as tmp:
+                root = Path(tmp)
+                install(root, FULL_DEFINITIONS)
+                for control in ("\x0b", "\x0c", "\x1c"):
+                    with self.subTest(profile=profile, control=repr(control)):
+                        header = "name: tdd\ndescription:" + control + "  Neutral fixture\n"
+                        with self.assertRaises(checker.yaml.YAMLError):
+                            checker.yaml.safe_load(header)
+                        (root / "tdd/SKILL.md").write_text("---\n" + header + "---\n", encoding="utf-8")
+                        result = subprocess.run([sys.executable, str(ROOT / "scripts/check_prerequisites.py"),
+                                                 "--skills-root", str(root), "--profile", profile],
+                                                capture_output=True, text=True)
+                        self.assertEqual(result.returncode, 1, result.stderr)
+                        payload = json.loads(result.stdout)
+                        self.assertFalse(payload["prerequisites_present"])
+                        self.assertEqual([item["name"] for item in payload["missing"]], ["tdd"])
+
+    def test_frontmatter_keeps_block_scalar_fences_and_normal_line_endings(self):
+        header = "description: |\n  Neutral header\n  ---\n  Continued description\nname: tdd\n"
+        for newline in ("\n", "\r\n", "\r"):
+            with self.subTest(newline=repr(newline)), tempfile.TemporaryDirectory() as tmp:
+                root = Path(tmp)
+                install(root, FULL_DEFINITIONS)
+                content = ("---\n" + header + "---\nBody\n").replace("\n", newline)
+                (root / "tdd/SKILL.md").write_bytes(content.encode("utf-8"))
+                before = (root / "tdd/SKILL.md").read_bytes()
+                self.assertTrue(checker.check([root])["prerequisites_present"])
+                self.assertEqual((root / "tdd/SKILL.md").read_bytes(), before)
+
+    def test_frontmatter_delimiters_must_be_unindented(self):
+        for content in ("  ---\nname: tdd\n---\n", "---\nname: tdd\n  ---\n"):
+            with self.subTest(content=content), tempfile.TemporaryDirectory() as tmp:
+                root = Path(tmp)
+                install(root, FULL_DEFINITIONS)
+                (root / "tdd/SKILL.md").write_text(content, encoding="utf-8")
+                self.assertFalse(checker.check([root])["prerequisites_present"])
+
+    def test_frontmatter_invalid_controls_use_a_valid_later_root(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            first, second = Path(tmp) / "first", Path(tmp) / "second"
+            install(first, FULL_DEFINITIONS)
+            install(second, ["tdd"])
+            (first / "tdd/SKILL.md").write_text("---\nname: tdd\ndescription:\x0c  Neutral fixture\n---\n")
+            result = checker.check([first, second])
+            self.assertTrue(result["prerequisites_present"])
+            self.assertEqual(next(item["path"] for item in result["present"] if item["name"] == "tdd"),
+                             str((second / "tdd/SKILL.md").resolve()))
+
     def test_excessive_yaml_nesting_is_reported_as_invalid_definition(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

@@ -94,10 +94,12 @@ def check(roots: list[Path], profile: str = "full-workflow") -> dict:
         for root in roots:
             path = root / name / "SKILL.md"
             try:
-                lines = path.read_text(encoding="utf-8").splitlines()
-                if not lines or lines[0].strip() != "---":
+                # Text I/O normalizes CR/LF endings only. Keep other controls
+                # intact so the YAML parser can reject them as invalid input.
+                lines = path.read_text(encoding="utf-8").split("\n")
+                if not lines or lines[0].rstrip(" \t") != "---":
                     raise ValueError("Missing YAML frontmatter.")
-                end = next((i for i in range(1, len(lines)) if lines[i].strip() == "---"), None)
+                end = next((i for i in range(1, len(lines)) if lines[i].rstrip(" \t") == "---"), None)
                 if end is None:
                     raise ValueError("Unterminated YAML frontmatter.")
                 try:

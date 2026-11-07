@@ -4,6 +4,7 @@ import contextlib
 import importlib.util
 import io
 import json
+import os
 import subprocess
 import sys
 import tempfile
@@ -296,6 +297,72 @@ class DeliveryCliTests(unittest.TestCase):
 
 
 class InitializationTests(unittest.TestCase):
+    def test_cli_reports_unicode_paths_under_restricted_stdout_encodings(self):
+        for encoding in ("ascii", "cp1252"):
+            with self.subTest(encoding=encoding), tempfile.TemporaryDirectory() as tmp:
+                root = Path(tmp) / "\u4ea4\u4ed8"
+                command = [sys.executable, str(ROOT / "scripts/init_delivery.py"), str(root),
+                           "--id", "T", "--summary", "\u4e2d\u6587\u6458\u8981", "--with-brief"]
+                result = subprocess.run(command, capture_output=True,
+                                        env=dict(os.environ, PYTHONIOENCODING=encoding))
+                self.assertEqual(result.returncode, 0, result.stderr)
+                displayed = result.stdout.decode(encoding)
+                self.assertIn("\\u4ea4\\u4ed8", displayed)
+                self.assertIn("delivery-record.json", displayed)
+                self.assertIn("implementation-brief.md", displayed)
+                self.assertEqual(validator.load_record(root / "delivery-record.json")["task"]["summary"],
+                                 "\u4e2d\u6587\u6458\u8981")
+                before = {p.name: p.read_bytes() for p in root.iterdir()}
+                retry = subprocess.run(command, capture_output=True,
+                                       env=dict(os.environ, PYTHONIOENCODING="utf-8"))
+                self.assertEqual(retry.returncode, 2)
+                self.assertIn(b"already exists", retry.stderr)
+                self.assertEqual({p.name: p.read_bytes() for p in root.iterdir()}, before)
+
+    def test_cli_json_result_preserves_actual_paths_in_every_output_encoding(self):
+        for encoding in ("ascii", "cp1252", "utf-8"):
+            with self.subTest(encoding=encoding), tempfile.TemporaryDirectory() as tmp:
+                root = Path(tmp) / "\u4ea4\u4ed8"
+                command = [sys.executable, str(ROOT / "scripts/init_delivery.py"), str(root),
+                           "--id", "T", "--summary", "Neutral delivery", "--with-brief", "--json"]
+                result = subprocess.run(command, capture_output=True,
+                                        env=dict(os.environ, PYTHONIOENCODING=encoding))
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertEqual(json.loads(result.stdout.decode("ascii")),
+                                 {"created": [str(root / "delivery-record.json"),
+                                              str(root / "implementation-brief.md")]})
+
+    def test_reporting_io_failure_does_not_claim_initialization_failed(self):
+        class FailingOutput(io.StringIO):
+            def write(self, text):
+                raise OSError("simulated reporting failure")
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "delivery"
+            args = [str(root), "--id", "T", "--summary", "Neutral delivery", "--with-brief"]
+            with contextlib.redirect_stdout(FailingOutput()), contextlib.redirect_stderr(io.StringIO()) as stderr:
+                self.assertEqual(initializer.main(args), 2)
+            self.assertIn("Initialized output files", stderr.getvalue())
+            self.assertNotIn("Cannot initialize:", stderr.getvalue())
+            self.assertEqual({p.name for p in root.iterdir()}, {"delivery-record.json", "implementation-brief.md"})
+
+    def test_closed_stdout_pipe_reports_completed_files_without_shutdown_error(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "delivery"
+            command = [sys.executable, str(ROOT / "scripts/init_delivery.py"), str(root),
+                       "--id", "T", "--summary", "Neutral delivery", "--with-brief"]
+            read_fd, write_fd = os.pipe()
+            os.close(read_fd)
+            env = dict(os.environ)
+            env.pop("PYTHONUNBUFFERED", None)
+            with os.fdopen(write_fd, "wb") as output:
+                result = subprocess.run(command, stdout=output, stderr=subprocess.PIPE, env=env)
+            self.assertEqual(result.returncode, 2, result.stderr)
+            self.assertIn(b"Initialized output files", result.stderr)
+            self.assertNotIn(b"Exception ignored", result.stderr)
+            self.assertNotIn(b"Cannot initialize:", result.stderr)
+            self.assertEqual({p.name for p in root.iterdir()}, {"delivery-record.json", "implementation-brief.md"})
+
     def test_unencodable_arguments_leave_no_files_and_allow_valid_retry(self):
         for field in ("task_id", "summary"):
             for with_brief in (False, True):

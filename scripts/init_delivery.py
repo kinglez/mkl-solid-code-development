@@ -10,6 +10,12 @@ from pathlib import Path
 ASSETS = Path(__file__).resolve().parents[1] / "assets" / "templates"
 
 
+def emit_line(message: str, stream):
+    """Keep human output readable even when the console cannot encode a path."""
+    encoding = getattr(stream, "encoding", None) or "utf-8"
+    print(message.encode(encoding, errors="backslashreplace").decode(encoding), file=stream)
+
+
 def initialize(destination: Path, task_id: str, summary: str, intent: str, with_brief=False,
                design_profile: str | None = None, architecture_profile: str | None = None):
     if not task_id.strip() or not summary.strip():
@@ -61,17 +67,33 @@ def main(argv=None):
     parser.add_argument("--summary", required=True)
     parser.add_argument("--intent", choices=("implement", "design", "review"), default="implement")
     parser.add_argument("--with-brief", action="store_true")
+    parser.add_argument("--json", action="store_true", dest="json_output",
+                        help="Print ASCII-safe JSON with the created paths for programmatic use.")
     parser.add_argument("--design-profile", choices=("detailed", "lightweight"),
                         help="Add an explicit, unready design-view draft; omitted for legacy records.")
     parser.add_argument("--architecture-profile", choices=("system", "bounded", "lightweight"),
                         help="Add an unready high-level architecture draft; omit --design-profile for architecture-only work.")
     args = parser.parse_args(argv)
     try:
-        for path in initialize(args.destination, args.task_id, args.summary, args.intent,
-                               args.with_brief, args.design_profile, args.architecture_profile):
-            print(path)
+        targets = initialize(args.destination, args.task_id, args.summary, args.intent,
+                             args.with_brief, args.design_profile, args.architecture_profile)
     except (OSError, ValueError) as exc:
-        print(f"Cannot initialize: {exc}", file=sys.stderr)
+        emit_line(f"Cannot initialize: {exc}", sys.stderr)
+        return 2
+    try:
+        if args.json_output:
+            emit_line(json.dumps({"created": [str(path) for path in targets]}, ensure_ascii=True), sys.stdout)
+        else:
+            for path in targets:
+                emit_line(str(path), sys.stdout)
+        sys.stdout.flush()
+    except (OSError, ValueError) as exc:
+        # A buffered broken pipe must not be flushed again at shutdown.
+        try:
+            sys.stdout.close()
+        except (OSError, ValueError):
+            pass
+        emit_line(f"Initialized output files, but cannot report their paths: {exc}", sys.stderr)
         return 2
     return 0
 

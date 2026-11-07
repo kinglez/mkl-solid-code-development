@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 1330" width="1440" height="1330" role="img" aria-labelledby="how-to-use-title how-to-use-desc" data-generator="fireworks-tech-graph" data-schema-version="1" data-style-id="1" data-visual-theme="Flat Icon" data-diagram-type="flowchart" data-semantic-profile="generic" data-semantic-valid="true" data-quality-profile="showcase">
 <title id="how-to-use-title">Install once, execute the relevant stages</title>
-<desc id="how-to-use-desc">Usage flow installs both upstream skill collections, checks the nineteen required workflow capabilities, reuses repository setup and runs only the requested stages.</desc>
+<desc id="how-to-use-desc">Usage flow installs both upstream skill collections, checks the 20 named workflow prerequisites, reuses repository setup and runs only the requested stages.</desc>
 <style>text{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif}</style>
 <defs><marker id="how-to-use-arrow" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="10" refX="12" refY="5" orient="auto"><path d="M 0,0 L 12,5 L 0,10 Z" fill="#2563eb"/></marker></defs>
 <rect data-graph-role="background" x="0" y="0" width="1440" height="1330" fill="#ffffff"/>

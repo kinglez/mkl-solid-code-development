@@ -82,8 +82,17 @@ def read_state(root: Path, baseline: str, scope: list[str]):
                          "review them separately: " + "; ".join(hidden))
     diff_args = ("diff", "--no-ext-diff", "--no-textconv", "--no-renames", "--no-color",
                  "--src-prefix=a/", "--dst-prefix=b/", "--ignore-submodules=none")
-    changed = git(root, *diff_args, "--name-only", "-z", baseline, "--", *scope)
     untracked = git(root, "ls-files", "--others", "--exclude-standard", "-z", "--", *scope)
+    for raw in untracked.split(b"\0"):
+        if raw:
+            name = raw.decode("utf-8", errors="surrogateescape")
+            path = root / name
+            if path.is_symlink() and path.is_dir():
+                raise ValueError(f"An untracked directory symlink needs separate patch review: {name!r}.")
+    changed = git(root, *diff_args, "--name-only", "-z", baseline, "--", *scope)
+    tracked = git(root, "ls-files", "--cached", "-z", "--", *scope)
+    current_names = {part.decode("utf-8", errors="surrogateescape")
+                     for part in tracked.split(b"\0") + untracked.split(b"\0") if part}
     names = sorted(set(part.decode("utf-8", errors="surrogateescape")
                        for part in changed.split(b"\0") + untracked.split(b"\0") if part))
     if not names:
@@ -96,13 +105,19 @@ def read_state(root: Path, baseline: str, scope: list[str]):
                 gitlinks.add(entry.split(b"\t", 1)[1].decode("utf-8", errors="surrogateescape"))
     if gitlinks.intersection(names):
         raise ValueError("The selected change contains a submodule; review it separately.")
-    files = [current_file(root, name) for name in names]
+    # A baseline deletion may still have an ignored local copy. Only current
+    # index entries and explicitly allowed untracked paths may supply bytes.
+    files = [current_file(root, name) if name in current_names
+             else ({"path": name, "kind": "absent"}, None) for name in names]
     patch = git(root, *diff_args, "--binary", "--full-index", baseline, "--", *scope)
     for raw in untracked.split(b"\0"):
         if raw:
             name = raw.decode("utf-8", errors="surrogateescape")
-            patch += git(root, *diff_args, "--no-index",
-                         "--binary", "--full-index", "--", os.devnull, name, allowed=(0, 1))
+            addition = git(root, *diff_args, "--no-index",
+                           "--binary", "--full-index", "--", os.devnull, name, allowed=(0, 1))
+            if not addition:
+                raise ValueError(f"Git did not produce a review patch for untracked path {name!r}.")
+            patch += addition
     return {
         "head": git(root, "rev-parse", "--verify", "HEAD^{commit}").decode().strip(),
         "status": git(root, "status", "--porcelain=v1", "-z", "--untracked-files=all", "--", *scope),
@@ -113,7 +128,9 @@ def read_state(root: Path, baseline: str, scope: list[str]):
 
 def capture(repo: Path, baseline: str, output: Path, paths: list[str]):
     repo = repo.expanduser().resolve()
-    root = Path(git(repo, "rev-parse", "--show-toplevel").decode().rstrip("\n")).resolve()
+    root = Path(os.fsdecode(git(repo, "rev-parse", "--show-toplevel").removesuffix(b"\n"))).resolve()
+    if not repo.is_relative_to(root):
+        raise ValueError("The resolved Git root does not contain the requested repository directory.")
     output = output.expanduser().absolute()
     if output.resolve().is_relative_to(root):
         raise ValueError("Review output must be outside the target repository.")

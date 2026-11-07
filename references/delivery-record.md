@@ -14,7 +14,9 @@ python3 scripts/init_delivery.py path/to/new-delivery --id TASK-1 --summary "Del
 
 This creates `delivery-record.json`; `--with-brief` also creates an implementation-brief template. The initial status is `in_progress`, with no invented rules or verification results. New records include an empty `handoffs` array; populate it with the selected stages as work proceeds. Existing output files are never overwritten; edit an existing record in place where appropriate.
 
-All output is encoded as UTF-8 before directories or files are created. Unencodable task text is rejected with exit code `2`, leaving no output. If a subsequent file write encounters an I/O error, files created by this invocation are removed while pre-existing files are preserved.
+Generated file content is encoded as UTF-8 before directories or files are created. Unencodable task text is rejected with exit code `2`, leaving no output. If a subsequent file write encounters an I/O error, files created by this invocation are removed while pre-existing files are preserved.
+
+The CLI normally prints one created path per line. Characters unavailable in the console encoding are displayed as backslash escapes. For programmatic consumption, add `--json`: it returns ASCII-safe JSON with a `created` array; JSON decoding restores the actual Unicode paths. A successful write is not mislabeled as an initialization failure if console reporting fails: that error explicitly states that the files were created and are retained. Normal repeat invocations still refuse overwrites.
 
 The [delivery-record template](../assets/templates/delivery-record.json) and [implementation-brief template](../assets/templates/implementation-brief.md) can also be used directly. They need not be delivered together.
 

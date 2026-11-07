@@ -268,6 +268,53 @@ class ReviewCaptureTests(unittest.TestCase):
         self.assertEqual([item["path"] for item in self.manifest()["files"]], ["local.txt"])
         self.assertNotIn(b"excluded content", (self.output / "changes.patch").read_bytes())
 
+    def test_index_removal_excludes_ignored_worktree_payloads(self):
+        self.git("rm", "--cached", "--quiet", "local.txt")
+        (self.repo / ".gitignore").write_text("ignored/\nlocal.txt\n")
+        self.git("add", ".gitignore")
+        marker = b"IGNORED_LOCAL_ONLY_MARKER\n"
+        (self.repo / "local.txt").write_bytes(marker)
+        self.assertEqual(self.git("check-ignore", "local.txt"), b"local.txt\n")
+        for stage in ("staged", "committed"):
+            with self.subTest(stage=stage):
+                if stage == "committed":
+                    self.git("commit", "-qm", "Synthetic tracking removal")
+                output = self.workspace / ("removed-" + stage)
+                before_index = (self.repo / ".git/index").read_bytes()
+                before_status = self.git("status", "--porcelain=v1", "-z")
+                result = self.capture("--path", "local.txt", output=output)
+                self.assertEqual(result.returncode, 0, result.stderr)
+                item = json.loads((output / "manifest.json").read_text())["files"][0]
+                self.assertEqual(item, {"path": "local.txt", "kind": "absent"})
+                self.assertIn(b"deleted file mode", (output / "changes.patch").read_bytes())
+                for artifact in output.rglob("*"):
+                    if artifact.is_file():
+                        self.assertNotIn(marker, artifact.read_bytes())
+                self.assertEqual((self.repo / "local.txt").read_bytes(), marker)
+                self.assertEqual((self.repo / ".git/index").read_bytes(), before_index)
+                self.assertEqual(self.git("status", "--porcelain=v1", "-z"), before_status)
+
+    def test_ignore_rules_preserve_tracked_and_allowed_untracked_capture(self):
+        (self.repo / ".gitignore").write_text("ignored/\nlocal.txt\n")
+        (self.repo / "local.txt").write_bytes(b"tracked current bytes\n")
+        (self.repo / "new.txt").write_bytes(b"allowed new bytes\n")
+        result = self.capture()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        items = {item["path"]: item for item in self.manifest()["files"]}
+        for name in ("local.txt", "new.txt"):
+            self.assertEqual((self.output / items[name]["snapshot"]).read_bytes(),
+                             (self.repo / name).read_bytes())
+
+    def test_index_removal_retains_nonignored_worktree_addition(self):
+        self.git("rm", "--cached", "--quiet", "local.txt")
+        (self.repo / "local.txt").write_bytes(b"allowed current bytes\n")
+        result = self.capture("--path", "local.txt")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        item = self.manifest()["files"][0]
+        self.assertEqual(item["kind"], "file")
+        self.assertEqual((self.output / item["snapshot"]).read_bytes(), b"allowed current bytes\n")
+        self.assertIn(b"+allowed current bytes", (self.output / "changes.patch").read_bytes())
+
     def test_empty_change_is_an_explicit_error_without_output(self):
         result = self.capture()
         self.assertEqual(result.returncode, 2)
@@ -313,6 +360,50 @@ class ReviewCaptureTests(unittest.TestCase):
         self.assertIn("input_error", json.loads(result.stderr))
         self.assertFalse(self.output.exists())
 
+    @unittest.skipIf(os.name == "nt", "Windows does not allow newline directory names")
+    def test_repository_root_preserves_trailing_newlines_with_a_shared_baseline(self):
+        requested = self.workspace / "project\n"
+        subprocess.run(["git", "clone", "-q", "--no-hardlinks", str(self.repo), str(requested)],
+                       capture_output=True, check=True)
+        (self.repo / "local.txt").write_bytes(b"unrelated sibling bytes\n")
+        (requested / "local.txt").write_bytes(b"requested project bytes\n")
+        indices = {root: (root / ".git/index").read_bytes() for root in (self.repo, requested)}
+        result = self.capture(repo=requested)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        manifest = self.manifest()
+        self.assertEqual(manifest["repository"], str(requested.resolve()))
+        self.assertEqual(manifest["baseline"], self.baseline)
+        item = manifest["files"][0]
+        self.assertEqual((self.output / item["snapshot"]).read_bytes(), b"requested project bytes\n")
+        for root, index in indices.items():
+            self.assertEqual((root / ".git/index").read_bytes(), index)
+        self.assertEqual((self.repo / "local.txt").read_bytes(), b"unrelated sibling bytes\n")
+        self.assertEqual((requested / "local.txt").read_bytes(), b"requested project bytes\n")
+
+    @unittest.skipIf(os.name == "nt", "Windows does not allow newline directory names")
+    def test_repository_identity_handles_newlines_and_unicode_without_a_sibling(self):
+        for index, name in enumerate(("trailing\n\n", "embedded\nname", "\u76ee\u5f55")):
+            with self.subTest(name=name):
+                requested = self.workspace / name
+                self.repo.rename(requested)
+                self.repo = requested
+                (requested / "local.txt").write_bytes(b"requested current bytes\n")
+                output = self.workspace / ("identity-" + str(index))
+                result = self.capture(output=output)
+                self.assertEqual(result.returncode, 0, result.stderr)
+                manifest = json.loads((output / "manifest.json").read_text())
+                self.assertEqual(manifest["repository"], str(requested.resolve()))
+                self.assertEqual((output / manifest["files"][0]["snapshot"]).read_bytes(),
+                                 b"requested current bytes\n")
+
+    def test_repository_argument_can_name_a_subdirectory_of_the_worktree(self):
+        nested = self.repo / "nested/working"
+        nested.mkdir(parents=True)
+        (self.repo / "local.txt").write_bytes(b"current project bytes\n")
+        result = self.capture(repo=nested)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(self.manifest()["repository"], str(self.repo.resolve()))
+
     def test_source_change_during_capture_is_rejected_without_output(self):
         spec = importlib.util.spec_from_file_location("capture_review_test", SCRIPT)
         module = importlib.util.module_from_spec(spec)
@@ -333,6 +424,79 @@ class ReviewCaptureTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "changed during capture"):
                 module.capture(self.repo, self.baseline, self.output, [])
         self.assertFalse(self.output.exists())
+
+    @unittest.skipUnless(hasattr(os, "symlink"), "Symlinks unavailable")
+    def test_directory_symlink_capture_fails_closed_until_git_tracks_the_link(self):
+        folder = self.repo / "folder"
+        folder.mkdir()
+        (folder / "child.txt").write_bytes(b"old child bytes\n")
+        self.git("add", "folder")
+        self.git("commit", "-qm", "Synthetic directory baseline")
+        self.baseline = self.git("rev-parse", "HEAD").decode().strip()
+        (folder / "child.txt").unlink()
+        folder.rmdir()
+        outside = self.workspace / "outside-directory"
+        outside.mkdir()
+        marker = outside / "marker.txt"
+        marker.write_bytes(b"external target bytes\n")
+        try:
+            folder.symlink_to(outside, target_is_directory=True)
+        except (OSError, NotImplementedError):
+            self.skipTest("Directory symlinks unavailable")
+        before_index = (self.repo / ".git/index").read_bytes()
+        before_status = self.git("status", "--porcelain=v1", "-z", "--untracked-files=all")
+        for child in ("marker.txt", "null"):
+            with self.subTest(child=child):
+                (outside / child).write_bytes(b"external target bytes\n")
+                output = self.workspace / ("directory-link-" + child)
+                result = self.capture(output=output)
+                self.assertEqual(result.returncode, 2, result.stderr)
+                message = json.loads(result.stderr)["input_error"]
+                self.assertIn("directory symlink", message)
+                self.assertIn("patch", message)
+                self.assertFalse(output.exists())
+                self.assertEqual((self.repo / ".git/index").read_bytes(), before_index)
+                self.assertEqual(self.git("status", "--porcelain=v1", "-z", "--untracked-files=all"), before_status)
+        self.assertEqual(marker.read_bytes(), b"external target bytes\n")
+        # The normal tracked Git diff represents the link itself safely.
+        self.git("add", "-A")
+        staged_index = (self.repo / ".git/index").read_bytes()
+        result = self.capture()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        patch = (self.output / "changes.patch").read_bytes()
+        self.assertIn(b"new file mode 120000", patch)
+        self.assertIn(b"+" + os.fsencode(str(outside)), patch)
+        self.assertNotIn(b"external target bytes", patch)
+        self.assertEqual((self.repo / ".git/index").read_bytes(), staged_index)
+
+    def test_new_empty_file_still_has_a_reviewable_patch_and_snapshot(self):
+        (self.repo / "empty.txt").touch()
+        result = self.capture()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        item = self.manifest()["files"][0]
+        self.assertEqual(item["path"], "empty.txt")
+        self.assertEqual((self.output / item["snapshot"]).read_bytes(), b"")
+        self.assertIn(b"new file mode", (self.output / "changes.patch").read_bytes())
+
+    def test_missing_backend_patch_is_rejected_without_a_snapshot(self):
+        spec = importlib.util.spec_from_file_location("capture_missing_patch", SCRIPT)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        (self.repo / "new.txt").write_bytes(b"current untracked bytes\n")
+        before_index = (self.repo / ".git/index").read_bytes()
+        run_git = module.git
+
+        def unavailable_patch(root, *args, **kwargs):
+            if "--no-index" in args:
+                return b""
+            return run_git(root, *args, **kwargs)
+
+        with mock.patch.object(module, "git", side_effect=unavailable_patch):
+            with self.assertRaisesRegex(ValueError, "did not produce a review patch"):
+                module.capture(self.repo, self.baseline, self.output, [])
+        self.assertFalse(self.output.exists())
+        self.assertEqual((self.repo / ".git/index").read_bytes(), before_index)
+        self.assertEqual((self.repo / "new.txt").read_bytes(), b"current untracked bytes\n")
 
     @unittest.skipUnless(hasattr(os, "symlink"), "Symlinks unavailable")
     def test_symlink_is_captured_as_link_text_without_following_the_target(self):
